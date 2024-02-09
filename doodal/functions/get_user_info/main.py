@@ -1,7 +1,8 @@
 import json
 import mysql.connector
 
-# FIRST INSTALL THE CONNECTOR WITH THE COMMAND BELOW
+# MAKE SURE YOU ARE IN THE GET_USER_INFO DIRECTORY
+# THEN INSTALL THE CONNECTOR WITH THE COMMAND BELOW
 # pip install -t ./ mysql-connector-python
 
 # Database connection parameters
