@@ -1,54 +1,52 @@
 import json
-import mysql.connector
+import boto3
+from botocore.exceptions import ClientError
 
-# MAKE SURE YOU ARE IN THE GET_USER_INFO DIRECTORY
-# THEN INSTALL THE CONNECTOR WITH THE COMMAND BELOW
-# pip install -t ./ mysql-connector-python
-
-# Database connection parameters
-server = "doodal-db.c7qmwgoemetz.us-west-2.rds.amazonaws.com"
-username = "admin"
-password = "oR4KCGDhAVkdaPWNsZbD"
-database = "doodaldb"
-
-# Establishing a connection to the MySQL Server
-connection = mysql.connector.connect(
-    host=server,
-    user=username,
-    password=password,
-    database=database
-)
+# https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/example_dynamodb_Scenario_PartiQLSingle_section.html
+# Create a DynamoDB resource
+dynamodb_resource = boto3.client('dynamodb')
 
 def get_user_info(event, context):
     try:
-        # Creating a cursor object to execute queries
-        cursor = connection.cursor()
+        # Parse the JSON string in the 'body' field
+        body = json.loads(event['body'])
+        user_id = body['user_id']
+        
+        # make sure you use \"<table-name>\ or the query statement won't work" 
+        statement = "SELECT * FROM \"doodal-users\" WHERE UserID = ?"
+        params = [{"S": str(user_id)}]
+        response = dynamodb_resource.execute_statement(
+            Statement=statement,
+            Parameters=params
+        )
+        print(response)
 
-        # Executing the SELECT query
-        select_query = "SELECT email FROM users"
-        cursor.execute(select_query)
-
-        # Fetching all rows from the result
-        rows = cursor.fetchall()
-
-        # Closing cursor
-        cursor.close()
-
-        # Extracting emails from rows
-        emails = [row[0] for row in rows]
-
-        # Returning the emails with status code 200
+        # Handle the response
+        items = response.get('Items', [])
+        if not items:
+            return {
+                'statusCode': 404,
+                'body': 'User not found'
+            }
+        
+        user_info = items[0]
         return {
             'statusCode': 200,
-            'body': json.dumps(emails)
+            'body': json.dumps(user_info)
         }
-
-    except mysql.connector.Error as error:
-        print("Error connecting to MySQL database:", error)
-        # Returning an error response with status code 500
+        
+    except KeyError:
+        return {
+            'statusCode': 400,
+            'body': 'User ID is missing in the request body'
+        }
+    except ClientError as e:
         return {
             'statusCode': 500,
-            'body': json.dumps({'error': str(error)})
+            'body': f'Error executing PartiQL statement: {str(e)}'
         }
-
-# Note: The connection will remain open until the program terminates.
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': str(e)
+        }
