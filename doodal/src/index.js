@@ -1,11 +1,17 @@
 import React from 'react';
-import './index.css';
 import App from './App';
 import Home from './Home';
 import Comp from './Comp';
 import Draw from './DrawPage';
+import Account from './Account';
+import Gallery from './Gallery';
 import reportWebVitals from './reportWebVitals';
 import ReactDOM from "react-dom/client";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import './index.css';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -15,7 +21,9 @@ const router = createBrowserRouter([
     children: [
       { path: "/home", element: <Home /> },
       { path: "/competition",element: <Comp />,},
-      { path: "/draw", element: <Draw /> }
+      { path: "/draw", element: <Draw /> },
+      { path: "/profile", element: <Account/> },
+      { path: "/gallery", element: <Gallery/> }
     ],
   },
 ]);
