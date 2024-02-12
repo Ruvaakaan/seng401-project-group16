@@ -4,7 +4,7 @@ import Home from './Home';
 import Comp from './Comp';
 import Draw from './DrawPage';
 import Account from './Account';
-import Gallery from './Gallery';
+import Gallery from './GalleryPage';
 import reportWebVitals from './reportWebVitals';
 import ReactDOM from "react-dom/client";
 import 'bootstrap/dist/css/bootstrap.min.css';

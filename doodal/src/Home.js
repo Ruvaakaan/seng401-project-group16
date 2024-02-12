@@ -16,14 +16,14 @@ function Home() {
     <>
       <div className="prompt-display">
         <h1 className="prompt-title">
-          Previous Competition Entries: {prompt}
+          Current Competition: {prompt}
         </h1>
         <Button
           variant="outline-dark"
           className="entry-button"
           onClick={() => nav("/competition")}
         >
-          Join!
+          View
         </Button>
       </div>
       <Swiper
@@ -35,13 +35,13 @@ function Home() {
       >
         {curr_prompt.map((item, index) => (
           <SwiperSlide key={index}>
-            <img src="octopus.PNG" width={600} />
+            <img src="octopus.PNG" width={550} />
           </SwiperSlide> // temp image, item should hold the image so use {item}
         ))}
       </Swiper>
       <div className="prompt-display">
         <h1 className="prompt-title">
-          Previous Competition Entries: {oldprompt}
+          Previous Competition: {oldprompt}
         </h1>
         <Button
           variant="outline-dark"
@@ -60,7 +60,7 @@ function Home() {
       >
         {old_prompt.map((item, index) => (
           <SwiperSlide key={index}>
-            <img src="doodal.PNG" width={600} />
+            <img src="doodal.PNG" width={550} />
           </SwiperSlide> // temp image, item should hold the image so use {item}
         ))}
       </Swiper>

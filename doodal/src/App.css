@@ -63,6 +63,8 @@ body {
   margin-left:30%;
   margin-right:30%;
   display:flex;
+  background-color: gray;
+
 }
 
 .prompt-title {
@@ -75,3 +77,18 @@ body {
   flex:1;
 }
 
+#like {
+  background: red;
+    border: none;
+    font-size: 3em;
+    color: inherit;
+}
+
+#car {
+  background-color: transparent;
+  padding:0;
+}
+
+.tmp {
+  background-color: gray;
+}
