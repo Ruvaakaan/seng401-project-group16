@@ -8,11 +8,10 @@ dynamodb_resource = boto3.client('dynamodb')
 
 def get_user_info(event, context):
     try:
-        # Parse the JSON string in the 'body' field
         body = json.loads(event['body'])
         user_id = body['user_id']
-        
-        # make sure you use \"<table-name>\ or the query statement won't work" 
+
+        # make sure you use \"<table-name>\" or the query statement won't work" 
         statement = "SELECT * FROM \"doodal-users\" WHERE UserID = ?"
         params = [{"S": str(user_id)}]
         response = dynamodb_resource.execute_statement(
@@ -20,8 +19,7 @@ def get_user_info(event, context):
             Parameters=params
         )
         print(response)
-
-        # Handle the response
+        
         items = response.get('Items', [])
         if not items:
             return {

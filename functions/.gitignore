@@ -32,8 +32,3 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
-
-# Ignore python modules
-mysql/
-mysql_connector_python-8.3.0.dist-info/
-_mysql_connector.cp39-win_amd64.pyd
