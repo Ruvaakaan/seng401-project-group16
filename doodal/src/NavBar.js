@@ -13,7 +13,7 @@ function NavBar() {
         </div>
         <div className="nav">
           <Link to="/gallery" className="items">Gallery</Link>
-          <Link to="/draw" className="items">Draw!</Link>
+          <Link to="/draw" className="items">Draw</Link>
           <button id="modeswitch" onClick={()=>document.body.classList.toggle("dark-mode")}>
             &#9681;
           </button>
