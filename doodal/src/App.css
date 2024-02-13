@@ -35,6 +35,16 @@ body {
   right:0;
 }
 
+#login {
+  background: inherit;
+  border: none;
+  color: inherit;
+}
+
+#login:hover {
+  color:aqua;
+}
+
 .items {
   margin:40px;
   font-size: 1.5em;
@@ -90,6 +100,7 @@ body {
   border: none;
   font-size: 3em;
   color: red;
+  margin-right: 5%;
 }
 
 #card{
@@ -104,6 +115,11 @@ body {
 .user_info{
   display:flex;
   align-items: center;
+  margin-left:5%;
+}
+
+.name {
+  margin-left:5%;
 }
 
 .gal{
