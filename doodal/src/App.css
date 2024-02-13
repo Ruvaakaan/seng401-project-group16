@@ -9,9 +9,9 @@
 
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Times New Roman', sans-serif;
   background-color: #e6e6e6;
-  color: black;
+  color: black; 
 }
 
 .dark-mode {
@@ -42,6 +42,10 @@ body {
   color: inherit;
 }
 
+.items:hover {
+  color: aqua;
+}
+
 #modeswitch {
     background: inherit;
     border: none;
@@ -49,6 +53,10 @@ body {
     color: inherit;
     height: 110px;
     width: 60px;
+}
+
+#modeswitch:hover {
+  color: aqua;
 }
 
 #doodal {
@@ -77,18 +85,46 @@ body {
   flex:1;
 }
 
-#like {
-  background: red;
-    border: none;
-    font-size: 3em;
-    color: inherit;
+.like {
+  background-color: transparent;
+  border: none;
+  font-size: 3em;
+  color: red;
 }
 
-#car {
-  background-color: transparent;
+#card{
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  background-color: gray;
+  color: white;
   padding:0;
 }
 
-.tmp {
-  background-color: gray;
+.user_info{
+  display:flex;
+  align-items: center;
+}
+
+.gal{
+  margin-left: 1%;
+  margin-right: 1%;
+}
+
+.filter-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  font-size: 1.1em;
+  justify-content: center;
+}
+
+.filter-item {
+  margin-bottom: 5px;
+  margin-left: 10%;
+}
+
+.filter-item:hover {
+  color: #007bff;
 }
