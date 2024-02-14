@@ -11,9 +11,20 @@ function Account() {
         username: "example_user",
         email: "example@example.com",
         bio: "Bio here",
-        level: 5, 
-        exp: 50,
+        exp: 550,
     });
+
+    //Calculate the level based on experience points
+    function calculateLevel(exp) {
+        let level = 1;
+        let expNeeded = 100;
+    
+        while (exp >= expNeeded) {
+            level++;
+            expNeeded += level * 100;
+        }
+        return level;
+    }
 
     //Settings state
     const [isBioOpen, setIsBioOpen] = useState(false);
@@ -27,6 +38,45 @@ function Account() {
         }));
         setIsBioOpen(false);
     }
+
+    // useEffect(() => {
+    //     async function fetchUserData() {
+    //         try {
+    //             const response = await fetch('endpoint here');
+    //             if (response.ok) {
+    //                 const userData = await response.json();
+    //                 setUser(userData);
+    //             } else {
+    //                 console.error('Failed to fetch user data');
+    //             }
+    //         } catch (error) {
+    //             console.error('Error fetching user data:', error);
+    //         }
+    //     }
+    //     fetchUserData();
+    // }, []);
+
+    // async function updateUser(updateData) {
+    //     try {
+    //         const response = await fetch('endpoint here', {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify(updateData)
+    //         });
+    //         if (response.ok) {
+    //             setUser(prevUser => ({
+    //                 ...prevUser,
+    //                 ...updateData
+    //             }));
+    //         } else {
+    //             console.error('Failed to update user data');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error updating user data:', error);
+    //     }
+    // }
 
     //Function to update username
     function updateUsername(newUsername) {
@@ -48,11 +98,11 @@ function Account() {
                     </span>
                 </h2>
                 <div className="exp-bar">
-                    <h2>Level {user.level}</h2>
+                    <h2>Level {(calculateLevel(user.exp))}</h2>
                     <div className="exp-progress">
-                        <div className="exp-fill" style={{ width: `${(user.exp / 100) * 100}%` }}></div>
+                        <div className="exp-fill" style={{ width: `${(user.exp % (calculateLevel(user.exp)* 100)) / (calculateLevel(user.exp) * 100) * 100}%` }}></div>
                     </div>
-                    <p>{user.exp} / 100 EXP</p>
+                    <p>{user.exp % (calculateLevel(user.exp)* 100)} / {(calculateLevel(user.exp) * 100)} EXP</p>
                 </div>
                 <h2>
                     Bio 
@@ -71,7 +121,6 @@ function Account() {
                 onClose={() => setIsBioOpen(false)}
                 onUpdate={updateBio}
             />
-
 
             <User
                 isOpen={isUserOpen}

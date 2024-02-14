@@ -1,9 +1,7 @@
-
 .account-container {
     display: flex;
     padding: 20px;
 }
-
 
 .user-info {
     flex: 1;
@@ -17,7 +15,6 @@
     text-align: center; 
     word-wrap: break-word; 
 }
-
 
 .profile-picture {
     width: 100px; 
@@ -50,18 +47,19 @@
     border-radius: 5px;
     text-align: center;
 }
+
 .exp-progress {
     background-color: #ccc;
     height: 20px;
     border-radius: 5px;
     overflow: hidden;
-  }
-  
-  .exp-fill {
+}
+
+.exp-fill {
     background-color: #4caf50; 
     height: 100%;
     transition: width 0.3s ease; 
-  }
+}
 
 .exp-bar h2 {
     color: #222831; 
@@ -74,16 +72,35 @@
     background-color: #eeeeee; 
     border-radius: 5px;
 }
+
 .edit-icon {
     font-family: 'Font Awesome 5 Free'; 
     font-size: 14px;
     cursor: pointer;
     margin-left: 5px; 
 }
+
 .edit-icon:hover {
     color: lightblue; 
 }
-.dark-mode {
+
+.dark-mode .account-container {
     background-color: #1C1C1C;
     color: white;
-  }
+}
+
+.dark-mode .user-info {
+    background-color: #333;
+    color: white;
+    
+}
+
+.dark-mode .exp-bar,
+.dark-mode .image-gallery {
+    background-color: #333;
+    color: white;
+}
+
+.dark-mode h2 {
+    color: white;
+}

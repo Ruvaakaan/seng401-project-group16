@@ -1,4 +1,3 @@
-
 .settings-overlay {
     position: fixed;
     top: 0;
@@ -10,7 +9,6 @@
     justify-content: center;
     align-items: center;
 }
-
 
 .settings-content {
     background-color: #fff;
@@ -28,7 +26,6 @@
     border: 1px solid #ccc;
 }
 
-
 .settings-content button {
     background-color: #4ecca3; 
     color: #fff; 
@@ -38,4 +35,25 @@
 
 .settings-content button:hover {
     background-color: #47b78a; 
+}
+
+/* Dark Mode Styles */
+.dark-mode .settings-overlay {
+    background-color: rgba(0, 0, 0, 0.8); /* Darken overlay */
+}
+
+.dark-mode .settings-content {
+    background-color: #333; /* Dark background color */
+    color: #fff; /* Light text color */
+}
+
+.dark-mode .settings-content input,
+.dark-mode .settings-content button {
+    border-color: #666; /* Dark border color */
+    background-color: #444; /* Dark background color for input and button */
+    color: #fff; /* Light text color */
+}
+
+.dark-mode .settings-content button:hover {
+    background-color: #666; /* Dark hover color for button */
 }
