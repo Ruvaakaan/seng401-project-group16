@@ -1,15 +1,23 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function NavBar() {
   const [logged, setLogged] = useState(false);
 
-  function loginuser() {
-    // empty for now until cognito is figured out
-    // temp code
+  const location = useLocation();
 
-    setLogged(true);
-  }
+  useEffect(() => {
+    const {hash} = location;
+    const urlParams = new URLSearchParams(hash);
+
+    const accessToken = urlParams.get('access_token');
+
+    if (accessToken) {
+      // console.log('Access Token:', accessToken);
+      setLogged(true);
+    }
+    
+  }, [location]);
 
   return (
     <>
@@ -38,7 +46,12 @@ function NavBar() {
               <img src="" alt="Profile"></img>
             </Link>
           ) : (
-            <button id="login" className="items" onClick={()=>loginuser()}>Login</button>
+            <Link
+              to="https://doodal.auth.us-west-2.amazoncognito.com/login?client_id=6c1og3jvcp62aqmkhjcgkjkvgq&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F"
+              className="items"
+            >
+              Login
+            </Link>
           )}
         </div>
       </div>
