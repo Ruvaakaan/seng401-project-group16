@@ -25,7 +25,7 @@ function NavBar() {
         <div className="logos">
           <img src="octopus.PNG" alt="logo" width={150}></img>
           <Link to="/home">
-            <img src="doodal.PNG" alt="doodal" width={275} id="doodal"></img>
+            <img src="doodalnew.PNG" alt="doodal" width={275} id="doodal"></img>
           </Link>
         </div>
         <div className="nav">
