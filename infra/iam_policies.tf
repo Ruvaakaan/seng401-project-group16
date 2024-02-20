@@ -72,8 +72,8 @@ resource "aws_iam_policy" "get_user_info_policy" {
 EOF
 }
 
-resource "aws_iam_policy" "post_drawing_policy" {
-  name        = "lambda-logging-${local.post_drawing_funct}"
+resource "aws_iam_policy" "get_drawings_policy" {
+  name        = "lambda-logging-${local.get_drawings_funct}"
   description = "IAM policy for logging from a lambda"
 
   policy = <<EOF
@@ -81,26 +81,37 @@ resource "aws_iam_policy" "post_drawing_policy" {
   "Version": "2012-10-17",
   "Statement": [
     {
+      "Effect": "Allow",
       "Action": [
         "logs:CreateLogGroup",
         "logs:CreateLogStream",
-        "logs:PutLogEvents",
-        "ssm:GetParameters",
-        "ssm:GetParameter",
-        "ssm:PutParameter"
+        "logs:PutLogEvents"
       ],
-      "Resource": [
-        "arn:aws:logs:*:*:*"
+      "Resource": "arn:aws:logs:*:*:*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
       ],
-      "Effect": "Allow"
+      "Resource": "arn:aws:s3:::doodals-bucket-seng401/*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": "arn:aws:s3:::doodals-bucket-seng401"
     }
   ]
 }
 EOF
 }
 
-resource "aws_iam_policy" "un_like_drawing_policy" {
-  name        = "lambda-logging-${local.un_like_drawing_funct}"
+
+resource "aws_iam_policy" "put_drawing_policy" {
+  name        = "lambda-logging-${local.put_drawing_funct}"
   description = "IAM policy for logging from a lambda"
 
   policy = <<EOF
@@ -114,10 +125,12 @@ resource "aws_iam_policy" "un_like_drawing_policy" {
         "logs:PutLogEvents",
         "ssm:GetParameters",
         "ssm:GetParameter",
-        "ssm:PutParameter"
+        "ssm:PutParameter",
+        "s3:PutObject"
       ],
       "Resource": [
-        "arn:aws:logs:*:*:*"
+        "arn:aws:logs:*:*:*",
+        "arn:aws:s3:::doodals-bucket-seng401/*"
       ],
       "Effect": "Allow"
     }
@@ -139,13 +152,13 @@ resource "aws_iam_role_policy_attachment" "get_user_info_logs" {
   policy_arn = aws_iam_policy.get_user_info_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "post_drawing_logs" {
-  role       = aws_iam_role.post_drawing_iam.name
-  policy_arn = aws_iam_policy.post_drawing_policy.arn
+resource "aws_iam_role_policy_attachment" "get_drawings_logs" {
+  role       = aws_iam_role.get_drawings_iam.name
+  policy_arn = aws_iam_policy.get_drawings_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "un_like_drawing_logs" {
-  role       = aws_iam_role.un_like_drawing_iam.name
-  policy_arn = aws_iam_policy.un_like_drawing_policy.arn
+resource "aws_iam_role_policy_attachment" "put_drawing_logs" {
+  role       = aws_iam_role.put_drawing_iam.name
+  policy_arn = aws_iam_policy.put_drawing_policy.arn
 }
 # ...

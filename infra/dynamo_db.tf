@@ -26,4 +26,32 @@ resource "aws_dynamodb_table" "doodal-drawings" {
     type = "S"
   }
 }
+
+resource "aws_dynamodb_table" "doodal-likes" {
+  name         = "doodal-likes"
+  billing_mode = "PROVISIONED"
+  hash_key     = "UserID"
+
+  read_capacity  = 1
+  write_capacity = 1
+
+  attribute {
+    name = "UserID"
+    type = "S"
+  }
+}
+
+resource "aws_dynamodb_table" "doodal-comments" {
+  name         = "doodal-comments"
+  billing_mode = "PROVISIONED"
+  hash_key     = "UserID"
+
+  read_capacity  = 1
+  write_capacity = 1
+
+  attribute {
+    name = "UserID"
+    type = "S"
+  }
+}
 # ...
