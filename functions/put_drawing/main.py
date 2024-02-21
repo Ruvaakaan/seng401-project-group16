@@ -2,13 +2,16 @@ import boto3
 import json
 import base64
 
+s3 = boto3.client("s3")
+dynamodb_resource = boto3.client("dynamodb")
+table = dynamodb_resource.Table('doodal-users')
+
 def put_drawing(event, context):
   body = json.loads(event["body"])
   competition_id = body["competition_id"]
   drawing_id = body["drawing_id"]
   image_data = base64.b64decode(body["image_data"])
 
-  s3 = boto3.client("s3")
   file_name = f"{competition_id}/{drawing_id}.jpg"
   
   try:
