@@ -138,6 +138,41 @@ resource "aws_iam_policy" "put_drawing_policy" {
 }
 EOF
 }
+
+resource "aws_iam_policy" "like_unlike_policy" {
+  name        = "lambda-logging-${local.like_unlike_funct}"
+  description = "IAM policy for logging from a lambda"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:PartiQLSelect",
+        "dynamodb:PartiQLDelete"
+      ],
+      "Resource": [
+        "arn:aws:logs:*:*:*",
+        "${aws_dynamodb_table.doodal-drawings.arn}",
+        "${aws_dynamodb_table.doodal-likes.arn}"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
 # ...
 
 # policy attachments
@@ -160,5 +195,10 @@ resource "aws_iam_role_policy_attachment" "get_drawings_logs" {
 resource "aws_iam_role_policy_attachment" "put_drawing_logs" {
   role       = aws_iam_role.put_drawing_iam.name
   policy_arn = aws_iam_policy.put_drawing_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "like_unlike_logs" {
+  role       = aws_iam_role.like_unlike_iam.name
+  policy_arn = aws_iam_policy.like_unlike_policy.arn
 }
 # ...
