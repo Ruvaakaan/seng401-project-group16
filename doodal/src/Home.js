@@ -60,7 +60,7 @@ function Home() {
       >
         {pastComp.map((item, index) => (
           <SwiperSlide key={index}>
-            <img src="doodal.PNG" width={550} />
+            <img src="doodalnew.PNG" width={550} />
           </SwiperSlide> // temp image, item should hold the image so use {item}
         ))}
       </Swiper>

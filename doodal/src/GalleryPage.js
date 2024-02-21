@@ -37,7 +37,7 @@ function GalleryPage() {
           {posts.map((val, idx) => (
             <Col key={idx}>
               <Card>
-                <Card.Img variant="top" src="doodal.PNG" />
+                <Card.Img variant="top" src="doodalnew.PNG" />
                 <Card.Body id="card">
                   <div className="user_info">
                     <img src="octopus.PNG" width={60} />
