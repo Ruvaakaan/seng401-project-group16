@@ -1,23 +1,7 @@
-import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 
-function NavBar() {
-  const [logged, setLogged] = useState(false);
-
-  const location = useLocation();
-
-  useEffect(() => {
-    const {hash} = location;
-    const urlParams = new URLSearchParams(hash);
-
-    const accessToken = urlParams.get('access_token');
-
-    if (accessToken) {
-      // console.log('Access Token:', accessToken);
-      setLogged(true);
-    }
-    
-  }, [location]);
+function NavBar({authenticationToken}) {
 
   return (
     <>
@@ -41,7 +25,7 @@ function NavBar() {
           >
             &#9681;
           </button>
-          {logged ? (
+          {authenticationToken !== null ? (
             <Link to="/profile" className="items">
               <img src="" alt="Profile"></img>
             </Link>
