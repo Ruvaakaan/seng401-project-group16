@@ -4,8 +4,8 @@ import base64
 
 def put_drawing(event, context):
   body = json.loads(event["body"])
-  competition_id = body["competitionID"]
-  drawing_id = body["drawingID"]
+  competition_id = body["competition_id"]
+  drawing_id = body["drawing_id"]
   image_data = base64.b64decode(body["image_data"])
 
   s3 = boto3.client("s3")
