@@ -15,20 +15,20 @@ data "archive_file" "get_user_info_archive" {
   output_path = local.get_user_info_artifact
 }
 
-data "archive_file" "post_drawing_archive" {
+data "archive_file" "get_drawings_archive" {
   type = "zip"
   # this file (main.py) needs to exist in the same folder as this 
   # Terraform configuration file
-  source_dir  = "../functions/post_drawing"
-  output_path = local.post_drawing_artifact
+  source_dir  = "../functions/get_drawings"
+  output_path = local.get_drawings_artifact
 }
 
-data "archive_file" "un_like_drawing_archive" {
+data "archive_file" "put_drawing_archive" {
   type = "zip"
   # this file (main.py) needs to exist in the same folder as this 
   # Terraform configuration file
-  source_dir  = "../functions/un_like_drawing"
-  output_path = local.un_like_drawing_artifact
+  source_dir  = "../functions/put_drawing"
+  output_path = local.put_drawing_artifact
 }
 # ...
 
@@ -57,24 +57,24 @@ resource "aws_lambda_function" "get_user_info_lambda" {
   runtime = "python3.9"
 }
 
-resource "aws_lambda_function" "post_drawing_lambda" {
-  role             = aws_iam_role.post_drawing_iam.arn
-  function_name    = local.post_drawing_funct
-  handler          = local.post_drawing_handler
-  filename         = local.post_drawing_artifact
-  source_code_hash = data.archive_file.post_drawing_archive.output_base64sha256
+resource "aws_lambda_function" "get_drawings_lambda" {
+  role             = aws_iam_role.get_drawings_iam.arn
+  function_name    = local.get_drawings_funct
+  handler          = local.get_drawings_handler
+  filename         = local.get_drawings_artifact
+  source_code_hash = data.archive_file.get_drawings_archive.output_base64sha256
   timeout          = 20
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
   runtime = "python3.9"
 }
 
-resource "aws_lambda_function" "un_like_drawing_lambda" {
-  role             = aws_iam_role.un_like_drawing_iam.arn
-  function_name    = local.un_like_drawing_funct
-  handler          = local.un_like_drawing_handler
-  filename         = local.un_like_drawing_artifact
-  source_code_hash = data.archive_file.un_like_drawing_archive.output_base64sha256
+resource "aws_lambda_function" "put_drawing_lambda" {
+  role             = aws_iam_role.put_drawing_iam.arn
+  function_name    = local.put_drawing_funct
+  handler          = local.put_drawing_handler
+  filename         = local.put_drawing_artifact
+  source_code_hash = data.archive_file.put_drawing_archive.output_base64sha256
   timeout          = 20
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
@@ -110,8 +110,8 @@ resource "aws_lambda_function_url" "get_user_info_url" {
   }
 }
 
-resource "aws_lambda_function_url" "post_drawing_url" {
-  function_name      = aws_lambda_function.post_drawing_lambda.function_name
+resource "aws_lambda_function_url" "get_drawings_url" {
+  function_name      = aws_lambda_function.get_drawings_lambda.function_name
   authorization_type = "NONE"
 
   cors {
@@ -123,8 +123,8 @@ resource "aws_lambda_function_url" "post_drawing_url" {
   }
 }
 
-resource "aws_lambda_function_url" "un_like_drawing_url" {
-  function_name      = aws_lambda_function.un_like_drawing_lambda.function_name
+resource "aws_lambda_function_url" "put_drawing_url" {
+  function_name      = aws_lambda_function.put_drawing_lambda.function_name
   authorization_type = "NONE"
 
   cors {
