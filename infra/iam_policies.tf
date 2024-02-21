@@ -1,4 +1,4 @@
-# iam policies
+# iam policies for lambdas
 resource "aws_iam_policy" "create_user_policy" {
   name        = "lambda-logging-${local.create_user_funct}"
   description = "IAM policy for logging from a lambda"

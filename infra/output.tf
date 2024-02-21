@@ -15,3 +15,4 @@ output "api_gateway_urls" {
     aws_apigatewayv2_stage.dev_create_user_stage.invoke_url
   ]
 }
+

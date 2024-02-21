@@ -22,8 +22,9 @@ def get_competition_images(competition_id):
 def get_drawings(event, context):
   try:
     body = json.loads(event["body"])
-    competition_id = body["competitionID"]
-    drawing_id = body.get("drawingID") 
+    print(body)
+    competition_id = body["competition_id"]
+    drawing_id = body.get("drawing_id") 
   except KeyError:
     drawing_id = None
 
