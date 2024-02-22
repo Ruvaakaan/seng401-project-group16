@@ -54,4 +54,18 @@ resource "aws_dynamodb_table" "doodal-comments" {
     type = "S"
   }
 }
+
+resource "aws_dynamodb_table" "doodal-prompts" {
+  name         = "doodal-prompts"
+  billing_mode = "PROVISIONED"
+  hash_key     = "competition_id"
+
+  read_capacity  = 1
+  write_capacity = 1
+
+  attribute {
+    name = "competition_id"
+    type = "S"
+  }
+}
 # ...

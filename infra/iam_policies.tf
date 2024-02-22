@@ -173,6 +173,43 @@ resource "aws_iam_policy" "like_unlike_policy" {
 }
 EOF
 }
+
+resource "aws_iam_policy" "create_prompt_policy" {
+  name        = "lambda-logging-${local.create_prompt_funct}"
+  description = "IAM policy for logging from a lambda"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "ssm:GetParameters",
+        "ssm:GetParameter",
+        "ssm:PutParameter",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:PartiQLSelect"
+      ],
+      "Resource": [
+        "arn:aws:logs:*:*:*",
+        "${aws_dynamodb_table.doodal-prompts.arn}"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
 # ...
 
 # policy attachments
@@ -200,5 +237,10 @@ resource "aws_iam_role_policy_attachment" "put_drawing_logs" {
 resource "aws_iam_role_policy_attachment" "like_unlike_logs" {
   role       = aws_iam_role.like_unlike_iam.name
   policy_arn = aws_iam_policy.like_unlike_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "create_prompt_logs" {
+  role       = aws_iam_role.create_prompt_iam.name
+  policy_arn = aws_iam_policy.create_prompt_policy.arn
 }
 # ...

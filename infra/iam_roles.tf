@@ -93,4 +93,23 @@ resource "aws_iam_role" "like_unlike_iam" {
 }
 EOF
 }
+
+resource "aws_iam_role" "create_prompt_iam" {
+  name               = "iam-for-lambda-${local.create_prompt_funct}"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
 # ...
