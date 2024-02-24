@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import Bio from './Bio.js'; 
 import User from './User.js'; 
 import './Account.css'; 
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
-function Account() {
+function Account({authenticationToken}) { // Receive authenticationToken as a prop
     //User state
     const [user, setUser] = useState({
         username: "example_user",
@@ -39,45 +39,43 @@ function Account() {
         setIsBioOpen(false);
     }
 
-    // useEffect(() => {
-    //     async function fetchUserData() {
-    //         try {
-    //             const response = await fetch('endpoint here');
-    //             if (response.ok) {
-    //                 const userData = await response.json();
-    //                 setUser(userData);
-    //             } else {
-    //                 console.error('Failed to fetch user data');
-    //             }
-    //         } catch (error) {
-    //             console.error('Error fetching user data:', error);
-    //         }
-    //     }
-    //     fetchUserData();
-    // }, []);
-
-    // async function updateUser(updateData) {
-    //     try {
-    //         const response = await fetch('endpoint here', {
-    //             method: 'PUT',
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             body: JSON.stringify(updateData)
-    //         });
-    //         if (response.ok) {
-    //             setUser(prevUser => ({
-    //                 ...prevUser,
-    //                 ...updateData
-    //             }));
-    //         } else {
-    //             console.error('Failed to update user data');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error updating user data:', error);
-    //     }
-    // }
-
+    useEffect(() => {
+        async function fetchUserData() {
+            try {
+                console.log("Authentication Token:", authenticationToken); // Access authenticationToken directly
+                if (!authenticationToken) {
+                    console.error('Authentication token is missing');
+                    return;
+                }
+    
+                const response = await fetch('https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/getdata', {
+                    headers: {
+                        Authorization: authenticationToken
+                    }
+                });
+    
+                // Check if the response status is 0, indicating that it's a CORS preflight request
+                if (response.status === 0) {
+                    console.log('CORS preflight request');
+                    return;
+                }
+    
+                // If the response status is not 0, proceed with handling the response
+                if (response.ok) {
+                    const userData = await response.json();
+                    setUser(userData);
+                } else {
+                    console.error('Failed to fetch user data');
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        }
+    
+        fetchUserData();
+    }, [authenticationToken]); // Add authenticationToken as a dependency
+    
+    
     //Function to update username
     function updateUsername(newUsername) {
         setUser(prevUser => ({
