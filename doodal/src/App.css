@@ -9,7 +9,6 @@
 
 body {
   margin: 0;
-  font-family: 'Times New Roman', sans-serif;
   background-color: #e6e6e6;
   color: black; 
 }
@@ -44,7 +43,7 @@ body {
 }
 
 .items:hover {
-  color: aqua;
+  color: purple;
 }
 
 #modeswitch {
@@ -66,6 +65,8 @@ body {
   left: 0;
   right: 0;
   margin: auto;
+  margin-top:0.2%;
+
 }
 
 .prompt-display{
@@ -99,6 +100,7 @@ body {
 }
 
 .prompt-title {
+  padding: 0.5%;
 }
 
 .prev-prompt{
@@ -110,6 +112,8 @@ body {
 .entry-button {
   margin-left:10%;
   color: inherit;
+  height: 80%;
+  align-self: center;
 }
 
 .home-imgs{
@@ -123,6 +127,17 @@ body {
   font-size: 3em;
   color: red;
   margin-right: 5%;
+}
+
+.gallery-banner{
+  background-color: #D9D9D9;
+  margin-bottom: 1%;
+}
+
+.gallery-title {
+  padding: 0.5%;
+  color:black;
+  font-size: 2.5em;
 }
 
 #card{
@@ -154,15 +169,18 @@ body {
   padding: 0;
   margin: 0;
   display: flex;
-  font-size: 1.1em;
+  font-size: 1.2em;
   justify-content: center;
+  color:black;
 }
 
 .filter-item {
   margin-bottom: 5px;
   margin-left: 10%;
+  color: black;
 }
 
 .filter-item:hover {
-  color: #007bff;
+  color: purple;
+  cursor: pointer;
 }
