@@ -3,8 +3,6 @@ import json
 import base64
 
 s3 = boto3.client("s3")
-dynamodb_resource = boto3.client("dynamodb")
-table = dynamodb_resource.Table('doodal-users')
 
 def put_drawing(event, context):
   body = json.loads(event["body"])
@@ -16,13 +14,11 @@ def put_drawing(event, context):
   
   try:
     s3.put_object(Bucket="doodals-bucket-seng401", Key=file_name, Body=image_data)
-    print(f"Image uploaded to S3 bucket doodals-bucket-seng401 at {file_name}")
     return {
       "statusCode": 200,
       "body": f"Image uploaded to S3 bucket doodals-bucket-seng401 at {file_name}"
     }
   except Exception as e:
-    print(f"Error uploading image: {e}")
     return {
       "statusCode": 500,
       "body": f"Error uploading image: {e}"

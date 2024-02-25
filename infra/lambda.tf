@@ -38,6 +38,14 @@ data "archive_file" "like_unlike_archive" {
   source_dir  = "../functions/like_unlike"
   output_path = local.like_unlike_artifact
 }
+
+data "archive_file" "create_prompt_archive" {
+  type = "zip"
+  # this file (main.py) needs to exist in the same folder as this 
+  # Terraform configuration file
+  source_dir  = "../functions/create_prompt"
+  output_path = local.create_prompt_artifact
+}
 # ...
 
 # create lambda functions
@@ -95,6 +103,18 @@ resource "aws_lambda_function" "like_unlike_lambda" {
   handler          = local.like_unlike_handler
   filename         = local.like_unlike_artifact
   source_code_hash = data.archive_file.like_unlike_archive.output_base64sha256
+  timeout          = 20
+
+  # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
+  runtime = "python3.9"
+}
+
+resource "aws_lambda_function" "create_prompt_lambda" {
+  role             = aws_iam_role.create_prompt_iam.arn
+  function_name    = local.create_prompt_funct
+  handler          = local.create_prompt_handler
+  filename         = local.create_prompt_artifact
+  source_code_hash = data.archive_file.create_prompt_archive.output_base64sha256
   timeout          = 20
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
@@ -158,6 +178,19 @@ resource "aws_lambda_function_url" "put_drawing_url" {
 
 resource "aws_lambda_function_url" "like_unlike_url" {
   function_name      = aws_lambda_function.like_unlike_lambda.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["POST"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+resource "aws_lambda_function_url" "create_prompt_url" {
+  function_name      = aws_lambda_function.create_prompt_lambda.function_name
   authorization_type = "NONE"
 
   cors {
