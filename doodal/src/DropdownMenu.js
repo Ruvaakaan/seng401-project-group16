@@ -13,12 +13,17 @@ function DropdownMenu() {
   return (
     <>
       <ul className="drop-menu">
-        <li>
+      <hr class="breakline"></hr>
+        <li className="drop-items">
           <Link to="/profile" className="drop-items">
-            <img src="" alt="Profile"></img>
+            <i class="fa-solid fa-user drop-icons"></i> Profile
           </Link>
         </li>
-        <li onClick={() => handleLogOut()} className="drop-items">Logout</li>
+        <hr class="breakline"></hr>
+        <li onClick={() => handleLogOut()} className="drop-items">
+          <i class="drop-icons fa-solid fa-right-from-bracket"></i> Logout
+        </li>
+        <hr class="breakline"></hr>
         <li>
           <button
             id="modeswitch"
