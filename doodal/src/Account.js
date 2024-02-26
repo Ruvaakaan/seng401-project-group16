@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Bio from "./Bio.js";
-import User from "./User.js";
+import ProfilePicture from "./ProfilePicture.js";
+import Card from "react-bootstrap/Card";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 import "./Account.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Cookies from "js-cookie";
@@ -14,6 +17,8 @@ function Account() {
     bio: "Bio here",
     exp: 550,
   });
+
+  const [posts, setPosts] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
 
   //Calculate the level based on experience points
   function calculateLevel(exp) {
@@ -29,7 +34,7 @@ function Account() {
 
   //Settings state
   const [isBioOpen, setIsBioOpen] = useState(false);
-  const [isUserOpen, setIsUserOpen] = useState(false);
+  const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
 
   //Function to update user bio
   function updateBio(newBio) {
@@ -39,6 +44,18 @@ function Account() {
     }));
     setIsBioOpen(false);
   }
+
+  // Function to handle editing the profile picture
+  const handleEditProfile = () => {
+    setIsProfilePopupOpen(true);
+  };
+
+  // Function to handle profile picture change
+  const handleProfilePictureChange = (file) => {
+    // Perform actions with the selected file, such as updating the profile picture
+    console.log("Selected file:", file);
+    setIsProfilePopupOpen(false);
+  };
 
   useEffect(() => {
     async function fetchUserData() {
@@ -69,6 +86,13 @@ function Account() {
         // If the response status is not 0, proceed with handling the response
         if (response.ok) {
           const userData = await response.json(); // Parse response body as JSON
+          setUser({
+            username: userData.username.S,
+            email: userData.email.S,
+            bio: userData.bio.S, // You may want to set this to a default value or leave it empty initially
+            exp: parseInt(userData.experience.N), // Convert experience to a number
+          });
+  
           console.log(userData); // Log the parsed data to the console
           // Do something with userData, such as updating state
         } else {
@@ -81,28 +105,22 @@ function Account() {
     fetchUserData();
   }, []); // Add authenticationToken as a dependency
 
-  //Function to update username
-  function updateUsername(newUsername) {
-    setUser((prevUser) => ({
-      ...prevUser,
-      username: newUsername || prevUser.username,
-    }));
-    setIsUserOpen(false);
-  }
-
   return (
     <div className="account-container">
       <div className="user-info">
-        <img
-          src="https://i.etsystatic.com/16421349/r/il/c49bf5/2978449787/il_fullxfull.2978449787_hgl5.jpg"
-          alt="Profile"
-          className="profile-picture"
-        />
+        <div className="profile-picture-container">
+            <img
+                src="https://i.etsystatic.com/16421349/r/il/c49bf5/2978449787/il_fullxfull.2978449787_hgl5.jpg"
+                alt="Profile"
+                className="profile-picture"
+                onClick={handleEditProfile}
+            />
+            <span className="edit-profile" onClick={handleEditProfile}>
+                <i className="fas fa-edit"></i>Edit
+            </span>
+        </div>
         <h2>
           Hello {user.username}!
-          <span className="edit-icon" onClick={() => setIsUserOpen(true)}>
-            &#xf044;
-          </span>
         </h2>
         <div className="exp-bar">
           <h2>Level {calculateLevel(user.exp)}</h2>
@@ -132,19 +150,31 @@ function Account() {
         <p>{user.bio}</p>
       </div>
 
-      <div className="image-gallery"></div>
+      <div className="image-gallery">
+        <h2>Your Gallery</h2>
+        <Row xs={3} className="g-4">
+          {posts.map((val, idx) => (
+            <Col key={idx}>
+              <Card>
+                <Card.Img variant="top" src="doodalnew.PNG" />
+                <Card.Body id="card"></Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </div>
 
       <Bio
         isOpen={isBioOpen}
         onClose={() => setIsBioOpen(false)}
         onUpdate={updateBio}
       />
-
-      <User
-        isOpen={isUserOpen}
-        onClose={() => setIsUserOpen(false)}
-        onUpdate={updateUsername}
-      />
+      {isProfilePopupOpen && (
+        <ProfilePicture
+          onClose={() => setIsProfilePopupOpen(false)}
+          onProfilePictureChange={handleProfilePictureChange}
+        />
+      )}
     </div>
   );
 }
