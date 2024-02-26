@@ -140,7 +140,6 @@ function Home() {
         handleClose={handleCloseModal}
         selectedImage={selectedImage}
       />      
-
     </>
   );
 }
