@@ -56,7 +56,6 @@ def get_user_info(event, context):
                 "Access-Control-Allow-Headers" : "Content-Type",
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"
-                
             },
             "body": json.dumps(user_info)
         }
