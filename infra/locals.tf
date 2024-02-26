@@ -9,6 +9,7 @@ locals {
   add_comment_funct = "add_comment"
   delete_comment_funct = "delete_comment"
   update_bio_funct = "update_bio"
+  get_prompts_funct = "get_prompts"
   # ...
 
   # handlers
@@ -21,6 +22,7 @@ locals {
   add_comment_handler = "main.add_comment"
   delete_comment_handler = "main.delete_comment"
   update_bio_handler = "main.update_bio"
+  get_prompts_handler = "main.get_prompts"
   # ...
 
   # artifacts
@@ -33,6 +35,7 @@ locals {
   add_comment_artifact = "${local.add_comment_funct}/artifact.zip"
   delete_comment_artifact = "${local.delete_comment_funct}/artifact.zip"
   update_bio_artifact = "${local.update_bio_funct}/artifact.zip"
+  get_prompts_artifact = "${local.get_prompts_funct}/artifact.zip"
   # ...
 
   # lambda urls 
@@ -72,6 +75,10 @@ locals {
     {
       name = "update_bio_url"
       url  = aws_lambda_function_url.update_bio_url.function_url
+    },
+    {
+      name = "get_prompts_url"
+      url  = aws_lambda_function_url.get_prompts_url.function_url
     },
     # ...
   ]

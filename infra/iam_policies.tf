@@ -298,6 +298,43 @@ resource "aws_iam_policy" "update_bio_policy" {
 }
 EOF
 }
+
+resource "aws_iam_policy" "get_prompts_policy" {
+  name        = "lambda-logging-${local.get_prompts_funct}"
+  description = "IAM policy for logging from a lambda"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "ssm:GetParameters",
+        "ssm:GetParameter",
+        "ssm:PutParameter",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:PartiQLSelect"
+      ],
+      "Resource": [
+        "arn:aws:logs:*:*:*",
+        "${aws_dynamodb_table.doodal-users.arn}"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
 # ...
 
 # policy attachments
@@ -345,5 +382,10 @@ resource "aws_iam_role_policy_attachment" "delete_comment_logs" {
 resource "aws_iam_role_policy_attachment" "update_bio_logs" {
   role       = aws_iam_role.update_bio_iam.name
   policy_arn = aws_iam_policy.update_bio_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "get_prompts_logs" {
+  role       = aws_iam_role.get_prompts_iam.name
+  policy_arn = aws_iam_policy.get_prompts_policy.arn
 }
 # ...

@@ -70,6 +70,14 @@ data "archive_file" "update_bio_archive" {
   source_dir  = "../functions/update_bio"
   output_path = local.update_bio_artifact
 }
+
+data "archive_file" "get_prompts_archive" {
+  type = "zip"
+  # this file (main.py) needs to exist in the same folder as this 
+  # Terraform configuration file
+  source_dir  = "../functions/get_prompts"
+  output_path = local.get_prompts_artifact
+}
 # ...
 
 # create lambda functions
@@ -175,6 +183,18 @@ resource "aws_lambda_function" "update_bio_lambda" {
   handler          = local.update_bio_handler
   filename         = local.update_bio_artifact
   source_code_hash = data.archive_file.update_bio_archive.output_base64sha256
+  timeout          = 20
+
+  # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
+  runtime = "python3.9"
+}
+
+resource "aws_lambda_function" "get_prompts_lambda" {
+  role             = aws_iam_role.get_prompts_iam.arn
+  function_name    = local.get_prompts_funct
+  handler          = local.get_prompts_handler
+  filename         = local.get_prompts_artifact
+  source_code_hash = data.archive_file.get_prompts_archive.output_base64sha256
   timeout          = 20
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
@@ -290,6 +310,19 @@ resource "aws_lambda_function_url" "delete_comment_url" {
 
 resource "aws_lambda_function_url" "update_bio_url" {
   function_name      = aws_lambda_function.update_bio_lambda.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["POST"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+resource "aws_lambda_function_url" "get_prompts_url" {
+  function_name      = aws_lambda_function.get_prompts_lambda.function_name
   authorization_type = "NONE"
 
   cors {
