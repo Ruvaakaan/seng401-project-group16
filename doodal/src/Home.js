@@ -69,7 +69,7 @@ function Home() {
             variant="outline-dark"
             className="entry-button"
             onClick={() =>
-              nav("/competition", { state: { additionalProp: prompt } })
+              nav("/gallery", { state: { additionalProp: prompt } })
             }
           >
             View
