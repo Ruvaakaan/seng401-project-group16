@@ -2,7 +2,7 @@ import { Button } from "react-bootstrap";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Home() {
   var prompt = "new";
@@ -10,6 +10,49 @@ function Home() {
 
   const [current, setCurrent] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   const [pastComp, setPastComp] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+  const getPrompts = async () => {
+    // let res = await fetch(``, {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // });
+    // let extracted = await res.json();
+    // { prompt } = extracted // change this
+    // { oldprompt } = extracted // change this
+    console.log("get prompts");
+    getImages();
+  };
+
+  const getImages = async () => {
+
+    // 2 requests to get each set? (previous prompt images and current prompt images)
+
+    // let res = await fetch(``, {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // });
+    // let extracted = await res.json();
+    // setCurrent(extracted);
+
+
+    // let res = await fetch(``, {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // });
+    // let extracted = await res.json();
+    // setPastComp(extracted);
+    console.log("get imgs");
+  };
+
+  useEffect(() => {
+    getPrompts();
+  }, []);
 
   const nav = useNavigate();
   return (
@@ -42,7 +85,7 @@ function Home() {
       >
         {current.map((item, index) => (
           <SwiperSlide key={index}>
-            <img src="octopus.PNG" width={550} className="home-imgs"/>
+            <img src="octopus.PNG" width={550} className="home-imgs" />
           </SwiperSlide> // temp image, item should hold the image so use {item}
         ))}
       </Swiper>
@@ -69,7 +112,7 @@ function Home() {
       >
         {pastComp.map((item, index) => (
           <SwiperSlide key={index}>
-            <img src="doodalnew.PNG" width={550} className="home-imgs"/>
+            <img src="doodalnew.PNG" width={550} className="home-imgs" />
           </SwiperSlide> // temp image, item should hold the image so use {item}
         ))}
       </Swiper>
