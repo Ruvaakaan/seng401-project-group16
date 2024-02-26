@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Popup from "./Popup";
 
 function Home() {
   var prompt = "new";
@@ -55,6 +56,21 @@ function Home() {
   }, []);
 
   const nav = useNavigate();
+
+  // For the Popup //
+  const [showModal, setShowModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleImageClick = (image) => {
+    setSelectedImage(image);
+    setShowModal(true);
+  }
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  }
+
+
   return (
     <>
       <div className="prompt-display">
@@ -85,7 +101,8 @@ function Home() {
       >
         {current.map((item, index) => (
           <SwiperSlide key={index}>
-            <img src="octopus.PNG" width={550} className="home-imgs" />
+            {/* <img src="octopus.PNG" width={550} className="home-imgs" onClick={() => handleImageClick(item)} /> */}
+            <img src="octopus.PNG" width={550} className="home-imgs" onClick={() => handleImageClick(item)} />
           </SwiperSlide> // temp image, item should hold the image so use {item}
         ))}
       </Swiper>
@@ -112,10 +129,18 @@ function Home() {
       >
         {pastComp.map((item, index) => (
           <SwiperSlide key={index}>
-            <img src="doodalnew.PNG" width={550} className="home-imgs" />
+            {/* <img src="doodalnew.PNG" width={550} className="home-imgs" onClick={() => handleImageClick(item)}/> */}
+            <img src="doodalnew.PNG" width={550} className="home-imgs" onClick={() => handleImageClick(item)} />
           </SwiperSlide> // temp image, item should hold the image so use {item}
         ))}
       </Swiper>
+
+      <Popup
+        show={showModal}
+        handleClose={handleCloseModal}
+        selectedImage={selectedImage}
+      />      
+
     </>
   );
 }
