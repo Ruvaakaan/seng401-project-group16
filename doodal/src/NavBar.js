@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 
-function NavBar({authenticationToken}) {
-
+function NavBar({ authenticationToken }) {
   return (
     <>
       <div id="bar">
@@ -13,6 +12,9 @@ function NavBar({authenticationToken}) {
           </Link>
         </div>
         <div className="nav">
+          <Link to="/home" className="items">
+            Home
+          </Link>
           <Link to="/gallery" className="items">
             Gallery
           </Link>
