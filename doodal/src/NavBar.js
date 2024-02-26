@@ -27,7 +27,7 @@ function NavBar({ authenticationToken }) {
           {authenticationToken !== null ? (
             <div className="dropdown-click">
               <div
-                className={isDropdownOpen ? 'profile dropdown-opened' : 'profile'}
+                className={isDropdownOpen ? 'profile dropdown-opened reg-hover' : 'profile reg-hover'}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
                 <img src="" alt="O"></img>

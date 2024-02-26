@@ -47,9 +47,9 @@ function GalleryPage() {
           <li className="filter">
             <b>Filter:</b>
           </li>
-          <li className="filter-item" onClick={()=>callSorter("hot")}>Hot</li>
-          <li className="filter-item"onClick={()=>callSorter("pop")}>Popular</li>
-          <li className="filter-item"onClick={()=>callSorter("new")}>Newest</li>
+          <li className="filter-item reg-hover" onClick={()=>callSorter("hot")}>Hot</li>
+          <li className="filter-item reg-hover"onClick={()=>callSorter("pop")}>Popular</li>
+          <li className="filter-item reg-hover"onClick={()=>callSorter("new")}>Newest</li>
         </ul>
       </div>
     </div>
