@@ -43,6 +43,7 @@ def create_prompt(event, context):
     
     return {
       "statusCode": 200,
+      "headers": {"Content-Type": "application/json"},
       "body": f"Prompt: \"{openai_response}\" with competition_id: {competition_id} generated."
     }
 

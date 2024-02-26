@@ -69,6 +69,7 @@ def like_unlike(event, context):
       
       return {
         "statusCode": 200,
+        "headers": {"Content-Type": "application/json"},
         "body": f"Unliked drawing_id {drawing_id} deincremented to {updated_likes}"
       }
   except Exception as e:

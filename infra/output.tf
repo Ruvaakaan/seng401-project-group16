@@ -11,7 +11,7 @@ output "lambda_names_and_urls" {
 #     aws_lambda_function_url.create_user_url.function_url,
 #     aws_lambda_function_url.get_user_info_url.function_url,
 #     aws_lambda_function_url.get_drawings_url.function_url,
-#     aws_lambda_function_url.put_drawing_url.function_url,
+#     aws_lambda_function_url.upload_drawing_s3_url.function_url,
 #     aws_lambda_function_url.like_unlike_url.function_url,
 #     aws_lambda_function_url.create_prompt_url.function_url,
 #     aws_lambda_function_url.add_comment_url.function_url,
