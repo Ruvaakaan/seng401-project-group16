@@ -4,7 +4,7 @@ import jwt
 from botocore.exceptions import ClientError
 
 # https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/example_dynamodb_Scenario_PartiQLSingle_section.html
-dynamodb_resource = boto3.client("dynamodb")
+dynamodb = boto3.client("dynamodb")
 
 def get_user_info(event, context):
     try:
@@ -36,7 +36,7 @@ def get_user_info(event, context):
         params = [{"S": str(user_id)}]
 
         # Execute the PartiQL query
-        response = dynamodb_resource.execute_statement(
+        response = dynamodb.execute_statement(
             Statement=statement,
             Parameters=params
         )

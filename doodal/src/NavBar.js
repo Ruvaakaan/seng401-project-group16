@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
+import DropdownMenu from "./DropdownMenu";
 
-function NavBar({authenticationToken}) {
+function NavBar({ authenticationToken }) {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
     <>
@@ -13,22 +15,25 @@ function NavBar({authenticationToken}) {
           </Link>
         </div>
         <div className="nav">
+          <Link to="/home" className="items">
+            Home
+          </Link>
           <Link to="/gallery" className="items">
             Gallery
           </Link>
           <Link to="/draw" className="items">
             Draw
           </Link>
-          <button
-            id="modeswitch"
-            onClick={() => document.body.classList.toggle("dark-mode")}
-          >
-            &#9681;
-          </button>
           {authenticationToken !== null ? (
-            <Link to="/profile" className="items">
-              <img src="" alt="Profile"></img>
-            </Link>
+            <div className="dropdown-click">
+              <div
+                className={isDropdownOpen ? 'profile dropdown-opened reg-hover' : 'profile reg-hover'}
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
+                <img src="" alt="O"></img>
+              </div>
+              {isDropdownOpen && <DropdownMenu/>}
+            </div>
           ) : (
             <Link
               to="https://doodal.auth.us-west-2.amazoncognito.com/login?client_id=6c1og3jvcp62aqmkhjcgkjkvgq&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F"

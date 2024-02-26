@@ -19,19 +19,40 @@ function GalleryPage() {
     setUserLikes([...user_likes, val]);
   }
 
+  const callSorter = async (s) => {
+    // const link = "hello/"+s;
+    // console.log(link);
+    // const res = await fetch(
+    //   ``,
+    //   {
+    //     method: "GET",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   }
+    // );
+    // const extracted = await res.json();
+
+    let v = Math.floor(Math.random() * 10);
+    let extracted = new Array(v).fill(1);
+    setPosts(extracted);
+  };
+
   return (
     <>
-      <h1>Gallery {prompt}</h1>
+    <div className="gallery-banner">
+      <h1 className="gallery-title">Gallery {prompt}</h1>
       <div className="filter-options">
         <ul className="filter-list">
           <li className="filter">
             <b>Filter:</b>
           </li>
-          <li className="filter-item">Hot</li>
-          <li className="filter-item">Popular</li>
-          <li className="filter-item">Newest</li>
+          <li className="filter-item reg-hover" onClick={()=>callSorter("hot")}>Hot</li>
+          <li className="filter-item reg-hover"onClick={()=>callSorter("pop")}>Popular</li>
+          <li className="filter-item reg-hover"onClick={()=>callSorter("new")}>Newest</li>
         </ul>
       </div>
+    </div>
       <div className="gal">
         <Row xs={6} className="g-4">
           {posts.map((val, idx) => (

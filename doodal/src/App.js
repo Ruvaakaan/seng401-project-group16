@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "./NavBar";
 import "./App.css";
+import { DarkModeProvider } from './DarkModeContext';
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
@@ -33,12 +34,13 @@ function App() {
   }, []);
 
   return (
+    <DarkModeProvider>
     <div className="App">
       <NavBar authenticationToken={authenticationToken} />
       <div>
         <Outlet />
       </div>
-    </div>
+    </div></DarkModeProvider>
   );
 }
 
