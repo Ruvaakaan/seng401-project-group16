@@ -1,64 +1,53 @@
 import boto3
 import json
+from openai import OpenAI
+import uuid
 
-dynamodb = boto3.client("dynamodb")
+dynamodb = boto3.resource("dynamodb")
+table = dynamodb.Table("doodal-prompts")
+ssm = boto3.client("ssm", "us-west-2")
 
-# get all prompts from prompts table
-def select_prompts(prompt):
-  statement = "SELECT * FROM \"doodal-prompts\" WHERE prompt = ?"
-  params = [{"S": str(prompt)}]
-  response = dynamodb.execute_statement(
-    Statement=statement,
-    Parameters=params
+def get_openai_response():
+
+  response = ssm.get_parameter(
+    Name='doodal_openapi',
+    WithDecryption=True
   )
-  print(f"select_prompts Response: {response}")
-  items = response["Items"]
-  return items
+  openai_api_key = response['Parameter']['Value']
 
-# put new prompt into prompt table
-def put_new_prompt(prompt, competition_id):
-  response = dynamodb.put_item(
-    TableName="doodal-prompts",
-    Item={
-      "competition_id": {"S": str(competition_id)},
-      "prompt": {"S": str(prompt)}
-    }
+  client = OpenAI(api_key=openai_api_key)
+  print(openai_api_key)
+  
+  completion = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[
+      {"role": "system", "content": "You are a helpful assistant."},
+      {"role": "user", "content": "Give me something to draw. Make it at most 10 tokens and at most 5 words. No special characters or numbers. Don't repeat yourself."}
+    ],
+    max_tokens=10,
+    n=1,
+    temperature=0.6
   )
-  return response
+
+  print(completion.choices[0].message.content)
+  return completion.choices[0].message.content
 
 def create_prompt(event, context):
   try:
-    body = json.loads(event["body"])
-    competition_id = body["competition_id"]
-    prompt = body["prompt"]
+    openai_response = get_openai_response()
+    competition_id = str(uuid.uuid4())
+    table.put_item(Item={
+      "competition_id": competition_id,
+      "prompt": openai_response
+    })
     
-    if not prompt.isalpha():
-      return {
-      "statusCode": 400,
-      "body": "Error: Invalid prompt."
+    return {
+      "statusCode": 200,
+      "body": f"Prompt: \"{openai_response}\" with competition_id: {competition_id} generated."
     }
-    items = select_prompts(prompt)
-    
-    if not items:
-      response = put_new_prompt(prompt, competition_id)
-      return {
-        "statusCode": 200,
-        "body": f"{response}"
-      }
-    else:
-      return {
-        "statusCode": 400,
-        "body": f"Error: Prompt ({prompt}) already exists."
-      }
+
   except Exception as e:
     return {
       "statusCode": 500,
-      "body": f"Error: Internal server error: {e}."
+      "body": str(e)
     }
-    
-  
-  
-
-
-  
-

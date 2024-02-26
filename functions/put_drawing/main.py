@@ -11,7 +11,7 @@ def put_drawing(event, context):
   image_data = base64.b64decode(body["image_data"])
 
   file_name = f"{competition_id}/{drawing_id}.jpg"
-  
+
   try:
     s3.put_object(Bucket="doodals-bucket-seng401", Key=file_name, Body=image_data)
     return {

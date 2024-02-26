@@ -3,7 +3,6 @@ import json
 
 dynamodb_client = boto3.client("dynamodb")
 
-
 def update_drawing_likes(drawing_id, like_val):
   response = dynamodb_client.update_item(
     TableName="doodal-drawings",
