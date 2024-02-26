@@ -61,7 +61,7 @@ function Home() {
   return (
     <>
       <div className="prompt-display">
-        <img src={isDarkMode ? 'blurbanner.png' : 'blurbannerdark.png'} className="banner"></img>
+        <img src={isDarkMode ? 'blurbannerdark.png' : 'blurbanner.png'} className="banner"></img>
         <h1 className="memo-banner">
           Welcome to DOODAL! Participate in daily art challenges and share your
           art with others!
