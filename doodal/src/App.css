@@ -46,19 +46,6 @@ body {
   color: purple;
 }
 
-#modeswitch {
-    background: inherit;
-    border: none;
-    font-size: 2em;
-    color: inherit;
-    height: 110px;
-    width: 60px;
-}
-
-#modeswitch:hover {
-  color: aqua;
-}
-
 #doodal {
   position: absolute;
   top: 0;
@@ -183,4 +170,43 @@ body {
 .filter-item:hover {
   color: purple;
   cursor: pointer;
+}
+
+.dropdown {
+  position: absolute;
+  z-index: 1000;
+}
+
+.drop-menu {
+  background-color: red;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  font-size: 1.2em;
+  justify-content: center;
+}
+
+.drop-items {
+  text-decoration: none;
+  color: inherit;
+}
+
+.drop-items:hover{
+  color: purple;
+  cursor: pointer;
+}
+
+#modeswitch {
+  background: inherit;
+  border: none;
+  color: inherit;
+  margin-top:0;
+}
+
+#modeswitch:hover {
+  color: purple;
+}
+
+.dropdown-opened {
+  background-color: red;
 }
