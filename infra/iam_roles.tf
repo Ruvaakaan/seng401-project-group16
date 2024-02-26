@@ -56,8 +56,8 @@ resource "aws_iam_role" "get_drawings_iam" {
 EOF
 }
 
-resource "aws_iam_role" "put_drawing_iam" {
-  name               = "iam-for-lambda-${local.put_drawing_funct}"
+resource "aws_iam_role" "upload_drawing_iam" {
+  name               = "iam-for-lambda-${local.upload_drawing_funct}"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -172,6 +172,25 @@ EOF
 
 resource "aws_iam_role" "get_prompts_iam" {
   name               = "iam-for-lambda-${local.get_prompts_funct}"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role" "get_prompt_iam" {
+  name               = "iam-for-lambda-${local.get_prompt_funct}"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",

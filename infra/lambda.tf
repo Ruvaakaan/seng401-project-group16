@@ -23,12 +23,12 @@ data "archive_file" "get_drawings_archive" {
   output_path = local.get_drawings_artifact
 }
 
-data "archive_file" "put_drawing_archive" {
+data "archive_file" "upload_drawing_archive" {
   type = "zip"
   # this file (main.py) needs to exist in the same folder as this 
   # Terraform configuration file
-  source_dir  = "../functions/put_drawing"
-  output_path = local.put_drawing_artifact
+  source_dir  = "../functions/upload_drawing"
+  output_path = local.upload_drawing_artifact
 }
 
 data "archive_file" "like_unlike_archive" {
@@ -78,6 +78,14 @@ data "archive_file" "get_prompts_archive" {
   source_dir  = "../functions/get_prompts"
   output_path = local.get_prompts_artifact
 }
+
+data "archive_file" "get_prompt_archive" {
+  type = "zip"
+  # this file (main.py) needs to exist in the same folder as this 
+  # Terraform configuration file
+  source_dir  = "../functions/get_prompt"
+  output_path = local.get_prompt_artifact
+}
 # ...
 
 # create lambda functions
@@ -117,12 +125,12 @@ resource "aws_lambda_function" "get_drawings_lambda" {
   runtime = "python3.9"
 }
 
-resource "aws_lambda_function" "put_drawing_lambda" {
-  role             = aws_iam_role.put_drawing_iam.arn
-  function_name    = local.put_drawing_funct
-  handler          = local.put_drawing_handler
-  filename         = local.put_drawing_artifact
-  source_code_hash = data.archive_file.put_drawing_archive.output_base64sha256
+resource "aws_lambda_function" "upload_drawing_lambda" {
+  role             = aws_iam_role.upload_drawing_iam.arn
+  function_name    = local.upload_drawing_funct
+  handler          = local.upload_drawing_handler
+  filename         = local.upload_drawing_artifact
+  source_code_hash = data.archive_file.upload_drawing_archive.output_base64sha256
   timeout          = 20
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
@@ -200,6 +208,18 @@ resource "aws_lambda_function" "get_prompts_lambda" {
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
   runtime = "python3.9"
 }
+
+resource "aws_lambda_function" "get_prompt_lambda" {
+  role             = aws_iam_role.get_prompt_iam.arn
+  function_name    = local.get_prompt_funct
+  handler          = local.get_prompt_handler
+  filename         = local.get_prompt_artifact
+  source_code_hash = data.archive_file.get_prompt_archive.output_base64sha256
+  timeout          = 20
+
+  # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
+  runtime = "python3.9"
+}
 # ...
 
 # lambda function urls 
@@ -243,8 +263,8 @@ resource "aws_lambda_function_url" "get_drawings_url" {
   }
 }
 
-resource "aws_lambda_function_url" "put_drawing_url" {
-  function_name      = aws_lambda_function.put_drawing_lambda.function_name
+resource "aws_lambda_function_url" "upload_drawing_url" {
+  function_name      = aws_lambda_function.upload_drawing_lambda.function_name
   authorization_type = "NONE"
 
   cors {
@@ -323,6 +343,19 @@ resource "aws_lambda_function_url" "update_bio_url" {
 
 resource "aws_lambda_function_url" "get_prompts_url" {
   function_name      = aws_lambda_function.get_prompts_lambda.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["POST"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+resource "aws_lambda_function_url" "get_prompt_url" {
+  function_name      = aws_lambda_function.get_prompt_lambda.function_name
   authorization_type = "NONE"
 
   cors {

@@ -43,11 +43,13 @@ def create_prompt(event, context):
     
     return {
       "statusCode": 200,
+      "headers": {"Content-Type": "application/json"},
       "body": f"Prompt: \"{openai_response}\" with competition_id: {competition_id} generated."
     }
 
   except Exception as e:
     return {
       "statusCode": 500,
-      "body": str(e)
+      "headers": {"Content-Type": "application/json"},
+      "body": json.dumps({"error": str(e)})
     }

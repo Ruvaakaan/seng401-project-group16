@@ -110,8 +110,8 @@ EOF
 }
 
 
-resource "aws_iam_policy" "put_drawing_policy" {
-  name        = "lambda-logging-${local.put_drawing_funct}"
+resource "aws_iam_policy" "upload_drawing_policy" {
+  name        = "lambda-logging-${local.upload_drawing_funct}"
   description = "IAM policy for logging from a lambda"
 
   policy = <<EOF
@@ -126,11 +126,21 @@ resource "aws_iam_policy" "put_drawing_policy" {
         "ssm:GetParameters",
         "ssm:GetParameter",
         "ssm:PutParameter",
-        "s3:PutObject"
+        "s3:PutObject",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:PartiQLSelect",
+        "dynamodb:PartiQLDelete"
       ],
       "Resource": [
         "arn:aws:logs:*:*:*",
-        "arn:aws:s3:::doodals-bucket-seng401/*"
+        "arn:aws:s3:::doodals-bucket-seng401/*",
+        "${aws_dynamodb_table.doodal-drawings.arn}"
       ],
       "Effect": "Allow"
     }
@@ -327,7 +337,44 @@ resource "aws_iam_policy" "get_prompts_policy" {
       ],
       "Resource": [
         "arn:aws:logs:*:*:*",
-        "${aws_dynamodb_table.doodal-users.arn}"
+        "${aws_dynamodb_table.doodal-prompts.arn}"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_policy" "get_prompt_policy" {
+  name        = "lambda-logging-${local.get_prompt_funct}"
+  description = "IAM policy for logging from a lambda"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "ssm:GetParameters",
+        "ssm:GetParameter",
+        "ssm:PutParameter",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:PartiQLSelect"
+      ],
+      "Resource": [
+        "arn:aws:logs:*:*:*",
+        "${aws_dynamodb_table.doodal-prompts.arn}"
       ],
       "Effect": "Allow"
     }
@@ -354,9 +401,9 @@ resource "aws_iam_role_policy_attachment" "get_drawings_logs" {
   policy_arn = aws_iam_policy.get_drawings_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "put_drawing_logs" {
-  role       = aws_iam_role.put_drawing_iam.name
-  policy_arn = aws_iam_policy.put_drawing_policy.arn
+resource "aws_iam_role_policy_attachment" "upload_drawing_logs" {
+  role       = aws_iam_role.upload_drawing_iam.name
+  policy_arn = aws_iam_policy.upload_drawing_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "like_unlike_logs" {
@@ -387,5 +434,10 @@ resource "aws_iam_role_policy_attachment" "update_bio_logs" {
 resource "aws_iam_role_policy_attachment" "get_prompts_logs" {
   role       = aws_iam_role.get_prompts_iam.name
   policy_arn = aws_iam_policy.get_prompts_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "get_prompt_logs" {
+  role       = aws_iam_role.get_prompt_iam.name
+  policy_arn = aws_iam_policy.get_prompt_policy.arn
 }
 # ...
