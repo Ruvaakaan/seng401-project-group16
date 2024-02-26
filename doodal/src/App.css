@@ -29,10 +29,10 @@ body {
 
 .nav {
   align-items: right;
-  display: flex;
   position: absolute;
+  flex-grow: 0;
   margin-top:1%;
-  right:0;
+  right:20px;
 }
 
 .items {
@@ -40,10 +40,7 @@ body {
   font-size: 1.5em;
   text-decoration: none;
   color: inherit;
-}
-
-.items:hover {
-  color: purple;
+  height:40px;
 }
 
 #doodal {
@@ -57,9 +54,8 @@ body {
 }
 
 .prompt-display{
-  background-color: #D9D9D9;
+  background-color: #eeeeee;
   position: relative;
-  color: black;
   margin-top: 25px;
 }
 
@@ -82,7 +78,6 @@ body {
   bottom: 5%;
   left:50%;
   transform: translate(-50%, -50%);
-  color:black;
   width:100%;
 }
 
@@ -117,13 +112,12 @@ body {
 }
 
 .gallery-banner{
-  background-color: #D9D9D9;
+  background-color: #eeeeee;
   margin-bottom: 1%;
 }
 
 .gallery-title {
   padding: 0.5%;
-  color:black;
   font-size: 2.5em;
 }
 
@@ -131,8 +125,7 @@ body {
   display: flex;
   justify-content:space-between;
   align-items: center;
-  background-color: #D9D9D9;
-  color: black;
+  background-color: #eeeeee;
   padding:0;
 }
 
@@ -158,27 +151,20 @@ body {
   display: flex;
   font-size: 1.2em;
   justify-content: center;
-  color:black;
 }
 
 .filter-item {
   margin-bottom: 5px;
   margin-left: 10%;
-  color: black;
 }
 
-.filter-item:hover {
-  color: purple;
-  cursor: pointer;
-}
-
-.dropdown {
-  position: absolute;
+.dropdown-click {
+  position: relative;
   z-index: 1000;
 }
 
 .drop-menu {
-  background-color: red;
+  background-color: #D9D9D9;
   list-style-type: none;
   padding: 0;
   margin: 0;
@@ -188,25 +174,89 @@ body {
 
 .drop-items {
   text-decoration: none;
-  color: inherit;
-}
-
-.drop-items:hover{
-  color: purple;
-  cursor: pointer;
+  color: black;
+  font-size: 1.1em;
+  margin:10px 0;
 }
 
 #modeswitch {
   background: inherit;
   border: none;
-  color: inherit;
-  margin-top:0;
-}
-
-#modeswitch:hover {
-  color: purple;
+  color:black;
+  margin:10px 0;
+  font-size: 1.1em;
 }
 
 .dropdown-opened {
-  background-color: red;
+  background-color: #D9D9D9;
+  margin-bottom: 0px;
+  color:black;
+}
+
+.profile {
+  padding: 10px 45px;
+  padding-bottom: 0;
+  margin-top:30px;
+  font-size: 1.5em;
+  text-decoration: none;
+}
+
+.drop-icons {
+  font-size: 0.85em;
+}
+
+.breakline {
+  background-color: #D9D9D9;
+  margin:0;
+  color:black
+}
+
+.items:hover {
+  color: #6C22A6;
+}
+
+#modeswitch:hover {
+  color: #6C22A6; 
+}
+
+.reg-hover:hover {
+  color: #6C22A6;
+  cursor: pointer;
+}
+
+.dark-mode .reg-hover:hover{
+  color:#9F70FD;
+}
+
+.dark-mode .items:hover{
+  color:#9F70FD;
+}
+
+.dark-mode #modeswitch:hover{
+  color:#9F70FD;
+}
+
+.dark-mode .prev-prompt, .dark-mode .gallery-banner, 
+.dark-mode .drop-items, .dark-mode .drop-menu,
+.dark-mode #modeswitch, .dark-mode .dropdown-opened,
+.dark-mode #card, .dark-mode .name {
+  background-color: #333;
+  color: white;
+}
+
+.dark-mode .btn-outline-dark {
+  --bs-btn-color: #f8f9fa;
+  --bs-btn-border-color: #f8f9fa;
+  --bs-btn-hover-color: #000;
+  --bs-btn-hover-bg: #f8f9fa;
+  --bs-btn-hover-border-color: #f8f9fa;
+  --bs-btn-focus-shadow-rgb: 248,249,250;
+  --bs-btn-active-color: #000;
+  --bs-btn-active-bg: #f8f9fa;
+  --bs-btn-active-border-color: #f8f9fa;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #f8f9fa;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: #f8f9fa;
+  --bs-gradient: none;
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import App from './App';
 import Home from './Home';
-import Comp from './Comp';
 import Draw from './DrawPage';
 import Account from './Account';
 import Gallery from './GalleryPage';
@@ -21,7 +20,6 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Home /> },
       { path: "/home", element: <Home /> },
-      { path: "/competition",element: <Comp />,},
       { path: "/draw", element: <Draw /> },
       { path: "/profile", element: <Account/> },
       { path: "/gallery", element: <Gallery/> }

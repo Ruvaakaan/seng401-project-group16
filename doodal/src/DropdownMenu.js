@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
+import { useDarkMode } from './DarkModeContext';
 
 function DropdownMenu() {
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
+
   const handleLogOut = () => {
     if (Cookies.get("authentication")) {
       Cookies.remove("authentication");
@@ -13,16 +16,21 @@ function DropdownMenu() {
   return (
     <>
       <ul className="drop-menu">
-        <li>
-          <Link to="/profile" className="drop-items">
-            <img src="" alt="Profile"></img>
+      <hr class="breakline"></hr>
+        <li className="drop-items">
+          <Link to="/profile" className="drop-items reg-hover">
+            <i class="fa-solid fa-user drop-icons"></i> Profile
           </Link>
         </li>
-        <li onClick={() => handleLogOut()} className="drop-items">Logout</li>
+        <hr class="breakline"></hr>
+        <li onClick={() => handleLogOut()} className="drop-items reg-hover">
+          <i class="drop-icons fa-solid fa-right-from-bracket"></i> Logout
+        </li>
+        <hr class="breakline"></hr>
         <li>
           <button
             id="modeswitch"
-            onClick={() => document.body.classList.toggle("dark-mode")}
+            onClick={toggleDarkMode}
           >
             &#9681;
           </button>

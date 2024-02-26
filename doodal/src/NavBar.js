@@ -25,14 +25,14 @@ function NavBar({ authenticationToken }) {
             Draw
           </Link>
           {authenticationToken !== null ? (
-            <div className="dropdown">
+            <div className="dropdown-click">
               <div
-                className={isDropdownOpen ? 'items dropdown-opened' : 'items'}
+                className={isDropdownOpen ? 'profile dropdown-opened reg-hover' : 'profile reg-hover'}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-                <img src="" alt="Profile"></img>
+                <img src="" alt="O"></img>
               </div>
-              {isDropdownOpen && <DropdownMenu />}
+              {isDropdownOpen && <DropdownMenu/>}
             </div>
           ) : (
             <Link
