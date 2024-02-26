@@ -28,19 +28,28 @@ def get_drawings(event, context):
   except KeyError:
     drawing_id = None
 
-  if competition_id:
-    if drawing_id:
-      image_urls = get_specific_images(competition_id, drawing_id)
+  try:
+    if competition_id:
+      if drawing_id:
+        image_urls = get_specific_images(competition_id, drawing_id)
+      else:
+        image_urls = get_competition_images(competition_id)
+      return {
+        "statusCode": 200,
+        "headers": {"Content-Type": "application/json"},
+        "body": json.dumps({"image_urls": image_urls})
+      }
     else:
-      image_urls = get_competition_images(competition_id)
+      return {
+        "statusCode": 400,
+        "headers": {"Content-Type": "application/json"},
+        "body": json.dumps({"message": "Competition ID is required"})
+      }
+  except Exception as e:
     return {
-      "statusCode": 200,
-      "body": json.dumps({"image_urls": image_urls})
-    }
-  else:
-    return {
-      "statusCode": 400,
-      "body": json.dumps({"message": "Competition ID is required"})
+      "statusCode": 500,
+      "headers": {"Content-Type": "application/json"},
+      "body": json.dumps({"error": str(e)})
     }
 
   

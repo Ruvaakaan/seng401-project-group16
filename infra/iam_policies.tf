@@ -110,8 +110,8 @@ EOF
 }
 
 
-resource "aws_iam_policy" "upload_drawing_s3_policy" {
-  name        = "lambda-logging-${local.upload_drawing_s3_funct}"
+resource "aws_iam_policy" "upload_drawing_policy" {
+  name        = "lambda-logging-${local.upload_drawing_funct}"
   description = "IAM policy for logging from a lambda"
 
   policy = <<EOF
@@ -126,11 +126,21 @@ resource "aws_iam_policy" "upload_drawing_s3_policy" {
         "ssm:GetParameters",
         "ssm:GetParameter",
         "ssm:PutParameter",
-        "s3:PutObject"
+        "s3:PutObject",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:PartiQLSelect",
+        "dynamodb:PartiQLDelete"
       ],
       "Resource": [
         "arn:aws:logs:*:*:*",
-        "arn:aws:s3:::doodals-bucket-seng401/*"
+        "arn:aws:s3:::doodals-bucket-seng401/*",
+        "${aws_dynamodb_table.doodal-drawings.arn}"
       ],
       "Effect": "Allow"
     }
@@ -391,9 +401,9 @@ resource "aws_iam_role_policy_attachment" "get_drawings_logs" {
   policy_arn = aws_iam_policy.get_drawings_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "upload_drawing_s3_logs" {
-  role       = aws_iam_role.upload_drawing_s3_iam.name
-  policy_arn = aws_iam_policy.upload_drawing_s3_policy.arn
+resource "aws_iam_role_policy_attachment" "upload_drawing_logs" {
+  role       = aws_iam_role.upload_drawing_iam.name
+  policy_arn = aws_iam_policy.upload_drawing_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "like_unlike_logs" {

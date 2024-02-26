@@ -20,5 +20,6 @@ def get_prompts(event, context):
   except Exception as e:
     return {
       "statusCode": 500,
-      "body": str(e)
+      "headers": {"Content-Type": "application/json"},
+      "body": json.dumps({"error": str(e)})
     }

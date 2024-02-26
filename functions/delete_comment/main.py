@@ -25,7 +25,8 @@ def delete_comment(event, context):
   except Exception as e:
     return {
       "statusCode": 500,
-      "body": f"Error: {e}."
+      "headers": {"Content-Type": "application/json"},
+      "body": json.dumps({"error": str(e)})
     }
   
   

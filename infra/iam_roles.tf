@@ -56,8 +56,8 @@ resource "aws_iam_role" "get_drawings_iam" {
 EOF
 }
 
-resource "aws_iam_role" "upload_drawing_s3_iam" {
-  name               = "iam-for-lambda-${local.upload_drawing_s3_funct}"
+resource "aws_iam_role" "upload_drawing_iam" {
+  name               = "iam-for-lambda-${local.upload_drawing_funct}"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",

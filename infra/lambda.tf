@@ -23,12 +23,12 @@ data "archive_file" "get_drawings_archive" {
   output_path = local.get_drawings_artifact
 }
 
-data "archive_file" "upload_drawing_s3_archive" {
+data "archive_file" "upload_drawing_archive" {
   type = "zip"
   # this file (main.py) needs to exist in the same folder as this 
   # Terraform configuration file
-  source_dir  = "../functions/upload_drawing_s3"
-  output_path = local.upload_drawing_s3_artifact
+  source_dir  = "../functions/upload_drawing"
+  output_path = local.upload_drawing_artifact
 }
 
 data "archive_file" "like_unlike_archive" {
@@ -125,12 +125,12 @@ resource "aws_lambda_function" "get_drawings_lambda" {
   runtime = "python3.9"
 }
 
-resource "aws_lambda_function" "upload_drawing_s3_lambda" {
-  role             = aws_iam_role.upload_drawing_s3_iam.arn
-  function_name    = local.upload_drawing_s3_funct
-  handler          = local.upload_drawing_s3_handler
-  filename         = local.upload_drawing_s3_artifact
-  source_code_hash = data.archive_file.upload_drawing_s3_archive.output_base64sha256
+resource "aws_lambda_function" "upload_drawing_lambda" {
+  role             = aws_iam_role.upload_drawing_iam.arn
+  function_name    = local.upload_drawing_funct
+  handler          = local.upload_drawing_handler
+  filename         = local.upload_drawing_artifact
+  source_code_hash = data.archive_file.upload_drawing_archive.output_base64sha256
   timeout          = 20
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
@@ -263,8 +263,8 @@ resource "aws_lambda_function_url" "get_drawings_url" {
   }
 }
 
-resource "aws_lambda_function_url" "upload_drawing_s3_url" {
-  function_name      = aws_lambda_function.upload_drawing_s3_lambda.function_name
+resource "aws_lambda_function_url" "upload_drawing_url" {
+  function_name      = aws_lambda_function.upload_drawing_lambda.function_name
   authorization_type = "NONE"
 
   cors {
