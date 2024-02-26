@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useDarkMode } from './DarkModeContext';
 
 function Home() {
   var prompt = "new";
@@ -54,11 +55,13 @@ function Home() {
     getPrompts();
   }, []);
 
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
+
   const nav = useNavigate();
   return (
     <>
       <div className="prompt-display">
-        <img src="blurbanner.png" className="banner"></img>
+        <img src={isDarkMode ? 'blurbanner.png' : 'blurbannerdark.png'} className="banner"></img>
         <h1 className="memo-banner">
           Welcome to DOODAL! Participate in daily art challenges and share your
           art with others!

@@ -56,7 +56,6 @@ body {
 .prompt-display{
   background-color: #eeeeee;
   position: relative;
-  color: black;
   margin-top: 25px;
 }
 
@@ -79,7 +78,6 @@ body {
   bottom: 5%;
   left:50%;
   transform: translate(-50%, -50%);
-  color:black;
   width:100%;
 }
 
@@ -128,7 +126,6 @@ body {
   justify-content:space-between;
   align-items: center;
   background-color: #eeeeee;
-  color: black;
   padding:0;
 }
 
@@ -241,7 +238,8 @@ body {
 
 .dark-mode .prev-prompt, .dark-mode .gallery-banner, 
 .dark-mode .drop-items, .dark-mode .drop-menu,
-.dark-mode #modeswitch, .dark-mode .dropdown-opened {
+.dark-mode #modeswitch, .dark-mode .dropdown-opened,
+.dark-mode #card, .dark-mode .name {
   background-color: #333;
   color: white;
 }
