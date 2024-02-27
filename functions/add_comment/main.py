@@ -1,18 +1,19 @@
 import boto3
 import json
 import datetime
+import uuid
 
 dynamodb = boto3.client("dynamodb")
 
 def add_comment(event, context):
   print(event)
   body = json.loads(event["body"])
-  comment_id = body["comment_id"]
   drawing_id = body["drawing_id"]
   user_id = body["user_id"] 
   comment_text = body["comment_text"] 
   likes = 0
   date_created = str(datetime.datetime.now().timestamp())
+  comment_id = str(uuid.uuid4())
   
   try:
     response = dynamodb.put_item(
@@ -28,17 +29,14 @@ def add_comment(event, context):
     )
     return {
       "statusCode": 200,
-      # "headers":{
-      #   "Access-Control-Allow-Headers" : "Content-Type",
-      #   "Access-Control-Allow-Origin": "*",
-      #   "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"
-      # },
-      "body": f"Response: {response}."
+      "headers": {"Content-Type": "application/json"},
+      "body": json.dumps(response)
     }
   except Exception as e:
     return {
       "statusCode": 500,
-      "body": f"Error: {e}."
+      "headers": {"Content-Type": "application/json"},
+      "body": json.dumps({"error": str(e)})
     }
   
   

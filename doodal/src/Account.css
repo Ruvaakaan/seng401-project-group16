@@ -4,7 +4,8 @@
 }
 
 .user-info {
-    flex: 1;
+    flex: 1; 
+    height: 100%; 
     padding: 20px;
     background-color: #eeeeee; 
     border-radius: 5px;
@@ -64,13 +65,13 @@
 .exp-bar h2 {
     color: #222831; 
 }
-
 .image-gallery {
-    flex: 3; 
+    flex: 3; /* Allow the image-gallery to grow */
     margin-left: 20px;
     padding: 20px;
     background-color: #eeeeee; 
     border-radius: 5px;
+    overflow: auto; /* Add scroll if content overflows */
 }
 
 .edit-icon {
@@ -83,6 +84,42 @@
 .edit-icon:hover {
     color: lightblue; 
 }
+.profile-picture-container {
+  position: relative;
+  display: inline-block; /* Ensure the container takes the size of its contents */
+
+}
+
+.profile-picture {
+  display: block;
+  border-radius: 50%; /* Ensure the image is circular */
+}
+
+.edit-profile {
+  display: none; /* Initially hide the edit text and symbol */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px; 
+  height: 100px; 
+  transform: translate(-50%, -60%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 5px;
+  border-radius: 50%; /* Make the overlay circular */
+}
+
+.profile-picture-container:hover .edit-profile {
+  display: flex; /* Show the edit text and symbol when hovering over the profile picture container */
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+}
+
+/* Adjust the size and color of the edit symbol */
+.edit-profile i {
+  margin-right: 5px;
+}
 
 .dark-mode .account-container {
     background-color: #1C1C1C;
@@ -92,7 +129,6 @@
 .dark-mode .user-info {
     background-color: #333;
     color: white;
-    
 }
 
 .dark-mode .exp-bar,

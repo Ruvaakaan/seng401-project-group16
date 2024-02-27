@@ -1,0 +1,89 @@
+/* Light mode */
+.profile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .profile-content {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    width: 20vw;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .profile-content h1 {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .profile-content #fileText {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  
+  .profile-content #file {
+    display: flex;
+    cursor: pointer;
+  }
+  
+  .profile-content #error {
+    color: red;
+  }
+  
+  .profile-content .buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 10vw;
+  }
+  
+  .profile-content button {
+    padding: 10px 20px;
+    background-color: #4ecca3;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .profile-content button:hover {
+    background-color: #47b78a;
+  }
+  
+  /* Dark mode */
+  .dark-mode .profile-overlay {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .dark-mode .profile-content {
+    background-color: #333;
+  }
+  
+  .dark-mode .profile-content h1 {
+    color: #fff;
+  }
+  
+  .dark-mode .profile-content #error {
+    color: red;
+  }
+  
+  .dark-mode .profile-content button {
+    background-color: #4ecca3;
+    color: #fff;
+  }
+  
+  .dark-mode .profile-content button:hover {
+    background-color: #47b78a;
+  }
+  

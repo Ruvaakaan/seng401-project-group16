@@ -2,6 +2,7 @@ import boto3
 import json
 from openai import OpenAI
 import uuid
+import datetime
 
 dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table("doodal-prompts")
@@ -36,18 +37,22 @@ def create_prompt(event, context):
   try:
     openai_response = get_openai_response()
     competition_id = str(uuid.uuid4())
+    date_created = str(datetime.datetime.now().timestamp())
     table.put_item(Item={
       "competition_id": competition_id,
-      "prompt": openai_response
+      "prompt": openai_response,
+      "date_created": date_created
     })
     
     return {
       "statusCode": 200,
+      "headers": {"Content-Type": "application/json"},
       "body": f"Prompt: \"{openai_response}\" with competition_id: {competition_id} generated."
     }
 
   except Exception as e:
     return {
       "statusCode": 500,
-      "body": str(e)
+      "headers": {"Content-Type": "application/json"},
+      "body": json.dumps({"error": str(e)})
     }

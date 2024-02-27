@@ -12,6 +12,9 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Cookies from 'js-cookie';
+
+const authenticationToken = Cookies.get('authentication');
 
 const router = createBrowserRouter([
   {
@@ -21,7 +24,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "/home", element: <Home /> },
       { path: "/draw", element: <Draw /> },
-      { path: "/profile", element: <Account/> },
+      { path: "/profile", element: <Account authenticationToken={authenticationToken}/> },
       { path: "/gallery", element: <Gallery/> }
     ],
   },

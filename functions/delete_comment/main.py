@@ -19,17 +19,14 @@ def delete_comment(event, context):
     print(f"Response: {response}")
     return {
       "statusCode": 200,
-      # "headers":{
-      #   "Access-Control-Allow-Headers" : "Content-Type",
-      #   "Access-Control-Allow-Origin": "*",
-      #   "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"
-      # },
-      "body": f"Response: {response}."
+      "headers": {"Content-Type": "application/json"},
+      "body": json.dumps(response)
     }
   except Exception as e:
     return {
       "statusCode": 500,
-      "body": f"Error: {e}."
+      "headers": {"Content-Type": "application/json"},
+      "body": json.dumps({"error": str(e)})
     }
   
   
