@@ -1,5 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import NotLoggedIn from "./NotLoggedIn.js";
+import Cookies from "js-cookie";
 
 // resetting canvas when transparent background doesnt work correctly
 // going off screen whilst holding mouse button and then letting go of mouse leaves mouse pressed
@@ -13,6 +15,7 @@ function Canvas({ lineColor, brushSize, backgroundColor }) {
   const [context, setContext] = useState(null);
   const [eraserMode, setEraserMode] = useState(false);
   const [canvasStates, setCanvasStates] = useState([]);
+  const [userNotLogged, setUserNotLogged] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -23,9 +26,9 @@ function Canvas({ lineColor, brushSize, backgroundColor }) {
     saveCanvasState();
   }, [backgroundColor]);
 
-  useEffect(() => {
-    console.log(canvasStates);
-  }, [canvasStates]);
+  // useEffect(() => {
+  //   console.log(canvasStates);
+  // }, [canvasStates]);
 
   const saveCanvasState = () => {
     const canvas = canvasRef.current;
@@ -99,6 +102,40 @@ function Canvas({ lineColor, brushSize, backgroundColor }) {
     saveCanvasState();
   };
 
+  const handleUpload = () => {
+    try {
+      const authenticationToken = Cookies.get("authentication");
+
+      if (!authenticationToken) {
+        setUserNotLogged(true);
+        return console.log("user was not logged in"); // handle users not logged in here
+      }
+      
+      const canvas = canvasRef.current;
+      const img = canvas.toDataURL("image/jpeg");
+      const jsonData = {
+        competition_id: "test",
+        user_id: "b1724b73-5ade-473d-b85c-d64d563a00d3",
+      };
+      const encodedImageData = btoa(img);
+      jsonData.image_data = encodedImageData;
+
+      const jsonString = JSON.stringify(jsonData);
+
+      const link = `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/upload_drawing`;
+      const res = fetch(link, {
+        method: "POST",
+        headers: {
+          Authorization: authenticationToken,
+        },
+        body: jsonString,
+      });
+
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
   return (
     <div>
       <Button variant="primary" onClick={handleResetCanvas}>
@@ -108,12 +145,21 @@ function Canvas({ lineColor, brushSize, backgroundColor }) {
         Undo
       </Button>
 
+      <Button variant="primary" onClick={handleUpload}>
+        Upload
+      </Button>
+
       <Form.Check
         type="checkbox"
         id="eraserMode"
         label="Eraser Mode"
         checked={eraserMode}
         onChange={toggleEraserMode}
+      />
+
+      <NotLoggedIn
+        isOpen={userNotLogged}
+        onClose={() => setUserNotLogged(false)}
       />
 
       <canvas
