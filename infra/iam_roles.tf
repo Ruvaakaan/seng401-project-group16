@@ -207,4 +207,42 @@ resource "aws_iam_role" "get_prompt_iam" {
 }
 EOF
 }
+
+resource "aws_iam_role" "upload_profile_photo_iam" {
+  name               = "iam-for-lambda-${local.upload_profile_photo_funct}"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role" "get_profile_photo_iam" {
+  name               = "iam-for-lambda-${local.get_profile_photo_funct}"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
 # ...

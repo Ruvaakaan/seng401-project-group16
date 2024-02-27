@@ -20,7 +20,8 @@ def create_user(event, context):
       "email": email,
       "experience": xp,
       "bio": bio,
-      "date_created": date_created
+      "date_created": date_created,
+      "profile_photo_url": ""
     })
     return event
   except Exception as e:

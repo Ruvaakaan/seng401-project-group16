@@ -11,6 +11,8 @@ locals {
   update_bio_funct = "update_bio"
   get_prompts_funct = "get_prompts"
   get_prompt_funct = "get_prompt"
+  upload_profile_photo_funct = "upload_profile_photo"
+  get_profile_photo_funct = "get_profile_photo"
   # ...
 
   # handlers
@@ -25,6 +27,8 @@ locals {
   update_bio_handler = "main.update_bio"
   get_prompts_handler = "main.get_prompts"
   get_prompt_handler = "main.get_prompt"  
+  upload_profile_photo_handler = "main.upload_profile_photo"  
+  get_profile_photo_handler = "main.get_profile_photo"  
   # ...
 
   # artifacts
@@ -39,6 +43,8 @@ locals {
   update_bio_artifact = "${local.update_bio_funct}/artifact.zip"
   get_prompts_artifact = "${local.get_prompts_funct}/artifact.zip"
   get_prompt_artifact = "${local.get_prompt_funct}/artifact.zip"
+  upload_profile_photo_artifact = "${local.upload_profile_photo_funct}/artifact.zip"
+  get_profile_photo_artifact = "${local.get_profile_photo_funct}/artifact.zip"
   # ...
 
   # lambda urls 
@@ -86,6 +92,14 @@ locals {
     {
       name = "get_prompt_url"
       url  = aws_lambda_function_url.get_prompt_url.function_url
+    },
+    {
+      name = "upload_profile_photo_url"
+      url  = aws_lambda_function_url.upload_profile_photo_url.function_url
+    },
+    {
+      name = "get_profile_photo_url"
+      url  = aws_lambda_function_url.get_profile_photo_url.function_url
     },
     # ...
   ]
