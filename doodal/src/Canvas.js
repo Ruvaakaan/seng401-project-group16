@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Button, ButtonGroup, Form } from "react-bootstrap";
 import {FaEraser, FaUndo, FaTrash, FaRegSquare, FaSlash} from "react-icons/fa";
-import {FaSquareCheck} from "react-icons/fa6";
+import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 
 // resetting canvas when transparent background doesnt work correctly
 // going off screen whilst holding mouse button and then letting go of mouse leaves mouse pressed
@@ -17,6 +17,7 @@ function Canvas({ lineColor, brushSize, backgroundColor }) {
   const [canvasStates, setCanvasStates] = useState([]);
   const [straightLineMode, setStraightLineMode] = useState(false);
   const [rectangleMode, setRectangleMode] = useState(false);
+  const [triangleMode, setTriangleeMode] = useState(false);
   const [startPoint, setStartPoint] = useState({ x: 0, y: 0 });
   const [endPoint, setEndPoint] = useState({ x: 0, y: 0 });
 
@@ -42,7 +43,7 @@ function Canvas({ lineColor, brushSize, backgroundColor }) {
 
   const startDrawing = (event) => {
     setIsDrawing(true);
-    if (straightLineMode || rectangleMode) {
+    if (straightLineMode || rectangleMode || triangleMode) {
       const canvas = canvasRef.current;
       const rect = canvas.getBoundingClientRect();
       setStartPoint({
@@ -57,6 +58,7 @@ function Canvas({ lineColor, brushSize, backgroundColor }) {
     if (context) {
       context.beginPath();
     }
+    saveCanvasState();
   };
 
   const drawFreehand = (event) => {
@@ -78,64 +80,103 @@ function Canvas({ lineColor, brushSize, backgroundColor }) {
     }
   };
 
-  const drawLine = () => {
+  const drawLine = (start, end) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     ctx.strokeStyle = eraserMode ? backgroundColor : lineColor;
     ctx.lineWidth = brushSize;
     ctx.beginPath();
-    ctx.moveTo(startPoint.x, startPoint.y);
-    ctx.lineTo(endPoint.x, endPoint.y);
+    ctx.moveTo(start.x, start.y);
+    ctx.lineTo(end.x, end.y);
     ctx.stroke();
   };
 
-  const drawRectangle = () => {
+  const drawRectangle = (start, end) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     ctx.strokeStyle = eraserMode ? backgroundColor : lineColor;
     ctx.lineWidth = brushSize;
 
-    const width = endPoint.x - startPoint.x;
-    const height = endPoint.y - startPoint.y;
+    const width = end.x - start.x;
+    const height = end.y - start.y;
 
-    ctx.strokeRect(startPoint.x, startPoint.y, width, height);
+    ctx.strokeRect(start.x, start.y, width, height);
   };
+
+  const drawTriangle = (point1, point2) => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    ctx.strokeStyle = eraserMode ? backgroundColor : lineColor;
+    ctx.lineWidth = brushSize;
+
+    const baseLength = Math.sqrt((point2.x - point1.x) ** 2 + (point2.y - point1.y) ** 2);
+    const height = (Math.sqrt(3) / 2) * baseLength;
+
+    const midPointX = (point1.x + point2.x) / 2;
+    const midPointY = (point1.y + point2.y) / 2;
+
+    const point3X = midPointX + (height * (point1.y - point2.y)) / baseLength;
+    const point3Y = midPointY + (height * (point2.x - point1.x)) / baseLength;
+    ctx.beginPath();
+    ctx.moveTo(point1.x, point1.y);
+    ctx.lineTo(point2.x, point2.y);
+    ctx.lineTo(point3X, point3Y);
+    ctx.closePath();
+    ctx.stroke();
+  };
+
 
   const draw = (event) => {
     if (!isDrawing) return;
 
-    if(!straightLineMode && !rectangleMode)
-      drawFreehand(event);
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const ctx = canvas.getContext("2d");
 
-    else {
-      const canvas = canvasRef.current;
-      const rect = canvas.getBoundingClientRect();
-      const ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const currentPoint = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top
+    };
+
+    if (!straightLineMode && !rectangleMode && !triangleMode) {
+      drawFreehand(event);
+    } else {
+      // ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.putImageData(canvasStates[canvasStates.length - 1], 0, 0);
 
-      setEndPoint({
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top
-      });
-
-      if (straightLineMode)
-        drawLine();
-
-      else if (rectangleMode)
-        drawRectangle();
-    }
+      if (straightLineMode) {
+        drawLine(startPoint, currentPoint);
+      } else if (rectangleMode) {
+        drawRectangle(startPoint, currentPoint);
+      }
+        else if(triangleMode) {
+        drawTriangle(startPoint, currentPoint);
+        }
+      }
   };
 
   const toggleStraightLineMode = () => {
+    setRectangleMode(false);
+    setTriangleeMode(false);
     setStraightLineMode(!straightLineMode);
   };
 
   const toggleRectangleMode = () => {
+    setStraightLineMode(false);
+    setTriangleeMode(false);
     setRectangleMode(!rectangleMode);
   };
 
-    const toggleEraserMode = () => {
+  const toggleTriangleMode = () => {
+    setStraightLineMode(false);
+    setRectangleMode(false);
+    setTriangleeMode(!triangleMode);
+  };
+
+  const toggleEraserMode = () => {
+    setStraightLineMode(false);
+    setRectangleMode(false);
+    setTriangleeMode(false)
     setEraserMode(!eraserMode);
   };
 
@@ -167,39 +208,46 @@ function Canvas({ lineColor, brushSize, backgroundColor }) {
   return (
       <>
         <div style={{ display: "flex", justifyContent: "center", marginBottom: "10px" }}>
-
-            <Button variant="primary" onClick={handleResetCanvas} className="me-2">
-              <FaTrash />
-            </Button>
-            <Button variant="primary" onClick={handleUndo} className="me-2">
-              <FaUndo />
-            </Button>
-            <Button
-                variant={eraserMode ? "danger" : "primary"}
-                onClick={toggleEraserMode}
-                className="me-2"
-            >
-              <FaEraser /> {eraserMode ? "" : ""}
-            </Button>
-
-
-
           <Button
               variant={straightLineMode ? "danger" : "primary"}
               onClick={toggleStraightLineMode}
               className="me-2"
+              style={{ width: "50px" }}
           >
             <FaSlash /> {straightLineMode ? "" : ""}
           </Button>
-
           <Button
               variant={rectangleMode ? "danger" : "primary"}
               onClick={toggleRectangleMode}
               className="me-2"
+              style={{ width: "50px" }}
           >
             <FaRegSquare /> {rectangleMode ? "" : ""}
           </Button>
-
+          <Button
+              variant={triangleMode ? "danger" : "primary"}
+              onClick={toggleTriangleMode}
+              className="me-2"
+              style={{ width: "50px" }}
+          >
+            <ChangeHistoryIcon /> {triangleMode ? "" : ""}
+          </Button>
+        </div>
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: "10px" }}>
+          <Button variant="primary" onClick={handleResetCanvas} className="me-2" style={{ width: "50px" }}>
+            <FaTrash />
+          </Button>
+          <Button variant="primary" onClick={handleUndo} className="me-2" style={{ width: "50px" }}>
+            <FaUndo />
+          </Button>
+          <Button
+              variant={eraserMode ? "danger" : "primary"}
+              onClick={toggleEraserMode}
+              className="me-2"
+              style={{ width: "50px" }}
+          >
+            <FaEraser /> {eraserMode ? "" : ""}
+          </Button>
         </div>
 
 
