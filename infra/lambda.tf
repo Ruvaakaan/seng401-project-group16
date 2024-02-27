@@ -86,6 +86,22 @@ data "archive_file" "get_prompt_archive" {
   source_dir  = "../functions/get_prompt"
   output_path = local.get_prompt_artifact
 }
+
+data "archive_file" "upload_profile_photo_archive" {
+  type = "zip"
+  # this file (main.py) needs to exist in the same folder as this 
+  # Terraform configuration file
+  source_dir  = "../functions/upload_profile_photo"
+  output_path = local.upload_profile_photo_artifact
+}
+
+data "archive_file" "get_profile_photo_archive" {
+  type = "zip"
+  # this file (main.py) needs to exist in the same folder as this 
+  # Terraform configuration file
+  source_dir  = "../functions/get_profile_photo"
+  output_path = local.get_profile_photo_artifact
+}
 # ...
 
 # create lambda functions
@@ -215,6 +231,30 @@ resource "aws_lambda_function" "get_prompt_lambda" {
   handler          = local.get_prompt_handler
   filename         = local.get_prompt_artifact
   source_code_hash = data.archive_file.get_prompt_archive.output_base64sha256
+  timeout          = 20
+
+  # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
+  runtime = "python3.9"
+}
+
+resource "aws_lambda_function" "upload_profile_photo_lambda" {
+  role             = aws_iam_role.upload_profile_photo_iam.arn
+  function_name    = local.upload_profile_photo_funct
+  handler          = local.upload_profile_photo_handler
+  filename         = local.upload_profile_photo_artifact
+  source_code_hash = data.archive_file.upload_profile_photo_archive.output_base64sha256
+  timeout          = 20
+
+  # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
+  runtime = "python3.9"
+}
+
+resource "aws_lambda_function" "get_profile_photo_lambda" {
+  role             = aws_iam_role.get_profile_photo_iam.arn
+  function_name    = local.get_profile_photo_funct
+  handler          = local.get_profile_photo_handler
+  filename         = local.get_profile_photo_artifact
+  source_code_hash = data.archive_file.get_profile_photo_archive.output_base64sha256
   timeout          = 20
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
@@ -362,6 +402,32 @@ resource "aws_lambda_function_url" "get_prompt_url" {
     allow_credentials = true
     allow_origins     = ["*"]
     allow_methods     = ["POST"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+resource "aws_lambda_function_url" "upload_profile_photo_url" {
+  function_name      = aws_lambda_function.upload_profile_photo_lambda.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["POST"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+resource "aws_lambda_function_url" "get_profile_photo_url" {
+  function_name      = aws_lambda_function.get_profile_photo_lambda.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["GET"]
     allow_headers     = ["*"]
     expose_headers    = ["keep-alive", "date"]
   }
