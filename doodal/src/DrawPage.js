@@ -3,6 +3,7 @@ import Canvas from "./Canvas";
 import ColorPicker from "./ColorPicker";
 import { Button } from "react-bootstrap";
 import Brush from "./Brush";
+import Toolbar from "./Toolbar"
 
 function DrawPage() {
   const [lineColor, setLineColor] = useState("black");
@@ -32,31 +33,24 @@ function DrawPage() {
     setBrushColorPickerEnabled(!brushColorPickerEnabled);
   }
 
-  return (
-    <>
-      <Button variant="primary" onClick={toggleBackgroundColorPicker}>
-        {backgroundColorPickerEnabled ? "Collapse Background Color Picker" : "Expand Background Color Picker"}
-      </Button>
 
-      <Button variant="primary" onClick={toggleBrushColorPicker}>
-        {brushColorPickerEnabled ? "Collapse Brush Color Picker" : "Expand Brush Color Picker"}
-      </Button>
 
-      {backgroundColorPickerEnabled && (
-        <>
-          <ColorPicker value={backgroundColor} onChange={handleBackgroundChange} />
-        </>
-      )}
+    return (
+      <>
+          <Toolbar
+              backgroundColorPickerEnabled={backgroundColorPickerEnabled}
+              brushColorPickerEnabled={brushColorPickerEnabled}
+              handleBackgroundChange={handleBackgroundChange}
+              handleColorChange={handleColorChange}
+              handleBrushSizeChange={handleBrushSizeChange}
+              lineColor={lineColor}
+              brushSize={brushSize}
+              backgroundColor={backgroundColor}
+          />
 
-      {brushColorPickerEnabled && (
-        <>
-          <ColorPicker value={lineColor} onChange={handleColorChange} />
-        </>
-      )}
 
-      <Brush value={brushSize} onChange={handleBrushSizeChange}/>
-      <Canvas lineColor={lineColor} brushSize={brushSize} backgroundColor={backgroundColor}/>
-    </>
+        <Canvas lineColor={lineColor} brushSize={brushSize} backgroundColor={backgroundColor}/>
+      </>
   );
 }
 
