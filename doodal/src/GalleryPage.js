@@ -2,6 +2,7 @@ import { useState } from "react";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import Popup from "./Popup"
 import { useLocation } from 'react-router-dom';
 
 function GalleryPage() {
@@ -38,6 +39,19 @@ function GalleryPage() {
     setPosts(extracted);
   };
 
+  // For the Popup //
+  const [showModal, setShowModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleImageClick = (image) => {
+    setSelectedImage(image);
+    setShowModal(true);
+  }
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  }
+
   return (
     <>
     <div className="gallery-banner">
@@ -57,7 +71,7 @@ function GalleryPage() {
         <Row xs={6} className="g-4">
           {posts.map((val, idx) => (
             <Col key={idx}>
-              <Card>
+              <Card onClick={() => handleImageClick(val)}>
                 <Card.Img variant="top" src="doodalnew.PNG" />
                 <Card.Body id="card">
                   <div className="user_info">
@@ -79,6 +93,13 @@ function GalleryPage() {
           ))}
         </Row>
       </div>
+
+      <Popup 
+      show={showModal}
+      handleClose={handleCloseModal}
+      selectedImage={selectedImage}
+      username="username1"
+      />
     </>
   );
 }
