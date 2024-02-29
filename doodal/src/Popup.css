@@ -1,0 +1,31 @@
+
+  
+.popup-image {
+    width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+}
+
+.popup-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user_info {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 40px;
+    margin-right: 20px; 
+}
+
+.name {
+    font-size: 18px;
+}
+
+.like-btn {
+    cursor: pointer;
+}
