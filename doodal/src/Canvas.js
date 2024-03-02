@@ -114,8 +114,8 @@ function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
       const canvas = canvasRef.current;
       const img = canvas.toDataURL("image/jpeg");
       const jsonData = {
-        competition_id: "test",
-        user_id: "b1724b73-5ade-473d-b85c-d64d563a00d3",
+        competition_id: comp_id,
+        user_id: "b1724b73-5ade-473d-b85c-d64d563a00d3", // find a way to get user id
       };
       const encodedImageData = btoa(img);
       jsonData.image_data = encodedImageData;
