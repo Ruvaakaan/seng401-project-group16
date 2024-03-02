@@ -25,7 +25,6 @@ function Home() {
       }
     );
     let extracted = await res.json();
-
     let { body } = extracted;
     let newComps = [];
     let newPrompts = [];

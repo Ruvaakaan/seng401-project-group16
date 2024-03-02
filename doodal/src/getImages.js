@@ -12,8 +12,16 @@ export const getImages = async (id) => {
       }
     );
     let extracted = await res.json();
+    
     let { body } = extracted;
     body = JSON.parse(body);
-    let image_list = body["image_urls"];
+    console.log(body)
+    let image_list = [];
+
+    for (let i = 0; i < body["items"].length; i++) {
+      let url = body["items"][i]["s3_url"]["S"]; 
+      image_list.push(url); 
+    }
+    console.log(image_list)
     return image_list;
   };
