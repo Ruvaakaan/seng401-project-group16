@@ -23,8 +23,11 @@ function GalleryPage() {
     if (prompt) {
       title = prompt;
       setUserEnter(true);
+      handleImages(comp_id);
     }
-    handleImages(comp_id);
+    else{
+      callSorter("likes-descend")
+    }
   }, []);
 
   function like_change(val) {
@@ -106,13 +109,13 @@ function GalleryPage() {
               className="filter-item reg-hover"
               onClick={() => callSorter("likes-ascend")}
             >
-              Most Liked
+              Least Liked
             </li>
             <li
               className="filter-item reg-hover"
               onClick={() => callSorter("likes-descend")}
             >
-              Least Liked
+              Most Liked
             </li>
             <li
               className="filter-item reg-hover"
