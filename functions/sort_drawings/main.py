@@ -1,39 +1,74 @@
 import boto3
 import json
+import random
 
-def get_object_creation_date(bucket_name, object_key):
-    s3 = boto3.client('s3')
-    response = s3.head_object(Bucket=bucket_name, Key=object_key)
-    return response['LastModified']
+dynamodb_resource = boto3.client("dynamodb")
+table_name = "doodal-drawings"
 
-def list_s3_objects(bucket_name):
-    s3 = boto3.client('s3')
-    response = s3.list_objects_v2(Bucket=bucket_name)
+def randomize(data):
+    return random.sample(data, len(data))
 
-    object_details = []
+def likes_ascend(data):
+    return sorted(data, key=lambda x: x.get('likes', 0))
 
-    for obj in response.get('Contents', []):
-        object_key = obj['Key']
-        creation_date = get_object_creation_date(bucket_name, object_key)
-        object_details.append({"key": object_key, "creation_date": creation_date})
+def likes_descend(data):
+    return sorted(data, key=lambda x: x.get('likes', 0), reverse=True)
 
-    # Sort the objects by creation date
-    sorted_objects = sorted(object_details, key=lambda x: x['creation_date'])
+def date_ascend(data):
+    return sorted(data, key=lambda x: x.get('date_created', ''))
 
-    return sorted_objects
+def date_descend(data):
+    return sorted(data, key=lambda x: x.get('date_created', ''), reverse=True)
 
 def sort_drawings_handler(event, context):
-    bucket_name = 'doodals-bucket-seng401'
-    s3_objects = list_s3_objects(bucket_name)
+    body = json.loads(event["body"])
+    sort_by = body.get("sort_by", "random")
 
-    print("S3 Objects:")
-    for obj in s3_objects:
-        print(obj['key'], obj['creation_date'])
+    print(sort_by)
 
-    data = {
-        "test": "test",
-        "items": [{"key": obj['key'], "creation_date": obj['creation_date'].isoformat()} for obj in s3_objects]
-    }
+    response = dynamodb_resource.scan(TableName=table_name)
+
+    items = response.get('Items', [])
+
+    print(response)
+
+    data = []
+
+    for item in items:
+        drawing_id = item.get('drawing_id')
+        competition_id = item.get('competition_id')
+        date_created = item.get('date_created')
+        likes = item.get('likes')
+        s3_url = item.get('s3_url')
+        user_id = item.get('user_id')
+
+        item_dict = {
+            'drawing_id': drawing_id,
+            'competition_id': competition_id,
+            'date_created': date_created,
+            'likes': likes,
+            's3_url': s3_url,
+            'user_id': user_id
+        }
+
+        data.append(item_dict)
+
+    print(data)
+
+    if sort_by == "random":
+        data = randomize(data)
+    elif sort_by == "likes-ascend":
+        data = likes_ascend(data)
+    elif sort_by == "likes-descend":
+        data = likes_descend(data)
+    elif sort_by == "date-ascend":
+        data = date_ascend(data)
+    elif sort_by == "date-descend":
+        data = date_descend(data)
+    else:
+        data = randomize(data)
+
+    print(data)
 
     return {
         "statusCode": 200,
