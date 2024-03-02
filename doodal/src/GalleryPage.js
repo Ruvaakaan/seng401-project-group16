@@ -11,26 +11,24 @@ function GalleryPage() {
   const [user_likes, setUserLikes] = useState([1, 3]); // array of all posts liked by user
   const [images, setImages] = useState([]);
   const [userEnter, setUserEnter] = useState(false);
+  const [title, setTitle] = useState("Gallery");
 
   const nav = useNavigate();
   const location = useLocation();
   const prompt = location.state?.prompt;
   const comp_id = location.state?.comp_id;
 
-  var title = "Gallery";
-
   useEffect(() => {
     if (prompt) {
-      title = prompt;
+      setTitle(prompt);
       setUserEnter(true);
       handleImages(comp_id);
-    }
-    else{
-      callSorter("likes-descend")
+    } else {
+      callSorter("likes-descend");
     }
   }, []);
 
-  function like_change(val) {
+  function like_change(val) { // this function changes the heart icon for liking and unliking
     if (user_likes.includes(val)) {
       setUserLikes(user_likes.filter((item) => item !== val));
       return;
@@ -58,50 +56,70 @@ function GalleryPage() {
   };
 
   const handleImages = async (id) => {
-    let image_list = await getImages(id);
+    let body = await getImages(id);
 
-    if (!image_list) {
+    let post_info_list = []; // tragedy isnt it?
+    let post_info = {};
+    try {
+      for (let i = 0; i < body["items"].length; i++) {
+        post_info['s3_url'] = body["items"][i]["s3_url"]["S"];
+        post_info['competition_id'] = body["items"][i]["competition_id"]["S"];
+        post_info['drawing_id'] = body["items"][i]["drawing_id"]["S"];
+        post_info['likes'] = body["items"][i]["likes"]["N"];
+        post_info['user_id'] = body["items"][i]["user_id"]["S"];
+        post_info['date_created'] = body["items"][i]["date_created"]["S"];
+        post_info_list.push(post_info);
+      }
+    } catch {
+    }
+
+    if (!post_info_list) {
       return;
     }
-    setImages(image_list);
+    setImages(post_info_list);
   };
 
   const callSorter = async (s) => {
-    let sorted = await sortImages(s);
-
-    if (!sorted) {
+    let body = await sortImages(s);
+    if (!body) {
       return;
     }
-    setImages(sorted);
+    setImages(body);
   };
 
-  // useEffect(() => {
-  //   console.log(images);
-  // }, [images]);
+  useEffect(() => {
+    console.log("images:", images);
+  }, [images]);
 
   return (
     <>
       <div className="gallery-banner">
-        <h1 className="gallery-title">{title}</h1>
-        {userEnter && (
-          <Button
-            variant="outline-dark"
-            className="entry-button"
-            onClick={() =>
-              nav("/draw", {
-                state: { prompt: prompt, comp_id: comp_id },
-              })
-            }
-          ></Button>
-        )}
+        <div className="gallery-title">
+          <h1>
+            {title}
+            {userEnter && (
+              <Button
+                variant="outline-dark"
+                className="entry-button"
+                onClick={() =>
+                  nav("/draw", {
+                    state: { prompt: prompt, comp_id: comp_id },
+                  })
+                }
+              >
+                Draw
+              </Button>
+            )}
+          </h1>
+        </div>
         <div className="filter-options">
           <ul className="filter-list">
             <li className="filter">
-              <b>Filter:</b>
+              <b>Filter by:</b>
             </li>
             <li
               className="filter-item reg-hover"
-              onClick={() => callSorter("random")} // change these values, add the other options from the lambda
+              onClick={() => callSorter("random")}
             >
               Random
             </li>
@@ -137,11 +155,11 @@ function GalleryPage() {
           {images.map((val, idx) => (
             <Col key={idx}>
               <Card>
-                <Card.Img variant="top" src={val} />
+                <Card.Img variant="top" src={val['s3_url']} />
                 <Card.Body id="card">
                   <div className="user_info">
                     <img src="octopus.PNG" width={60} />
-                    <text className="name">Username{idx}</text>
+                    <text className="name">{val['user_id']}</text>
                   </div>
                   {user_likes.includes(val) ? (
                     <button className="like" onClick={() => like_change(val)}>
