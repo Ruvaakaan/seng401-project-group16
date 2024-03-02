@@ -21,6 +21,26 @@ def date_descend(data):
     return sorted(data, key=lambda x: x.get('date_created', ''), reverse=True)
 
 def sort_drawings_handler(event, context):
+    """
+    Lambda function to handle sorting and retrieving drawings from a DynamoDB table
+
+    Parameters:
+    - sort_by (str): Specifies the sorting criteria for the drawing list
+    - "random": Randomizes the drawing list
+    - "likes-ascend": Sorts the drawing list from least liked to most liked
+    - "likes-descend": Sorts the drawing list from most liked to least liked
+    - "date-ascend": Sorts the drawing list from oldest to newest
+    - "date-descend": Sorts the drawing list from newest to oldest
+    - Empty body or other sort type defaults to random
+
+    Example:
+    {
+        "sort_by": "random"
+    }
+
+    Returns:
+    - dict: JSON response with a sorted drawing array
+    """
     try:
         if "body" not in event:
             raise ValueError("Missing 'body' key in the request")
