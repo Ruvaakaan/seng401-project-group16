@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Canvas from "./Canvas";
 import ColorPicker from "./ColorPicker";
 import { Button } from "react-bootstrap";
+import { useLocation } from 'react-router-dom';
 import Brush from "./Brush";
 
 function DrawPage() {
@@ -10,7 +11,9 @@ function DrawPage() {
   const [backgroundColor, setBackgroundColor] = useState("white");
   const [backgroundColorPickerEnabled, setBackgroundColorPickerEnabled] = useState(false);
   const [brushColorPickerEnabled, setBrushColorPickerEnabled] = useState(false);
-
+  const location = useLocation();
+  const prompt = location.state?.prompt;
+  const comp_id = location.state?.comp_id;
 
   const handleColorChange = (color) => {
     setLineColor(color);
@@ -53,9 +56,9 @@ function DrawPage() {
           <ColorPicker value={lineColor} onChange={handleColorChange} />
         </>
       )}
-
+      <h1>{prompt}{comp_id}</h1>
       <Brush value={brushSize} onChange={handleBrushSizeChange}/>
-      <Canvas lineColor={lineColor} brushSize={brushSize} backgroundColor={backgroundColor}/>
+      <Canvas lineColor={lineColor} brushSize={brushSize} backgroundColor={backgroundColor} comp_id={comp_id}/>
     </>
   );
 }

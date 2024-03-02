@@ -4,6 +4,7 @@ import { Navigation, Pagination } from "swiper/modules";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDarkMode } from "./DarkModeContext";
+import { getImages } from "./getImages.js";
 
 function Home() {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
@@ -31,29 +32,16 @@ function Home() {
     for (let i = 0; i < 3; i++) {
       // take 3 most recent prompts
       newComps.push(body[i]["competition_id"]["S"]);
-      await getImages(body[i]["competition_id"]["S"]);
+      await handleImages(body[i]["competition_id"]["S"]);
       newPrompts.push(body[i]["prompt"]["S"]);
     }
     setComps(newComps);
     setPrompts(newPrompts);
   };
 
-  const getImages = async (id) => {
-    let res = await fetch(
-      `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/get_drawings`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          competition_id: id,
-        }),
-      }
-    );
-    let extracted = await res.json();
-    let { body } = extracted;
-    let image_list = body['image_urls'];
+  const handleImages = async (id) => {
+    
+    let image_list = await getImages(id);
 
     if (!image_list){
       setImages(images => [...images, []]);
