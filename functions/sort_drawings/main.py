@@ -22,6 +22,9 @@ def date_descend(data):
 
 def sort_drawings_handler(event, context):
     try:
+        if "body" not in event:
+            raise ValueError("Missing 'body' key in the request")
+
         body = json.loads(event["body"])
         sort_by = body.get("sort_by", "random")
 
