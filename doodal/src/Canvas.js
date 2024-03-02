@@ -9,7 +9,7 @@ import Cookies from "js-cookie";
 // add maybe a fill function
 // add maybe a straight line function
 
-function Canvas({ lineColor, brushSize, backgroundColor }) {
+function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [context, setContext] = useState(null);

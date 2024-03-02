@@ -1,22 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import { useLocation } from 'react-router-dom';
+import { Button } from "react-bootstrap";
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function GalleryPage() {
   const [user_likes, setUserLikes] = useState([1, 3]); // array of all posts liked by user
   const [posts, setPosts] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+  const [userEnter, setUserEnter] = useState(false);
 
+  const nav = useNavigate();
   const location = useLocation();
   const prompt = location.state?.prompt;
   const comp_id = location.state?.comp_id;
 
   var title = "Gallery"
 
-  if (prompt){ 
-    title = prompt;
-  }
+  useEffect(()=> {
+    if (prompt){ 
+        title = prompt;
+        setUserEnter(true);
+      }
+  }, [])
 
   function like_change(val) {
     if (user_likes.includes(val)) {
@@ -49,6 +55,18 @@ function GalleryPage() {
     <>
     <div className="gallery-banner">
       <h1 className="gallery-title">{title}</h1>
+      {userEnter && (
+      <Button
+                  variant="outline-dark"
+                  className="entry-button"
+                  onClick={() =>
+                    nav("/draw", {
+                      state: { prompt: prompt, comp_id: comp_id },
+                    })
+                  }
+                ></Button>
+
+      )}
       <div className="filter-options">
         <ul className="filter-list">
           <li className="filter">
