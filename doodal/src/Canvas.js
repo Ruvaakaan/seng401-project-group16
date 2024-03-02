@@ -132,7 +132,7 @@ function Canvas({ lineColor, brushSize, backgroundColor }) {
       });
 
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      console.error("Error uploading drawing:", error);
     }
   };
 
