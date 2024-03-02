@@ -13,7 +13,7 @@ export const getImages = async (id) => {
     );
     let extracted = await res.json();
     let { body } = extracted;
-    let image_list = body['image_urls'];
-
+    body = JSON.parse(body);
+    let image_list = body["image_urls"];
     return image_list;
   };
