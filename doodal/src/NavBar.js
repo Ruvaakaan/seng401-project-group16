@@ -21,9 +21,9 @@ function NavBar({ loggedIn }) {
           <Link to="/gallery" className="items">
             Gallery
           </Link>
-          <Link to="/draw" className="items">
+          {/* <Link to="/draw" className="items">
             Draw
-          </Link>
+          </Link> */}
           {loggedIn !== false ? (
             <div className="dropdown-click">
               <div
