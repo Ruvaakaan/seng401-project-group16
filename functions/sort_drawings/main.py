@@ -25,7 +25,7 @@ def sort_drawings_handler(event, context):
     Lambda function to handle sorting and retrieving drawings from a DynamoDB table
 
     Parameters:
-    - sort_by (str): Specifies the sorting criteria for the drawing list
+    - sort_type (str): Specifies the sorting criteria for the drawing list
     - "random": Randomizes the drawing list
     - "likes-ascend": Sorts the drawing list from least liked to most liked
     - "likes-descend": Sorts the drawing list from most liked to least liked
@@ -35,18 +35,29 @@ def sort_drawings_handler(event, context):
 
     Example:
     {
-        "sort_by": "random"
+        "sort_type": "random"
     }
+
+    API Gateway Example:
+    - Query strings
+        - sort_type=likes-ascend
 
     Returns:
     - dict: JSON response with a sorted drawing array
     """
     try:
-        if "body" not in event:
-            raise ValueError("Missing 'body' key in the request")
+        print(event)
+        print(type(event))
+        sort_by = "random"
+    
+        if "sort_type" in event:
+            sort_by = event.get("sort_type", "random")
+        else:
+            if "body" not in event:
+                raise ValueError("Missing 'body' key in the request")
 
-        body = json.loads(event["body"])
-        sort_by = body.get("sort_by", "random")
+            body = json.loads(event["body"])
+            sort_by = body.get("sort_type", "random")
 
         print(sort_by)
 
