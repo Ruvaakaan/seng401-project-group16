@@ -13,6 +13,7 @@ function Home() {
   const [comps, setComps] = useState([]);
   const [prompts, setPrompts] = useState([]);
   const [images, setImages] = useState([]);
+  const [imageInfo, setImageInfo] = useState([]);
 
   const getPrompts = async () => {
     let res = await fetch(
@@ -40,13 +41,30 @@ function Home() {
 
   const handleImages = async (id) => {
     
-    let image_list = await getImages(id);
+    let body = await getImages(id);
+    let image_list = [];
+    let post_info_list = [];
+    let post_info = {};
+    try {
+      for (let i = 0; i < body["items"].length; i++) {
+        let url = body["items"][i]["s3_url"]["S"];
+        post_info['drawing_id'] = body["items"][i]["drawing_id"]["S"];
+        post_info['likes'] = body["items"][i]["likes"]["N"];
+        post_info['user_id'] = body["items"][i]["user_id"]["S"];
+        post_info['date_created'] = body["items"][i]["date_created"]["S"];
+        post_info_list.push(post_info);
+        image_list.push(url);
+      }
+    } catch {
+    }
 
-    if (!image_list){
+    if (!body){
       setImages(images => [...images, []]);
+      setImageInfo(imageInfo=>[...imageInfo,[]]);
       return;
     }
     setImages(images => [...images, image_list]);
+    setImageInfo(imageInfo => [...imageInfo, post_info_list]);
   };
 
   useEffect(() => {
@@ -55,6 +73,7 @@ function Home() {
 
   // useEffect(()=> {
   //   console.log(images);
+  //   console.log(imageInfo)
   // }, [images])
 
   return (
@@ -98,8 +117,8 @@ function Home() {
               {images[index]?.length === 0 ? (
                 <h1>No images yet!</h1>
               ) : (
-                images[index].map((item, index) => (
-                  <SwiperSlide key={index}>
+                images[index].map((item, ind) => (
+                  <SwiperSlide key={ind}>
                     <img src={item} width={550} className="home-imgs" />
                   </SwiperSlide>
                 ))
