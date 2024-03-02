@@ -72,8 +72,8 @@ resource "aws_iam_policy" "get_user_info_policy" {
 EOF
 }
 
-resource "aws_iam_policy" "get_drawings_policy" {
-  name        = "lambda-logging-${local.get_drawings_funct}"
+resource "aws_iam_policy" "get_competition_drawings_policy" {
+  name        = "lambda-logging-${local.get_competition_drawings_funct}"
   description = "IAM policy for logging from a lambda"
 
   policy = <<EOF
@@ -361,8 +361,8 @@ resource "aws_iam_policy" "get_prompts_policy" {
 EOF
 }
 
-resource "aws_iam_policy" "get_prompt_policy" {
-  name        = "lambda-logging-${local.get_prompt_funct}"
+resource "aws_iam_policy" "get_users_drawings_policy" {
+  name        = "lambda-logging-${local.get_users_drawings_funct}"
   description = "IAM policy for logging from a lambda"
 
   policy = <<EOF
@@ -389,7 +389,7 @@ resource "aws_iam_policy" "get_prompt_policy" {
       ],
       "Resource": [
         "arn:aws:logs:*:*:*",
-        "${aws_dynamodb_table.doodal-prompts.arn}"
+        "${aws_dynamodb_table.doodal-drawings.arn}"
       ],
       "Effect": "Allow"
     }
@@ -489,9 +489,9 @@ resource "aws_iam_role_policy_attachment" "get_user_info_logs" {
   policy_arn = aws_iam_policy.get_user_info_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "get_drawings_logs" {
-  role       = aws_iam_role.get_drawings_iam.name
-  policy_arn = aws_iam_policy.get_drawings_policy.arn
+resource "aws_iam_role_policy_attachment" "get_competition_drawings_logs" {
+  role       = aws_iam_role.get_competition_drawings_iam.name
+  policy_arn = aws_iam_policy.get_competition_drawings_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "upload_drawing_logs" {
@@ -529,9 +529,9 @@ resource "aws_iam_role_policy_attachment" "get_prompts_logs" {
   policy_arn = aws_iam_policy.get_prompts_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "get_prompt_logs" {
-  role       = aws_iam_role.get_prompt_iam.name
-  policy_arn = aws_iam_policy.get_prompt_policy.arn
+resource "aws_iam_role_policy_attachment" "get_users_drawings_logs" {
+  role       = aws_iam_role.get_users_drawings_iam.name
+  policy_arn = aws_iam_policy.get_users_drawings_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "upload_profile_photo_logs" {

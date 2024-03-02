@@ -17,9 +17,10 @@ dynamodb = boto3.client("dynamodb")
   
 #   return image_urls
 
-def get_drawings(event, context):
+def get_competition_drawings(event, context):
   
   try:
+    print(event)
     competition_id = event["competition_id"]
 
     if competition_id:

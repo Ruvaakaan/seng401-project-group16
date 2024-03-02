@@ -15,12 +15,12 @@ data "archive_file" "get_user_info_archive" {
   output_path = local.get_user_info_artifact
 }
 
-data "archive_file" "get_drawings_archive" {
+data "archive_file" "get_competition_drawings_archive" {
   type = "zip"
   # this file (main.py) needs to exist in the same folder as this 
   # Terraform configuration file
-  source_dir  = "../functions/get_drawings"
-  output_path = local.get_drawings_artifact
+  source_dir  = "../functions/get_competition_drawings"
+  output_path = local.get_competition_drawings_artifact
 }
 
 data "archive_file" "upload_drawing_archive" {
@@ -79,12 +79,12 @@ data "archive_file" "get_prompts_archive" {
   output_path = local.get_prompts_artifact
 }
 
-data "archive_file" "get_prompt_archive" {
+data "archive_file" "get_users_drawings_archive" {
   type = "zip"
   # this file (main.py) needs to exist in the same folder as this 
   # Terraform configuration file
-  source_dir  = "../functions/get_prompt"
-  output_path = local.get_prompt_artifact
+  source_dir  = "../functions/get_users_drawings"
+  output_path = local.get_users_drawings_artifact
 }
 
 data "archive_file" "upload_profile_photo_archive" {
@@ -129,12 +129,12 @@ resource "aws_lambda_function" "get_user_info_lambda" {
   runtime = "python3.9"
 }
 
-resource "aws_lambda_function" "get_drawings_lambda" {
-  role             = aws_iam_role.get_drawings_iam.arn
-  function_name    = local.get_drawings_funct
-  handler          = local.get_drawings_handler
-  filename         = local.get_drawings_artifact
-  source_code_hash = data.archive_file.get_drawings_archive.output_base64sha256
+resource "aws_lambda_function" "get_competition_drawings_lambda" {
+  role             = aws_iam_role.get_competition_drawings_iam.arn
+  function_name    = local.get_competition_drawings_funct
+  handler          = local.get_competition_drawings_handler
+  filename         = local.get_competition_drawings_artifact
+  source_code_hash = data.archive_file.get_competition_drawings_archive.output_base64sha256
   timeout          = 20
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
@@ -225,12 +225,12 @@ resource "aws_lambda_function" "get_prompts_lambda" {
   runtime = "python3.9"
 }
 
-resource "aws_lambda_function" "get_prompt_lambda" {
-  role             = aws_iam_role.get_prompt_iam.arn
-  function_name    = local.get_prompt_funct
-  handler          = local.get_prompt_handler
-  filename         = local.get_prompt_artifact
-  source_code_hash = data.archive_file.get_prompt_archive.output_base64sha256
+resource "aws_lambda_function" "get_users_drawings_lambda" {
+  role             = aws_iam_role.get_users_drawings_iam.arn
+  function_name    = local.get_users_drawings_funct
+  handler          = local.get_users_drawings_handler
+  filename         = local.get_users_drawings_artifact
+  source_code_hash = data.archive_file.get_users_drawings_archive.output_base64sha256
   timeout          = 20
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
@@ -290,8 +290,8 @@ resource "aws_lambda_function_url" "get_user_info_url" {
   }
 }
 
-resource "aws_lambda_function_url" "get_drawings_url" {
-  function_name      = aws_lambda_function.get_drawings_lambda.function_name
+resource "aws_lambda_function_url" "get_competition_drawings_url" {
+  function_name      = aws_lambda_function.get_competition_drawings_lambda.function_name
   authorization_type = "NONE"
 
   cors {
@@ -394,8 +394,8 @@ resource "aws_lambda_function_url" "get_prompts_url" {
   }
 }
 
-resource "aws_lambda_function_url" "get_prompt_url" {
-  function_name      = aws_lambda_function.get_prompt_lambda.function_name
+resource "aws_lambda_function_url" "get_users_drawings_url" {
+  function_name      = aws_lambda_function.get_users_drawings_lambda.function_name
   authorization_type = "NONE"
 
   cors {

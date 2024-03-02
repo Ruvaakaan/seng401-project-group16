@@ -7,18 +7,20 @@ import Row from "react-bootstrap/Row";
 import "./Account.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Cookies from "js-cookie";
+import { getUserImages } from "./getUserImages.js";
 
 function Account() {
   // Receive authenticationToken as a prop
   //User state
   const [user, setUser] = useState({
+    id: "example_id",
     username: "example_user",
     email: "example@example.com",
     bio: "Bio here",
     exp: 550,
   });
 
-  const [posts, setPosts] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+  const [posts, setPosts] = useState([]);
 
   //Calculate the level based on experience points
   function calculateLevel(exp) {
@@ -87,6 +89,7 @@ function Account() {
         if (response.ok) {
           const userData = await response.json(); // Parse response body as JSON
           setUser({
+            id: userData.user_id.S,
             username: userData.username.S,
             email: userData.email.S,
             bio: userData.bio.S, // You may want to set this to a default value or leave it empty initially
@@ -102,8 +105,22 @@ function Account() {
         console.error("Error fetching user data:", error);
       }
     }
+    async function fetchUserImages() {
+      const authenticationToken = Cookies.get("authentication");
+      try {
+        console.log(user.id)
+        const images = await getUserImages(user.id, authenticationToken);
+        setPosts(images);
+      } catch (error) {
+        console.error("Error fetching user images:", error);
+      }
+    }
+
     fetchUserData();
-  }, []); // Add authenticationToken as a dependency
+    if (user.id) {
+      fetchUserImages();
+    }
+  }, [user.id]);
 
   return (
     <div className="account-container">
@@ -153,10 +170,10 @@ function Account() {
       <div className="image-gallery">
         <h2>Your Gallery</h2>
         <Row xs={3} className="g-4">
-          {posts.map((val, idx) => (
+          {posts.map((url, idx) => (
             <Col key={idx}>
               <Card>
-                <Card.Img variant="top" src="doodalnew.PNG" />
+                <Card.Img variant="top" src={url} />
                 <Card.Body id="card"></Card.Body>
               </Card>
             </Col>

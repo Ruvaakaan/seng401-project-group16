@@ -37,8 +37,8 @@ resource "aws_iam_role" "get_user_info_iam" {
 EOF
 }
 
-resource "aws_iam_role" "get_drawings_iam" {
-  name               = "iam-for-lambda-${local.get_drawings_funct}"
+resource "aws_iam_role" "get_competition_drawings_iam" {
+  name               = "iam-for-lambda-${local.get_competition_drawings_funct}"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -189,8 +189,8 @@ resource "aws_iam_role" "get_prompts_iam" {
 EOF
 }
 
-resource "aws_iam_role" "get_prompt_iam" {
-  name               = "iam-for-lambda-${local.get_prompt_funct}"
+resource "aws_iam_role" "get_users_drawings_iam" {
+  name               = "iam-for-lambda-${local.get_users_drawings_funct}"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",

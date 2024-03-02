@@ -1,6 +1,6 @@
 export const getImages = async (id) => {
     let res = await fetch(
-      `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/get_drawings`,
+      `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/get_competition_drawings`,
       {
         method: "POST",
         headers: {
