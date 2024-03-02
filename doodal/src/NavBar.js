@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import DropdownMenu from "./DropdownMenu";
 
-function NavBar({ authenticationToken }) {
+function NavBar({ loggedIn }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
@@ -24,7 +24,7 @@ function NavBar({ authenticationToken }) {
           <Link to="/draw" className="items">
             Draw
           </Link>
-          {authenticationToken !== null ? (
+          {loggedIn !== false ? (
             <div className="dropdown-click">
               <div
                 className={isDropdownOpen ? 'profile dropdown-opened reg-hover' : 'profile reg-hover'}
