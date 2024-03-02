@@ -9,7 +9,14 @@ function GalleryPage() {
   const [posts, setPosts] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
 
   const location = useLocation();
-  const prompt = location.state?.additionalProp;
+  const prompt = location.state?.prompt;
+  const comp_id = location.state?.comp_id;
+
+  var title = "Gallery"
+
+  if (prompt){ 
+    title = prompt;
+  }
 
   function like_change(val) {
     if (user_likes.includes(val)) {
@@ -41,7 +48,7 @@ function GalleryPage() {
   return (
     <>
     <div className="gallery-banner">
-      <h1 className="gallery-title">Gallery {prompt}</h1>
+      <h1 className="gallery-title">{title}</h1>
       <div className="filter-options">
         <ul className="filter-list">
           <li className="filter">
