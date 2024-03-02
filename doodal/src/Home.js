@@ -9,7 +9,6 @@ function Home() {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
   const nav = useNavigate();
 
-  const [current, setCurrent] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   const [comps, setComps] = useState([]);
   const [prompts, setPrompts] = useState([]);
   const [images, setImages] = useState([]);
@@ -32,14 +31,14 @@ function Home() {
     for (let i = 0; i < 3; i++) {
       // take 3 most recent prompts
       newComps.push(body[i]["competition_id"]["S"]);
-      await getImages(i, body[i]["competition_id"]["S"]);
+      await getImages(body[i]["competition_id"]["S"]);
       newPrompts.push(body[i]["prompt"]["S"]);
     }
     setComps(newComps);
     setPrompts(newPrompts);
   };
 
-  const getImages = async (index, id) => {
+  const getImages = async (id) => {
     let res = await fetch(
       `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/get_drawings`,
       {
