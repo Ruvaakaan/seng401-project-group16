@@ -60,21 +60,21 @@ function GalleryPage() {
     if (!image_list) {
       return;
     }
-    setImages(...images, image_list);
+    setImages(image_list);
   };
 
   const callSorter = async (s) => {
-    
     let sorted = await sortImages(s);
 
-    // let v = Math.floor(Math.random() * 10);
-    // let extracted = new Array(v).fill(1);
-    // setImages(extracted);
+    if (!sorted) {
+      return;
+    }
+    setImages(sorted);
   };
 
-  useEffect(() => {
-    console.log(images);
-  }, [images]);
+  // useEffect(() => {
+  //   console.log(images);
+  // }, [images]);
 
   return (
     <>
@@ -98,21 +98,33 @@ function GalleryPage() {
             </li>
             <li
               className="filter-item reg-hover"
-              onClick={() => callSorter("hot")} // change these values, add the other options from the lambda
+              onClick={() => callSorter("random")} // change these values, add the other options from the lambda
             >
-              Hot
+              Random
             </li>
             <li
               className="filter-item reg-hover"
-              onClick={() => callSorter("pop")}
+              onClick={() => callSorter("likes-ascend")}
             >
-              Popular
+              Most Liked
             </li>
             <li
               className="filter-item reg-hover"
-              onClick={() => callSorter("new")}
+              onClick={() => callSorter("likes-descend")}
+            >
+              Least Liked
+            </li>
+            <li
+              className="filter-item reg-hover"
+              onClick={() => callSorter("date-descend")}
             >
               Newest
+            </li>
+            <li
+              className="filter-item reg-hover"
+              onClick={() => callSorter("date-ascend")}
+            >
+              Oldest
             </li>
           </ul>
         </div>
