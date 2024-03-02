@@ -35,12 +35,12 @@ def sort_drawings_handler(event, context):
     data = []
 
     for item in items:
-        drawing_id = item.get('drawing_id')
-        competition_id = item.get('competition_id')
-        date_created = item.get('date_created')
-        likes = item.get('likes')
-        s3_url = item.get('s3_url')
-        user_id = item.get('user_id')
+        drawing_id = item.get('drawing_id', {}).get('S', '')
+        competition_id = item.get('competition_id', {}).get('S', '')
+        date_created = float(item.get('date_created', {}).get('S', ''))
+        likes = int(item.get('likes', {}).get('N', 0))
+        s3_url = item.get('s3_url', {}).get('S', '')
+        user_id = item.get('user_id', {}).get('S', '')
 
         item_dict = {
             'drawing_id': drawing_id,
