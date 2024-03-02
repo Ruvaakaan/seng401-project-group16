@@ -4,10 +4,11 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { Button } from "react-bootstrap";
 import { useLocation, useNavigate } from 'react-router-dom';
+import { getImages } from "./getImages.js";
 
 function GalleryPage() {
   const [user_likes, setUserLikes] = useState([1, 3]); // array of all posts liked by user
-  const [posts, setPosts] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+  const [images, setImages] = useState([]);
   const [userEnter, setUserEnter] = useState(false);
 
   const nav = useNavigate();
@@ -22,6 +23,8 @@ function GalleryPage() {
         title = prompt;
         setUserEnter(true);
       }
+      handleImages(comp_id);
+    
   }, [])
 
   function like_change(val) {
@@ -31,6 +34,36 @@ function GalleryPage() {
     }
     setUserLikes([...user_likes, val]);
   }
+
+  const handleLikes = async () => {
+    let res = await fetch(
+      `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/get_drawings`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: "tmp", // need to find a way to get user id
+          drawing_id: "tmp", // need to get drawing id
+        }),
+      }
+    );
+    if (res.ok){
+      console.log("success")
+    }
+  }
+
+  const handleImages = async (id) => {
+    
+    let image_list = await getImages(id);
+
+    if (!image_list){
+      setImages(images => [...images, []]); // change how this is handled here
+      return;
+    }
+    setImages(images => [...images, image_list]);
+  };
 
   const callSorter = async (s) => {
     // const link = "hello/"+s;
@@ -48,7 +81,7 @@ function GalleryPage() {
 
     let v = Math.floor(Math.random() * 10);
     let extracted = new Array(v).fill(1);
-    setPosts(extracted);
+    setImages(extracted);
   };
 
   return (
@@ -80,7 +113,7 @@ function GalleryPage() {
     </div>
       <div className="gal">
         <Row xs={6} className="g-4">
-          {posts.map((val, idx) => (
+          {images.map((val, idx) => (
             <Col key={idx}>
               <Card>
                 <Card.Img variant="top" src="doodalnew.PNG" />
