@@ -19,11 +19,12 @@ function App() {
         const hash = window.location.hash;
         const urlParams = new URLSearchParams(hash);
         const accessToken = urlParams.get("access_token");
+
         if (accessToken) { // Checking url params for authentication
             Cookies.set("authentication", accessToken, { expires: 1 / 24 });
             setLoggedIn(true);
             navigate(window.location.pathname);
-             
+
             try {
                 const user = await makeApiCall("https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/getdata", "GET", "");
                 Cookies.set("userInfo", JSON.stringify(user));
@@ -34,13 +35,13 @@ function App() {
             const authenticationCookie = Cookies.get("authentication");
             if (authenticationCookie) {
                 setLoggedIn(true);
-                const unfinishedApiCall = Cookies.get("unfinishedapicall");
+                const unfinishedApiCall = localStorage.getItem("unfinishedapicall");
                 try {
                     if (unfinishedApiCall) {
-                        const { url, method, request, redirectUri } = JSON.parse(unfinishedApiCall);
-                        makeApiCall(url, method, request, redirectUri);
+                        const { url, method, request } = JSON.parse(unfinishedApiCall);
+                        makeApiCall(url, method, request);
                     }
-                    Cookies.remove("unfinishedapicall");
+                    localStorage.removeItem("unfinishedapicall");
                 } catch (error) {
                     console.log(error);
                 }

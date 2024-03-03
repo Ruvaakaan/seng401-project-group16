@@ -37,7 +37,7 @@ async function makeApiCall(url, method, request) {
         }
     } catch (error) {
         console.error("makeApiCall ~ error:", error);
-        if (error.code === "ERR_NETWORK") {
+        if (error.code === "ERR_NETWORK" || error.code === "ERR_BAD_REQUEST") {
             // Handle 401 error
             console.log("Unauthorized Error");
             const apiCallToStore = {
@@ -51,13 +51,15 @@ async function makeApiCall(url, method, request) {
 }
 
 function handleUnauthorizedError(unfinishedCall) {
+    console.log("handleUnauthorizedError ~ unfinishedCall:", unfinishedCall)
+    
     // Save the unfinished API call request to a cookie for later retrieval
-    Cookies.set("unfinishedapicall", unfinishedCall);
+    localStorage.setItem("unfinishedapicall", JSON.stringify(unfinishedCall));
 
     const redirectUri = encodeURIComponent("http://localhost:3000/");
     const fullRedirectUrl = `https://doodal.auth.us-west-2.amazoncognito.com/login?client_id=6c1og3jvcp62aqmkhjcgkjkvgq&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=${redirectUri}`;
 
-    // window.location.href = fullRedirectUrl;
+    window.location.href = fullRedirectUrl;
 }
 
 export default makeApiCall;
