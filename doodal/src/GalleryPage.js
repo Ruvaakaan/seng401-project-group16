@@ -6,9 +6,10 @@ import { Button } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getImages } from "./getImages.js";
 import { sortImages } from "./sortDrawings.js";
+import { likeUnlike } from "./LikeAndUnlike.js";
 
 function GalleryPage() {
-  const [user_likes, setUserLikes] = useState([1, 3]); // array of all posts liked by user
+  const [user_likes, setUserLikes] = useState([]); // array of all posts liked by user
   const [images, setImages] = useState([]);
   const [userEnter, setUserEnter] = useState(false);
   const [title, setTitle] = useState("Gallery");
@@ -28,7 +29,8 @@ function GalleryPage() {
     }
   }, []);
 
-  function like_change(val) { // this function changes the heart icon for liking and unliking
+  function like_change(val) {
+    // this function changes the heart icon for liking and unliking
     if (user_likes.includes(val)) {
       setUserLikes(user_likes.filter((item) => item !== val));
       return;
@@ -36,42 +38,29 @@ function GalleryPage() {
     setUserLikes([...user_likes, val]);
   }
 
-  const handleLikes = async () => {
-    let res = await fetch(
-      `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/get_drawings`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: "tmp", // need to find a way to get user id
-          drawing_id: "tmp", // need to get drawing id
-        }),
-      }
-    );
-    if (res.ok) {
-      console.log("success");
+  const handleLikes = async (id) => {
+    let val = await likeUnlike(id);
+    if (val){
+      like_change(id)
     }
   };
 
   const handleImages = async (id) => {
     let body = await getImages(id);
-
+    console.log("dwas", body);
     let post_info_list = []; // tragedy isnt it?
-    let post_info = {};
     try {
       for (let i = 0; i < body["items"].length; i++) {
-        post_info['s3_url'] = body["items"][i]["s3_url"]["S"];
-        post_info['competition_id'] = body["items"][i]["competition_id"]["S"];
-        post_info['drawing_id'] = body["items"][i]["drawing_id"]["S"];
-        post_info['likes'] = body["items"][i]["likes"]["N"];
-        post_info['user_id'] = body["items"][i]["user_id"]["S"];
-        post_info['date_created'] = body["items"][i]["date_created"]["S"];
+        let post_info = {};
+        post_info["s3_url"] = body["items"][i]["s3_url"]["S"];
+        post_info["competition_id"] = body["items"][i]["competition_id"]["S"];
+        post_info["drawing_id"] = body["items"][i]["drawing_id"]["S"];
+        post_info["likes"] = body["items"][i]["likes"]["N"];
+        post_info["user_id"] = body["items"][i]["user_id"]["S"];
+        post_info["date_created"] = body["items"][i]["date_created"]["S"];
         post_info_list.push(post_info);
       }
-    } catch {
-    }
+    } catch {}
 
     if (!post_info_list) {
       return;
@@ -155,18 +144,18 @@ function GalleryPage() {
           {images.map((val, idx) => (
             <Col key={idx}>
               <Card>
-                <Card.Img variant="top" src={val['s3_url']} />
+                <Card.Img variant="top" src={val["s3_url"]} />
                 <Card.Body id="card">
                   <div className="user_info">
                     <img src="octopus.PNG" width={60} />
-                    <text className="name">{val['user_id']}</text>
+                    <text className="name">{val["user_id"]}</text>
                   </div>
-                  {user_likes.includes(val) ? (
-                    <button className="like" onClick={() => like_change(val)}>
+                  {user_likes.includes(val['drawing_id']) ? (
+                    <button className="like" onClick={() => handleLikes(val['drawing_id'])}>
                       &#9829;
                     </button>
                   ) : (
-                    <button className="like" onClick={() => like_change(val)}>
+                    <button className="like" onClick={() => handleLikes(val['drawing_id'])}>
                       &#9825;
                     </button>
                   )}

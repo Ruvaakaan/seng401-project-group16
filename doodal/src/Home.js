@@ -40,31 +40,29 @@ function Home() {
   };
 
   const handleImages = async (id) => {
-    
     let body = await getImages(id);
     let image_list = [];
     let post_info_list = [];
-    let post_info = {};
     try {
       for (let i = 0; i < body["items"].length; i++) {
         let url = body["items"][i]["s3_url"]["S"];
-        post_info['drawing_id'] = body["items"][i]["drawing_id"]["S"];
-        post_info['likes'] = body["items"][i]["likes"]["N"];
-        post_info['user_id'] = body["items"][i]["user_id"]["S"];
-        post_info['date_created'] = body["items"][i]["date_created"]["S"];
+        let post_info = {};
+        post_info["drawing_id"] = body["items"][i]["drawing_id"]["S"];
+        post_info["likes"] = body["items"][i]["likes"]["N"];
+        post_info["user_id"] = body["items"][i]["user_id"]["S"];
+        post_info["date_created"] = body["items"][i]["date_created"]["S"];
         post_info_list.push(post_info);
         image_list.push(url);
       }
-    } catch {
-    }
+    } catch {}
 
-    if (!body){
-      setImages(images => [...images, []]);
-      setImageInfo(imageInfo=>[...imageInfo,[]]);
+    if (!body) {
+      setImages((images) => [...images, []]);
+      setImageInfo((imageInfo) => [...imageInfo, []]);
       return;
     }
-    setImages(images => [...images, image_list]);
-    setImageInfo(imageInfo => [...imageInfo, post_info_list]);
+    setImages((images) => [...images, image_list]);
+    setImageInfo((imageInfo) => [...imageInfo, post_info_list]);
   };
 
   useEffect(() => {
