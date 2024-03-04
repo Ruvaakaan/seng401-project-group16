@@ -6,28 +6,31 @@ import { Button } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getImages } from "./getImages.js";
 import { sortImages } from "./sortDrawings.js";
+import { likeUnlike } from "./LikeAndUnlike.js";
 
 function GalleryPage() {
-  const [user_likes, setUserLikes] = useState([1, 3]); // array of all posts liked by user
+  const [user_likes, setUserLikes] = useState([]); // array of all posts liked by user
   const [images, setImages] = useState([]);
   const [userEnter, setUserEnter] = useState(false);
+  const [title, setTitle] = useState("Gallery");
 
   const nav = useNavigate();
   const location = useLocation();
   const prompt = location.state?.prompt;
   const comp_id = location.state?.comp_id;
 
-  var title = "Gallery";
-
   useEffect(() => {
     if (prompt) {
-      title = prompt;
+      setTitle(prompt);
       setUserEnter(true);
+      handleImages(comp_id);
+    } else {
+      callSorter("likes-descend");
     }
-    handleImages(comp_id);
   }, []);
 
   function like_change(val) {
+    // this function changes the heart icon for liking and unliking
     if (user_likes.includes(val)) {
       setUserLikes(user_likes.filter((item) => item !== val));
       return;
@@ -35,84 +38,103 @@ function GalleryPage() {
     setUserLikes([...user_likes, val]);
   }
 
-  const handleLikes = async () => {
-    let res = await fetch(
-      `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/get_drawings`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: "tmp", // need to find a way to get user id
-          drawing_id: "tmp", // need to get drawing id
-        }),
-      }
-    );
-    if (res.ok) {
-      console.log("success");
+  const handleLikes = async (id) => {
+    let val = await likeUnlike(id);
+    if (val){
+      like_change(id)
     }
   };
 
   const handleImages = async (id) => {
-    let image_list = await getImages(id);
+    let body = await getImages(id);
+    console.log("dwas", body);
+    let post_info_list = []; // tragedy isnt it?
+    try {
+      for (let i = 0; i < body["items"].length; i++) {
+        let post_info = {};
+        post_info["s3_url"] = body["items"][i]["s3_url"]["S"];
+        post_info["competition_id"] = body["items"][i]["competition_id"]["S"];
+        post_info["drawing_id"] = body["items"][i]["drawing_id"]["S"];
+        post_info["likes"] = body["items"][i]["likes"]["N"];
+        post_info["user_id"] = body["items"][i]["user_id"]["S"];
+        post_info["date_created"] = body["items"][i]["date_created"]["S"];
+        post_info_list.push(post_info);
+      }
+    } catch {}
 
-    if (!image_list) {
+    if (!post_info_list) {
       return;
     }
-    setImages(...images, image_list);
+    setImages(post_info_list);
   };
 
   const callSorter = async (s) => {
-    
-    let sorted = await sortImages(s);
-
-    // let v = Math.floor(Math.random() * 10);
-    // let extracted = new Array(v).fill(1);
-    // setImages(extracted);
+    let body = await sortImages(s);
+    if (!body) {
+      return;
+    }
+    setImages(body);
   };
 
   useEffect(() => {
-    console.log(images);
+    console.log("images:", images);
   }, [images]);
 
   return (
     <>
       <div className="gallery-banner">
-        <h1 className="gallery-title">{title}</h1>
-        {userEnter && (
-          <Button
-            variant="outline-dark"
-            className="entry-button"
-            onClick={() =>
-              nav("/draw", {
-                state: { prompt: prompt, comp_id: comp_id },
-              })
-            }
-          ></Button>
-        )}
+        <div className="gallery-title">
+          <h1>
+            {title}
+            {userEnter && (
+              <Button
+                variant="outline-dark"
+                className="entry-button"
+                onClick={() =>
+                  nav("/draw", {
+                    state: { prompt: prompt, comp_id: comp_id },
+                  })
+                }
+              >
+                Draw
+              </Button>
+            )}
+          </h1>
+        </div>
         <div className="filter-options">
           <ul className="filter-list">
             <li className="filter">
-              <b>Filter:</b>
+              <b>Filter by:</b>
             </li>
             <li
               className="filter-item reg-hover"
-              onClick={() => callSorter("hot")} // change these values, add the other options from the lambda
+              onClick={() => callSorter("random")}
             >
-              Hot
+              Random
             </li>
             <li
               className="filter-item reg-hover"
-              onClick={() => callSorter("pop")}
+              onClick={() => callSorter("likes-ascend")}
             >
-              Popular
+              Least Liked
             </li>
             <li
               className="filter-item reg-hover"
-              onClick={() => callSorter("new")}
+              onClick={() => callSorter("likes-descend")}
+            >
+              Most Liked
+            </li>
+            <li
+              className="filter-item reg-hover"
+              onClick={() => callSorter("date-descend")}
             >
               Newest
+            </li>
+            <li
+              className="filter-item reg-hover"
+              onClick={() => callSorter("date-ascend")}
+            >
+              Oldest
             </li>
           </ul>
         </div>
@@ -122,18 +144,18 @@ function GalleryPage() {
           {images.map((val, idx) => (
             <Col key={idx}>
               <Card>
-                <Card.Img variant="top" src={val} />
+                <Card.Img variant="top" src={val["s3_url"]} />
                 <Card.Body id="card">
                   <div className="user_info">
                     <img src="octopus.PNG" width={60} />
-                    <text className="name">Username{idx}</text>
+                    <text className="name">{val["user_id"]}</text>
                   </div>
-                  {user_likes.includes(val) ? (
-                    <button className="like" onClick={() => like_change(val)}>
+                  {user_likes.includes(val['drawing_id']) ? (
+                    <button className="like" onClick={() => handleLikes(val['drawing_id'])}>
                       &#9829;
                     </button>
                   ) : (
-                    <button className="like" onClick={() => like_change(val)}>
+                    <button className="like" onClick={() => handleLikes(val['drawing_id'])}>
                       &#9825;
                     </button>
                   )}

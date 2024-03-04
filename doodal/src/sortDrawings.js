@@ -12,6 +12,7 @@ export const sortImages = async (sort) => {
       }
     );
     let extracted = await res.json();
-    console.log(extracted);
-    return;
+    let {body } = extracted;
+    body = JSON.parse(body);
+    return body;
   };

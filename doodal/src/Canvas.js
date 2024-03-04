@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import NotLoggedIn from "./NotLoggedIn.js";
 import Cookies from "js-cookie";
-
+import makeApiCall from "./makeApiCall.js";
 // resetting canvas when transparent background doesnt work correctly
 // going off screen whilst holding mouse button and then letting go of mouse leaves mouse pressed
 // add drawing with shapes
@@ -122,14 +122,7 @@ function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
 
       const jsonString = JSON.stringify(jsonData);
       const link = `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/upload_drawing`;
-      const res = fetch(link, {
-        method: "POST",
-        headers: {
-          Authorization: authenticationToken,
-        },
-        body: jsonString,
-      });
-
+      const res = makeApiCall(link, "POST", jsonString)
     } catch (error) {
       console.error("Error uploading drawing:", error);
     }
