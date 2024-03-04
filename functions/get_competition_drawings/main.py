@@ -5,18 +5,6 @@ import base64
 s3 = boto3.client("s3")
 dynamodb = boto3.client("dynamodb")
 
-# def get_competition_images(competition_id):
-#   prefix = f"{competition_id}/"
-  
-#   response = s3.list_objects_v2(Bucket="doodals-bucket-seng401", Prefix=prefix)
-#   image_urls = []
-#   if "Contents" in response:
-#     for obj in response["Contents"]:
-#       image_url = f"https://doodals-bucket-seng401.s3.amazonaws.com/{obj['Key']}"
-#       image_urls.append(image_url)
-  
-#   return image_urls
-
 def get_competition_drawings(event, context):
   
   try:
