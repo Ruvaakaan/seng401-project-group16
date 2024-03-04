@@ -1,6 +1,7 @@
 import makeApiCall from "./makeApiCall";
 
 export const getImages = async (id) => {
+
   const request = JSON.stringify({
     competition_id: id,
   })
