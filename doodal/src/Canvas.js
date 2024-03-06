@@ -103,20 +103,12 @@ function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
   };
 
   const handleUpload = () => {
-    try {
-      const authenticationToken = Cookies.get("authentication");
-
-      if (!authenticationToken) {
-        setUserNotLogged(true);
-        return console.log("user was not logged in"); // handle users not logged in here
-      }
-      
+    try {      
       const canvas = canvasRef.current;
       const img = canvas.toDataURL("image/jpeg");
       const img_data = img.replace(/^data:image\/jpeg;base64,/, "");
       const jsonData = {
-        competition_id: comp_id,
-        user_id: "b1724b73-5ade-473d-b85c-d64d563a00d3", // find a way to get user id
+        competition_id: comp_id
       };
       jsonData.image_data = img_data;
 

@@ -5,8 +5,7 @@ dynamodb = boto3.client("dynamodb")
 
 def get_users_drawings(event, context):
   print(event)
-  # user_id = event["requestContext"]["authorizer"]["claims"]["sub"]
-  user_id = "b1724b73-5ade-473d-b85c-d64d563a00d3"
+  user_id = event["requestContext"]["authorizer"]["claims"]["sub"]
   print(user_id)
   
   try:

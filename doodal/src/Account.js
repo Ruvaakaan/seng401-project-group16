@@ -17,7 +17,7 @@ function Account() {
     username: "example_user",
     email: "example@example.com",
     bio: "Bio here",
-    exp: 550,
+    exp: 0,
   });
 
   const [posts, setPosts] = useState([]);
@@ -106,10 +106,8 @@ function Account() {
       }
     }
     async function fetchUserImages() {
-      const authenticationToken = Cookies.get("authentication");
       try {
-        console.log(user.id)
-        const images = await getUserImages(user.id, authenticationToken);
+        const images = await getUserImages();
         setPosts(images);
       } catch (error) {
         console.error("Error fetching user images:", error);
@@ -117,10 +115,9 @@ function Account() {
     }
 
     fetchUserData();
-    if (user.id) {
-      fetchUserImages();
-    }
-  }, [user.id]);
+    fetchUserImages();
+    
+  }, []);
 
   return (
     <div className="account-container">

@@ -14,7 +14,7 @@ def upload_drawing(event, context):
 
     body = json.loads(event["body"])
     competition_id = body["competition_id"]
-    user_id = body["user_id"]
+    user_id = event['headers']["user_id"]
     image_data = base64.b64decode(body["image_data"])
   
     drawing_id = str(uuid.uuid4())
