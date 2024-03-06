@@ -26,22 +26,22 @@ const Popup = ({ show, handleClose, selectedImage, username }) => {
         </div>
       </Modal.Body>
       <Modal.Footer className="popup-footer">
-          <div className="user_info">
-            <img className="logo" src="octopus.PNG" alt="Logo" />
-            {/* <span className="name">{username}</span> */}
-            <span className="name">Username</span> 
-          </div>
-          <div className="like-btn" onClick={handleLike} >
-            {liked ? (
-                    <button className="like">
-                      &#9829;
-                    </button>
-                  ) : (
-                    <button className="like">
-                      &#9825;
-                    </button>
-                  )}
-          </div>
+        <div className="user_info">
+          <img className="logo" src="octopus.PNG" alt="Logo" />
+          {/* <span className="name">{username}</span> */}
+          <span className="name">Username</span> 
+        </div>
+        <div className="like-btn" onClick={handleLike} >
+          {liked ? (
+                  <button className="like">
+                    &#9829;
+                  </button>
+                ) : (
+                  <button className="like">
+                    &#9825;
+                  </button>
+                )}
+        </div>
       </Modal.Footer>
     </Modal>
   );

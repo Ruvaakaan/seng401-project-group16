@@ -12,14 +12,13 @@
     align-items: center;
 }
 
-.user_info {
+/* .user_info {
     display: flex;
     align-items: center;
-}
+} */
 
 .logo {
     width: 40px;
-    margin-right: 20px; 
 }
 
 .name {
