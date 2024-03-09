@@ -1,5 +1,6 @@
 import boto3
 import json
+import uuid
 
 dynamodb_client = boto3.client("dynamodb")
 
@@ -16,15 +17,19 @@ def update_drawing_likes(drawing_id, like_val):
   updated_likes = response['Attributes']['likes']
   return updated_likes
 
-def delete_users_liked_photos(user_id, drawing_id):
-  statement = "DELETE FROM \"doodal-likes\" WHERE user_id = ? AND drawing_id = ?"
-  params = [{"S": str(user_id)}, {"S": str(drawing_id)}]
-  response = dynamodb_client.execute_statement(
-    Statement=statement,
-    Parameters=params
-  )
-  print(f"delete_users_liked_photos Response: {response}")
-  return response
+def delete_users_liked_photos(user_id, drawing_id, like_id):
+  try:
+      statement = "DELETE FROM \"doodal-likes\" WHERE like_id = ?"
+      params = [{"S": str(like_id)}]
+      response = dynamodb_client.execute_statement(
+          Statement=statement,
+          Parameters=params
+      )
+      print(f"delete_users_liked_photos Response: {response}")
+      return response
+  except Exception as e:
+      print(f"An error occurred: {e}")
+      return None  # Or handle the error in a different way as per your requirement
 
 def check_if_user_already_liked(user_id, drawing_id):
   response = dynamodb_client.scan(
@@ -40,9 +45,11 @@ def check_if_user_already_liked(user_id, drawing_id):
   return items
 
 def add_to_users_liked_photos(user_id, drawing_id):
+  like_id = str(uuid.uuid4())
   dynamodb_client.put_item(
     TableName="doodal-likes",
     Item={
+      'like_id': {"S": str(like_id)},
       'user_id': {"S": str(user_id)},
       'drawing_id': {"S": str(drawing_id)}
     }
@@ -56,6 +63,7 @@ def like_unlike(event, context):
     user_id = event['headers']["user_id"]
 
     items = check_if_user_already_liked(user_id, drawing_id)
+    print(f"items: {items}")
     
     if not items:   
       add_to_users_liked_photos(user_id, drawing_id)
@@ -70,7 +78,11 @@ def like_unlike(event, context):
       }
     else:    
       updated_likes = update_drawing_likes(drawing_id, -1)  
-      delete_users_liked_photos(user_id, drawing_id)
+      print(f"updated likes after deleting: {updated_likes}")
+      like_id = items[0]["like_id"]["S"]
+      print(like_id)
+      response = delete_users_liked_photos(user_id, drawing_id, like_id)
+      print(f"after delete from like table: {response}")
       
       return {
         "statusCode": 200,

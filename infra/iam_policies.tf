@@ -118,6 +118,11 @@ resource "aws_iam_policy" "get_competition_drawings_policy" {
         "s3:GetBucketLocation"
       ],
       "Resource": "arn:aws:s3:::doodals-bucket-seng401"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "dynamodb:Query",
+      "Resource": "${aws_dynamodb_table.doodal-likes.arn}"
     }
   ]
 }

@@ -30,13 +30,13 @@ resource "aws_dynamodb_table" "doodal-drawings" {
 resource "aws_dynamodb_table" "doodal-likes" {
   name         = "doodal-likes"
   billing_mode = "PROVISIONED"
-  hash_key     = "user_id"
+  hash_key     = "like_id"
 
   read_capacity  = 1
   write_capacity = 1
 
   attribute {
-    name = "user_id"
+    name = "like_id"
     type = "S"
   }
 }
