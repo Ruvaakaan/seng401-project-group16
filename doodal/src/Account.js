@@ -22,6 +22,8 @@ function Account() {
   });
 
   const [posts, setPosts] = useState([]);
+  const [isBioOpen, setIsBioOpen] = useState(false);
+  const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
 
   //Calculate the level based on experience points
   function calculateLevel(exp) {
@@ -35,9 +37,6 @@ function Account() {
     return level;
   }
 
-  //Settings state
-  const [isBioOpen, setIsBioOpen] = useState(false);
-  const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
 
   //Function to update user bio
   function updateBio(newBio) {
