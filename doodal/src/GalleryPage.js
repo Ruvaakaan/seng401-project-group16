@@ -47,17 +47,16 @@ function GalleryPage() {
 
   const handleImages = async (id) => {
     let body = await getImages(id);
-    console.log("dwas", body);
     let post_info_list = []; // tragedy isnt it?
     try {
-      for (let i = 0; i < body["items"].length; i++) {
+      for (let i = 0; i < body.length; i++) {
         let post_info = {};
-        post_info["s3_url"] = body["items"][i]["s3_url"]["S"];
-        post_info["competition_id"] = body["items"][i]["competition_id"]["S"];
-        post_info["drawing_id"] = body["items"][i]["drawing_id"]["S"];
-        post_info["likes"] = body["items"][i]["likes"]["N"];
-        post_info["user_id"] = body["items"][i]["user_id"]["S"];
-        post_info["date_created"] = body["items"][i]["date_created"]["S"];
+        post_info["s3_url"] = body[i]["s3_url"]["S"];
+        post_info["competition_id"] = body[i]["competition_id"]["S"];
+        post_info["drawing_id"] = body[i]["drawing_id"]["S"];
+        post_info["likes"] = body[i]["likes"]["N"];
+        post_info["user_id"] = body[i]["user_id"]["S"];
+        post_info["date_created"] = body[i]["date_created"]["S"];
         post_info_list.push(post_info);
       }
     } catch {}
@@ -69,16 +68,20 @@ function GalleryPage() {
   };
 
   const callSorter = async (s) => {
-    let body = await sortImages(s);
+    var i = "";
+    if (comp_id){
+      i = comp_id
+    }
+    let body = await sortImages(s, i);
     if (!body) {
       return;
     }
     setImages(body);
   };
 
-  useEffect(() => {
-    console.log("images:", images);
-  }, [images]);
+  // useEffect(() => {
+  //   console.log("images:", images);
+  // }, [images]);
 
   return (
     <>
