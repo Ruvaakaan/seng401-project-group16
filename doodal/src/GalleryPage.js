@@ -29,10 +29,9 @@ function GalleryPage() {
     }
   }, []);
 
-
   useEffect(() => {
-    console.log(user_likes)
-  }, [user_likes])
+    console.log(user_likes);
+  }, [user_likes]);
 
   function like_change(val) {
     // this function changes the heart icon for liking and unliking
@@ -47,12 +46,13 @@ function GalleryPage() {
     let val = await likeUnlike(id);
     if (val) {
       // Update the likes property of the corresponding image item
-      setImages(prevImages => {
-        return prevImages.map(image => {
+      setImages((prevImages) => {
+        return prevImages.map((image) => {
           if (image.drawing_id === id) {
             // Toggle the likes count based on whether the user has liked or unliked the image
-            image.likes = parseInt(image.likes, 10) + (user_likes.includes(id) ? -1 : 1);
-            return {...image};
+            image.likes =
+              parseInt(image.likes, 10) + (user_likes.includes(id) ? -1 : 1);
+            return { ...image };
           }
           return image;
         });
@@ -79,7 +79,6 @@ function GalleryPage() {
         if (body[i]["liked_by_user"]) {
           userLikesList.push(body[i]["drawing_id"]["S"]);
         }
-        
       }
     } catch {}
 
@@ -92,10 +91,10 @@ function GalleryPage() {
 
   const callSorter = async (s) => {
     var i = "";
-    if (comp_id){
-      i = comp_id
+    if (comp_id) {
+      i = comp_id;
     }
-    let body = await sortImages(s, i);
+    let body = await sortImages(s, i, -1);
     if (!body) {
       return;
     }
@@ -166,31 +165,41 @@ function GalleryPage() {
         </div>
       </div>
       <div className="gal">
-        <Row xs={6} className="g-4">
-          {images.map((val, idx) => (
-            <Col key={idx}>
-              <Card>
-                <Card.Img variant="top" src={val["s3_url"]} />
-                <Card.Body id="card">
-                  <div className="user_info">
-                    <img src="octopus.PNG" width={60} />
-                    <text className="name">{val["user_id"]}</text>
-                  </div>
-                  <div className="like-counter">{val["likes"]} Likes</div>
-                  {user_likes.includes(val['drawing_id']) ? (
-                    <button className="like" onClick={() => handleLikes(val['drawing_id'])}>
-                      &#9829;
-                    </button>
-                  ) : (
-                    <button className="like" onClick={() => handleLikes(val['drawing_id'])}>
-                      &#9825;
-                    </button>
-                  )}
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
+        {images.length === 0 ? (
+          <h1>No images yet!</h1>
+        ) : (
+          <Row xs={6} className="g-4">
+            {images.map((val, idx) => (
+              <Col key={idx}>
+                <Card>
+                  <Card.Img variant="top" src={val["s3_url"]} />
+                  <Card.Body id="card">
+                    <div className="user_info">
+                      <img src="octopus.PNG" width={60} />
+                      <text className="name">{val["user_id"]}</text>
+                    </div>
+                    <div className="like-counter">{val["likes"]} Likes</div>
+                    {user_likes.includes(val["drawing_id"]) ? (
+                      <button
+                        className="like"
+                        onClick={() => handleLikes(val["drawing_id"])}
+                      >
+                        &#9829;
+                      </button>
+                    ) : (
+                      <button
+                        className="like"
+                        onClick={() => handleLikes(val["drawing_id"])}
+                      >
+                        &#9825;
+                      </button>
+                    )}
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        )}
       </div>
     </>
   );
