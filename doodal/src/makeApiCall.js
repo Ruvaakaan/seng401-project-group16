@@ -57,7 +57,7 @@ function handleUnauthorizedError(unfinishedCall) {
     localStorage.setItem("unfinishedapicall", JSON.stringify(unfinishedCall));
 
     const redirectUri = encodeURIComponent("http://localhost:3000/");
-    const fullRedirectUrl = `https://doodal.auth.us-west-2.amazoncognito.com/login?client_id=6c1og3jvcp62aqmkhjcgkjkvgq&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=${redirectUri}`;
+    // const fullRedirectUrl = `https://doodal.auth.us-west-2.amazoncognito.com/login?client_id=6c1og3jvcp62aqmkhjcgkjkvgq&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=${redirectUri}`;
 
     window.location.href = fullRedirectUrl;
 }

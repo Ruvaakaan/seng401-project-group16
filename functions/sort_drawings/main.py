@@ -39,8 +39,26 @@ def sort_drawings_handler(event, context):
     - amount (int): Specifies the number of elements in the drawing list
         - Defaults to all
         - Invalid input defaults to all   
+        - "random": Randomizes the drawing list
+        - "likes-ascend": Sorts the drawing list from least liked to most liked
+        - "likes-descend": Sorts the drawing list from most liked to least liked
+        - "date-ascend": Sorts the drawing list from oldest to newest
+        - "date-descend": Sorts the drawing list from newest to oldest
+        - Defaults to random
+        - Invalid input defaults to random
+    - competition_type (str): Specifies the competition for the drawing list
+        - Defaults to all
+        - Invalid input defaults to empty list
+    - amount (int): Specifies the number of elements in the drawing list
+        - Defaults to all
+        - Invalid input defaults to all   
 
     Example:
+    "body": {
+        "sort_type": "",
+        "competition_type": "",
+        "amount": 1
+    }
     "body": {
         "sort_type": "",
         "competition_type": "",
@@ -62,6 +80,7 @@ def sort_drawings_handler(event, context):
         amount = body["amount"]
        
         print(sort_by)
+        print(competition_by)
         print(competition_by)
 
         response = dynamodb_resource.scan(TableName=table_name)
@@ -98,6 +117,11 @@ def sort_drawings_handler(event, context):
 
         print(data)
 
+        if competition_by != "":
+            data = [item for item in data if item['competition_id'] == competition_by]
+
+        print(data)
+
         if sort_by == "random":
             data = randomize(data)
         elif sort_by == "likes-ascend":
@@ -110,6 +134,11 @@ def sort_drawings_handler(event, context):
             data = date_descend(data)
         else:
             data = randomize(data)
+
+        print(data)
+
+        if isinstance(amount, int) and amount >= 0:
+            data = data[:amount]
 
         print(data)
 

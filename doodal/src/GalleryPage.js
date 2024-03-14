@@ -91,16 +91,20 @@ function GalleryPage() {
   };
 
   const callSorter = async (s) => {
-    let body = await sortImages(s);
+    var i = "";
+    if (comp_id){
+      i = comp_id
+    }
+    let body = await sortImages(s, i);
     if (!body) {
       return;
     }
     setImages(body);
   };
 
-  useEffect(() => {
-    console.log("images:", images);
-  }, [images]);
+  // useEffect(() => {
+  //   console.log("images:", images);
+  // }, [images]);
 
   return (
     <>

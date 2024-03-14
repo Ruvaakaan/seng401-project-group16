@@ -1,18 +1,17 @@
-export const sortImages = async (sort) => {
-    let res = await fetch(
-      `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/sort_drawings`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          sort_type: sort,
-        }),
-      }
-    );
-    let extracted = await res.json();
-    let {body } = extracted;
-    body = JSON.parse(body);
-    return body;
-  };
+import makeApiCall from "./makeApiCall";
+
+export const sortImages = async (sort, id) => {
+  const request = JSON.stringify({
+    sort_type: sort,
+    competition_type: id,
+    amount: -1,
+  });
+
+  let res = await makeApiCall(
+    `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/sort_drawings`,
+    "POST",
+    request
+  );
+
+  return res;
+};

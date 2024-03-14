@@ -12,6 +12,7 @@ export const getImages = async (id) => {
   let body = res.items;
   // body = JSON.parse(body);
   // const items = body.items;
+  let body = res.items;
   
   return body;
 };
