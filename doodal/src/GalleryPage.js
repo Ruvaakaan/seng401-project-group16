@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getImages } from "./getImages.js";
 import { sortImages } from "./sortDrawings.js";
 import { likeUnlike } from "./LikeAndUnlike.js";
+import "./Gallery.css"
 
 function GalleryPage() {
   const [user_likes, setUserLikes] = useState([]); // array of all posts liked by user
@@ -74,6 +75,7 @@ function GalleryPage() {
         post_info["likes"] = body[i]["likes"]["N"];
         post_info["user_id"] = body[i]["user_id"]["S"];
         post_info["date_created"] = body[i]["date_created"]["S"];
+        post_info["username"] = body[i]["username"]["S"];
         post_info_list.push(post_info);
 
         if (body[i]["liked_by_user"]) {
@@ -95,7 +97,7 @@ function GalleryPage() {
     if (comp_id){
       i = comp_id
     }
-    let body = await sortImages(s, i);
+    let body = await sortImages(s, i, -1);
     if (!body) {
       return;
     }
@@ -166,31 +168,34 @@ function GalleryPage() {
         </div>
       </div>
       <div className="gal">
-        <Row xs={6} className="g-4">
-          {images.map((val, idx) => (
-            <Col key={idx}>
-              <Card>
-                <Card.Img variant="top" src={val["s3_url"]} />
-                <Card.Body id="card">
-                  <div className="user_info">
-                    <img src="octopus.PNG" width={60} />
-                    <text className="name">{val["user_id"]}</text>
-                  </div>
-                  <div className="like-counter">{val["likes"]} Likes</div>
+      <Row xs={6} className="g-4">
+        {images.map((val, idx) => (
+          <Col key={idx}>
+            <Card>
+              <Card.Img variant="top" src={val["s3_url"]} />
+              <Card.Body id="card">
+                <div className="user_info">
+                  <img src="octopus.PNG" width={60} />
+                  <text className="name">{val["username"]}</text>
+                </div>
+                <div className="like-container">
                   {user_likes.includes(val['drawing_id']) ? (
                     <button className="like" onClick={() => handleLikes(val['drawing_id'])}>
-                      &#9829;
+                      <i className="fa-solid fa-heart fa-2xs"></i>
                     </button>
                   ) : (
                     <button className="like" onClick={() => handleLikes(val['drawing_id'])}>
-                      &#9825;
+                      <i className="fa-regular fa-heart fa-2xs"></i>
                     </button>
                   )}
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
+                  <div className="like-counter">{val["likes"]}</div>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+
       </div>
     </>
   );

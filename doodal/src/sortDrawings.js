@@ -1,10 +1,10 @@
 import makeApiCall from "./makeApiCall";
 
-export const sortImages = async (sort, id) => {
+export const sortImages = async (sort, id, amount) => {
   const request = JSON.stringify({
     sort_type: sort,
     competition_type: id,
-    amount: -1,
+    amount: amount,
   });
 
   let res = await makeApiCall(

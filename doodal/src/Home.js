@@ -26,10 +26,11 @@ function Home() {
       }
     );
     let extracted = await res.json();
+    console.log(extracted)
     let { body } = extracted;
     let newComps = [];
     let newPrompts = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < body.length; i++) {
       // take 3 most recent prompts
       newComps.push(body[i]["competition_id"]["S"]);
       await handleImages(body[i]["competition_id"]["S"]);
