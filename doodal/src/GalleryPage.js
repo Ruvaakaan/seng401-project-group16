@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getImages } from "./getImages.js";
 import { sortImages } from "./sortDrawings.js";
 import { likeUnlike } from "./LikeAndUnlike.js";
-import "./Gallery.css"
+import "./Gallery.css";
 
 function GalleryPage() {
   const [user_likes, setUserLikes] = useState([]); // array of all posts liked by user
@@ -30,9 +30,9 @@ function GalleryPage() {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(user_likes);
-  }, [user_likes]);
+  // useEffect(() => {
+  //   console.log(user_likes);
+  // }, [user_likes]);
 
   function like_change(val) {
     // this function changes the heart icon for liking and unliking
@@ -66,6 +66,7 @@ function GalleryPage() {
     let body = await getImages(id);
     let post_info_list = []; // tragedy isnt it?
     let userLikesList = [];
+
     try {
       for (let i = 0; i < body.length; i++) { // process the return
         let post_info = {};
@@ -77,7 +78,6 @@ function GalleryPage() {
         post_info["date_created"] = body[i]["date_created"]["S"];
         post_info["username"] = body[i]["username"]["S"];
         post_info_list.push(post_info);
-
         if (body[i]["liked_by_user"]) {
           userLikesList.push(body[i]["drawing_id"]["S"]);
         }
@@ -100,9 +100,9 @@ function GalleryPage() {
     setImages(body);
   };
 
-  useEffect(() => {
-    console.log("images:", images); // debugging
-  }, [images]);
+  // useEffect(() => {
+  //   console.log("images:", images); // debugging
+  // }, [images]);
 
   return (
     <>
@@ -175,7 +175,7 @@ function GalleryPage() {
                   <Card.Body id="card">
                     <div className="user_info">
                       <img src="octopus.PNG" width={60} />
-                      <text className="name">{val["user_id"]}</text>
+                      <text className="name">{val["username"]}</text>
                     </div>
                     <div className="like-counter">{val["likes"]} Likes</div>
                     {user_likes.includes(val["drawing_id"]) ? (
