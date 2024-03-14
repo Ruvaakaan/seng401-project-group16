@@ -6,7 +6,7 @@ dynamodb_client = boto3.client("dynamodb")
 def update_bio(event, context):
   try:
     body = json.loads(event["body"])
-    user_id = body["user_id"]
+    user_id = event['headers']["user_id"]
     bio = body["bio"]
     
     response = dynamodb_client.update_item(
@@ -21,12 +21,18 @@ def update_bio(event, context):
     updated_bio = response['Attributes']['bio']
     return {
       "statusCode": 200,
-      "headers": {"Content-Type": "application/json"},
+      "headers": {"Content-Type": "application/json",
+                  "Access-Control-Allow-Headers" : "Content-Type",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"},
       "body": updated_bio
     }
   except Exception as e:
     return {
       "statusCode": 500,
-      "headers": {"Content-Type": "application/json"},
+      "headers": {"Content-Type": "application/json",
+                  "Access-Control-Allow-Headers" : "Content-Type",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"},
       "body": json.dumps({"error": str(e)})
     }

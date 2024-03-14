@@ -34,14 +34,20 @@ function ProfilePicture({ onClose, onProfilePictureChange }) {
     if (file) {
       try {
         onProfilePictureChange(file);
-        const formData = new FormData();
-        formData.append("image_data", file);
-        const response = await makeApiCall(`https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/upload_profile_photo`, "POST", formData);
-        onClose();
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+          const imgData = event.target.result.replace(/^data:image\/(png|jpeg);base64,/, "");
+          const jsonData = {
+            image_data: imgData
+          };
+          const jsonString = JSON.stringify(jsonData);
+          const response = await makeApiCall(`https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/upload_profile_photo`, "POST", jsonString);
+          onClose();
+        };
+        reader.readAsDataURL(file);
       } catch (error) {
         console.error("Error uploading profile picture:", error);
       }
-  
     } else {
       setFileError("Please choose an image");
     }

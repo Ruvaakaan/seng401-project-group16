@@ -52,21 +52,14 @@ def sort_drawings_handler(event, context):
     """
     try:
         print(event)
-        print(type(event))
-    
+
         if "body" not in event:
             raise ValueError("Missing 'body' key in the request")
 
-        body = event
-        
-        if isinstance(body, str):
-            body = json.loads(event["body"])
-        else:
-            body = event["body"]
-        
-        sort_by = body.get("sort_type", "")
-        competition_by = body.get("competition_type", "")
-        amount = body.get("amount", "")
+        body = json.loads(event["body"])
+        competition_by = body["competition_type"]
+        sort_by = body["sort_type"]
+        amount = body["amount"]
        
         print(sort_by)
         print(competition_by)
@@ -127,6 +120,10 @@ def sort_drawings_handler(event, context):
 
         return {
             "statusCode": 200,
+            "headers": {"Content-Type": "application/json",
+                  "Access-Control-Allow-Headers" : "Content-Type",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"},
             "body": json.dumps(data)
         }
     except ValueError as ve:
@@ -134,6 +131,10 @@ def sort_drawings_handler(event, context):
         print(f"ValueError: {ve}")
         return {
             "statusCode": 400,
+            "headers": {"Content-Type": "application/json",
+                  "Access-Control-Allow-Headers" : "Content-Type",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"},
             "body": json.dumps({"error": "Missing Request Body"})
         }
     except Exception as e:
@@ -141,5 +142,9 @@ def sort_drawings_handler(event, context):
         print(f"An error occurred: {e}")
         return {
             "statusCode": 500,
+            "headers": {"Content-Type": "application/json",
+                  "Access-Control-Allow-Headers" : "Content-Type",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"},
             "body": json.dumps({"error": "Internal Server Error"})
         }

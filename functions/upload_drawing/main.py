@@ -12,9 +12,12 @@ def upload_drawing(event, context):
   try:
     print(event)
 
+    
     body = json.loads(event["body"])
     competition_id = body["competition_id"]
     user_id = event['headers']["user_id"]
+    username = event['requestContext']['authorizer']['claims']['username']
+    print(username)
     image_data = base64.b64decode(body["image_data"])
   
     drawing_id = str(uuid.uuid4())
@@ -31,7 +34,8 @@ def upload_drawing(event, context):
       "user_id": user_id,
       "likes": likes,
       "date_created": date_created,
-      "s3_url": f"https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/{competition_id}/{drawing_id}.jpg"
+      "s3_url": f"https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/{competition_id}/{drawing_id}.jpg",
+      "username": username
     })
     return {
       "statusCode": 200,

@@ -1,0 +1,12 @@
+.like-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.like {
+  margin-bottom: -10px; /* Adjust as needed */
+}
+
+.like-counter {
+  margin-top: -17px; /* Adjust as needed */
+}
