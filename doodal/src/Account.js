@@ -12,15 +12,10 @@ import { getUserImages } from "./getUserImages.js";
 function Account() {
   // Receive authenticationToken as a prop
   //User state
-  const [user, setUser] = useState({
-    id: "example_id",
-    username: "example_user",
-    email: "example@example.com",
-    bio: "Bio here",
-    exp: 0,
-  });
-
+  const [user, setUser] = useState({});
   const [posts, setPosts] = useState([]);
+  const [isBioOpen, setIsBioOpen] = useState(false);
+  const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
 
   //Calculate the level based on experience points
   function calculateLevel(exp) {
@@ -34,9 +29,6 @@ function Account() {
     return level;
   }
 
-  //Settings state
-  const [isBioOpen, setIsBioOpen] = useState(false);
-  const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
 
   //Function to update user bio
   function updateBio(newBio) {
@@ -54,10 +46,33 @@ function Account() {
 
   // Function to handle profile picture change
   const handleProfilePictureChange = (file) => {
-    // Perform actions with the selected file, such as updating the profile picture
+    console.log("File received:", file);
+    if (!file) {
+        console.error("No file received.");
+        return;
+    }
+    const imageUrl = URL.createObjectURL(file);
+    console.log("Temporary image URL:", imageUrl);
+    if (!imageUrl) {
+        console.error("Failed to create temporary image URL.");
+        return;
+    }
     console.log("Selected file:", file);
+    setUser(prevUser => {
+        console.log("Previous user state:", prevUser);
+
+        if (!prevUser) {
+            console.error("Previous user state is empty or undefined.");
+            return null; // or any fallback value
+        }
+
+        const updatedUser = { ...prevUser, picture: imageUrl};
+        console.log("Updated user state:", updatedUser);
+        return updatedUser;
+    });
+
     setIsProfilePopupOpen(false);
-  };
+};
 
   useEffect(() => {
     async function fetchUserData() {
@@ -93,6 +108,7 @@ function Account() {
             username: userData.username.S,
             email: userData.email.S,
             bio: userData.bio.S, // You may want to set this to a default value or leave it empty initially
+            picture: "https://i.etsystatic.com/16421349/r/il/c49bf5/2978449787/il_fullxfull.2978449787_hgl5.jpg",
             exp: parseInt(userData.experience.N), // Convert experience to a number
           });
   
@@ -100,6 +116,14 @@ function Account() {
           // Do something with userData, such as updating state
         } else {
           console.error("Failed to fetch user data");
+          setUser({
+            id: "example_id",
+            picture: "https://i.etsystatic.com/16421349/r/il/c49bf5/2978449787/il_fullxfull.2978449787_hgl5.jpg",
+            username: "example_user",
+            email: "example@example.com",
+            bio: "Bio here",
+            exp: 0,
+          });
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -124,8 +148,8 @@ function Account() {
       <div className="user-info">
         <div className="profile-picture-container">
             <img
-                src="https://i.etsystatic.com/16421349/r/il/c49bf5/2978449787/il_fullxfull.2978449787_hgl5.jpg"
-                alt="Profile"
+                src={user.picture || "https://i.etsystatic.com/16421349/r/il/c49bf5/2978449787/il_fullxfull.2978449787_hgl5.jpg"}
+                alt="Profile Picture"
                 className="profile-picture"
                 onClick={handleEditProfile}
             />
