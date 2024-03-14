@@ -29,6 +29,11 @@ function GalleryPage() {
     }
   }, []);
 
+
+  useEffect(() => {
+    console.log(user_likes)
+  }, [user_likes])
+
   function like_change(val) {
     // this function changes the heart icon for liking and unliking
     if (user_likes.includes(val)) {
@@ -40,25 +45,41 @@ function GalleryPage() {
 
   const handleLikes = async (id) => {
     let val = await likeUnlike(id);
-    if (val){
-      like_change(id)
+    if (val) {
+      // Update the likes property of the corresponding image item
+      setImages(prevImages => {
+        return prevImages.map(image => {
+          if (image.drawing_id === id) {
+            // Toggle the likes count based on whether the user has liked or unliked the image
+            image.likes = parseInt(image.likes, 10) + (user_likes.includes(id) ? -1 : 1);
+            return {...image};
+          }
+          return image;
+        });
+      });
+      like_change(id);
     }
   };
 
   const handleImages = async (id) => {
     let body = await getImages(id);
-    console.log("dwas", body);
     let post_info_list = []; // tragedy isnt it?
+    let userLikesList = [];
     try {
-      for (let i = 0; i < body["items"].length; i++) {
+      for (let i = 0; i < body.length; i++) {
         let post_info = {};
-        post_info["s3_url"] = body["items"][i]["s3_url"]["S"];
-        post_info["competition_id"] = body["items"][i]["competition_id"]["S"];
-        post_info["drawing_id"] = body["items"][i]["drawing_id"]["S"];
-        post_info["likes"] = body["items"][i]["likes"]["N"];
-        post_info["user_id"] = body["items"][i]["user_id"]["S"];
-        post_info["date_created"] = body["items"][i]["date_created"]["S"];
+        post_info["s3_url"] = body[i]["s3_url"]["S"];
+        post_info["competition_id"] = body[i]["competition_id"]["S"];
+        post_info["drawing_id"] = body[i]["drawing_id"]["S"];
+        post_info["likes"] = body[i]["likes"]["N"];
+        post_info["user_id"] = body[i]["user_id"]["S"];
+        post_info["date_created"] = body[i]["date_created"]["S"];
         post_info_list.push(post_info);
+
+        if (body[i]["liked_by_user"]) {
+          userLikesList.push(body[i]["drawing_id"]["S"]);
+        }
+        
       }
     } catch {}
 
@@ -66,6 +87,7 @@ function GalleryPage() {
       return;
     }
     setImages(post_info_list);
+    setUserLikes(userLikesList);
   };
 
   const callSorter = async (s) => {
@@ -150,6 +172,7 @@ function GalleryPage() {
                     <img src="octopus.PNG" width={60} />
                     <text className="name">{val["user_id"]}</text>
                   </div>
+                  <div className="like-counter">{val["likes"]} Likes</div>
                   {user_likes.includes(val['drawing_id']) ? (
                     <button className="like" onClick={() => handleLikes(val['drawing_id'])}>
                       &#9829;
