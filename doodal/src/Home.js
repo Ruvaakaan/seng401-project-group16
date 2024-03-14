@@ -3,122 +3,130 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useDarkMode } from './DarkModeContext';
+import { useDarkMode } from "./DarkModeContext";
+import { getImages } from "./getImages.js";
 
 function Home() {
-  var prompt = "new";
-  var oldprompt = "old";
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
+  const nav = useNavigate();
 
-  const [current, setCurrent] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-  const [pastComp, setPastComp] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  const [comps, setComps] = useState([]);
+  const [prompts, setPrompts] = useState([]);
+  const [images, setImages] = useState([]);
+  const [imageInfo, setImageInfo] = useState([]);
 
   const getPrompts = async () => {
-    // let res = await fetch(``, {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-    // let extracted = await res.json();
-    // { prompt } = extracted // change this
-    // { oldprompt } = extracted // change this
-    console.log("get prompts");
-    getImages();
+    let res = await fetch(
+      `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/get_prompts`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    let extracted = await res.json();
+    let { body } = extracted;
+    let newComps = [];
+    let newPrompts = [];
+    for (let i = 0; i < 3; i++) {
+      // take 3 most recent prompts
+      newComps.push(body[i]["competition_id"]["S"]);
+      await handleImages(body[i]["competition_id"]["S"]);
+      newPrompts.push(body[i]["prompt"]["S"]);
+    }
+    setComps(newComps);
+    setPrompts(newPrompts);
   };
 
-  const getImages = async () => {
+  const handleImages = async (id) => {
+    let body = await getImages(id);
+    let image_list = [];
+    let post_info_list = [];
+    try {
+      for (let i = 0; i < body["items"].length; i++) {
+        let url = body["items"][i]["s3_url"]["S"];
+        let post_info = {};
+        post_info["drawing_id"] = body["items"][i]["drawing_id"]["S"];
+        post_info["likes"] = body["items"][i]["likes"]["N"];
+        post_info["user_id"] = body["items"][i]["user_id"]["S"];
+        post_info["date_created"] = body["items"][i]["date_created"]["S"];
+        post_info_list.push(post_info);
+        image_list.push(url);
+      }
+    } catch {}
 
-    // 2 requests to get each set? (previous prompt images and current prompt images)
-
-    // let res = await fetch(``, {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-    // let extracted = await res.json();
-    // setCurrent(extracted);
-
-
-    // let res = await fetch(``, {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-    // let extracted = await res.json();
-    // setPastComp(extracted);
-    console.log("get imgs");
+    if (!body) {
+      setImages((images) => [...images, []]);
+      setImageInfo((imageInfo) => [...imageInfo, []]);
+      return;
+    }
+    setImages((images) => [...images, image_list]);
+    setImageInfo((imageInfo) => [...imageInfo, post_info_list]);
   };
 
   useEffect(() => {
     getPrompts();
   }, []);
 
-  const { isDarkMode, toggleDarkMode } = useDarkMode();
+  // useEffect(()=> {
+  //   console.log(images);
+  //   console.log(imageInfo)
+  // }, [images])
 
-  const nav = useNavigate();
   return (
     <>
-      <div className="prompt-display">
-        <img src={isDarkMode ? 'blurbannerdark.png' : 'blurbanner.png'} className="banner"></img>
-        <h1 className="memo-banner">
-          Welcome to DOODAL! Participate in daily art challenges and share your
-          art with others!
-        </h1>
-        <div className="prompt-button">
-          <h1 className="prompt-title">Current Competition: {prompt}</h1>
-          <Button
-            variant="outline-dark"
-            className="entry-button"
-            onClick={() =>
-              nav("/gallery", { state: { additionalProp: prompt } })
-            }
-          >
-            View
-          </Button>
-        </div>
-      </div>
-      <Swiper
-        modules={[Navigation, Pagination]}
-        spaceBetween={10}
-        slidesPerView={4}
-        pagination={{ clickable: true }}
-        navigation
-      >
-        {current.map((item, index) => (
-          <SwiperSlide key={index}>
-            <img src="octopus.PNG" width={550} className="home-imgs" />
-          </SwiperSlide> // temp image, item should hold the image so use {item}
-        ))}
-      </Swiper>
-      <div className="prompt-display">
-        <div className="prev-prompt">
-          <h1 className="prompt-title">Previous Competition: {oldprompt}</h1>
-          <Button
-            variant="outline-dark"
-            className="entry-button"
-            onClick={() =>
-              nav("/gallery", { state: { additionalProp: oldprompt } })
-            }
-          >
-            View
-          </Button>
-        </div>
-      </div>
-      <Swiper
-        modules={[Navigation, Pagination]}
-        spaceBetween={10}
-        slidesPerView={4}
-        pagination={{ clickable: true }}
-        navigation
-      >
-        {pastComp.map((item, index) => (
-          <SwiperSlide key={index}>
-            <img src="doodalnew.PNG" width={550} className="home-imgs" />
-          </SwiperSlide> // temp image, item should hold the image so use {item}
-        ))}
-      </Swiper>
+      <img
+        src={isDarkMode ? "blurbannerdark.png" : "blurbanner.png"}
+        className="banner"
+      ></img>
+      <h1 className="memo-banner">
+        Welcome to DOODAL! Participate in daily art challenges and share your
+        art with others!
+      </h1>
+      {comps !== null ? (
+        comps.map((item, index) => (
+          <>
+            <div className="prompt-display">
+              <div className="prompt-button">
+                <h1 className="prompt-title">
+                  Ongoing Competition: {prompts[index]}
+                </h1>
+                <Button
+                  variant="outline-dark"
+                  className="entry-button"
+                  onClick={() =>
+                    nav("/gallery", {
+                      state: { prompt: prompts[index], comp_id: comps[index] },
+                    })
+                  }
+                >
+                  View
+                </Button>
+              </div>
+            </div>
+            <Swiper
+              modules={[Navigation, Pagination]}
+              spaceBetween={10}
+              slidesPerView={4}
+              pagination={{ clickable: true }}
+              navigation
+            >
+              {images[index]?.length === 0 ? (
+                <h1>No images yet!</h1>
+              ) : (
+                images[index].map((item, ind) => (
+                  <SwiperSlide key={ind}>
+                    <img src={item} width={550} className="home-imgs" />
+                  </SwiperSlide>
+                ))
+              )}
+            </Swiper>
+          </>
+        ))
+      ) : (
+        <></>
+      )}
     </>
   );
 }

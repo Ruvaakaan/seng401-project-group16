@@ -56,7 +56,7 @@ body {
 .prompt-display{
   background-color: #eeeeee;
   position: relative;
-  margin-top: 25px;
+  /* margin-top: 25px; */
 }
 
 .banner{
@@ -74,10 +74,6 @@ body {
 .prompt-button{
   display:flex;
   justify-content: center;
-  position: absolute;
-  bottom: 5%;
-  left:50%;
-  transform: translate(-50%, -50%);
   width:100%;
 }
 
@@ -92,7 +88,7 @@ body {
 }
 
 .entry-button {
-  margin-left:10%;
+  margin-left:2%;
   color: inherit;
   height: 80%;
   align-self: center;
@@ -236,7 +232,7 @@ body {
   color:#9F70FD;
 }
 
-.dark-mode .prev-prompt, .dark-mode .gallery-banner, 
+.dark-mode .prompt-display, .dark-mode .gallery-banner, 
 .dark-mode .drop-items, .dark-mode .drop-menu,
 .dark-mode #modeswitch, .dark-mode .dropdown-opened,
 .dark-mode #card, .dark-mode .name {

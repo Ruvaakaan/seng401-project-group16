@@ -50,10 +50,11 @@ def add_to_users_liked_photos(user_id, drawing_id):
 
 def like_unlike(event, context):
   try: 
-    body = json.loads(event["body"])
-    drawing_id = body["drawing_id"]
-    user_id = body["user_id"]
-    
+
+    body = json.loads(event['body'])
+    drawing_id = body.get('drawing_id')
+    user_id = event['headers']["user_id"]
+
     items = check_if_user_already_liked(user_id, drawing_id)
     
     if not items:   
@@ -61,7 +62,11 @@ def like_unlike(event, context):
       updated_likes = update_drawing_likes(drawing_id, 1)
       return {
         "statusCode": 200,
-        "body": f"Drawing not previously liked, likes for drawing_id {drawing_id} incremented to {updated_likes}"
+        "headers": {"Content-Type": "application/json",
+                    "Access-Control-Allow-Headers" : "Content-Type",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"},
+        "body": True
       }
     else:    
       updated_likes = update_drawing_likes(drawing_id, -1)  
@@ -69,10 +74,18 @@ def like_unlike(event, context):
       
       return {
         "statusCode": 200,
-        "body": f"Unliked drawing_id {drawing_id} deincremented to {updated_likes}"
+        "headers": {"Content-Type": "application/json",
+                    "Access-Control-Allow-Headers" : "Content-Type",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"},
+        "body": True
       }
   except Exception as e:
     return {
       "statusCode": 500,
-      "body": f"Error: {e}"
+      "headers": {"Content-Type": "application/json",
+                  "Access-Control-Allow-Headers" : "Content-Type",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"},
+      "body": False
     }

@@ -37,8 +37,8 @@ resource "aws_iam_role" "get_user_info_iam" {
 EOF
 }
 
-resource "aws_iam_role" "get_drawings_iam" {
-  name               = "iam-for-lambda-${local.get_drawings_funct}"
+resource "aws_iam_role" "get_competition_drawings_iam" {
+  name               = "iam-for-lambda-${local.get_competition_drawings_funct}"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -56,8 +56,8 @@ resource "aws_iam_role" "get_drawings_iam" {
 EOF
 }
 
-resource "aws_iam_role" "put_drawing_iam" {
-  name               = "iam-for-lambda-${local.put_drawing_funct}"
+resource "aws_iam_role" "upload_drawing_iam" {
+  name               = "iam-for-lambda-${local.upload_drawing_funct}"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -172,6 +172,63 @@ EOF
 
 resource "aws_iam_role" "get_prompts_iam" {
   name               = "iam-for-lambda-${local.get_prompts_funct}"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role" "get_users_drawings_iam" {
+  name               = "iam-for-lambda-${local.get_users_drawings_funct}"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role" "upload_profile_photo_iam" {
+  name               = "iam-for-lambda-${local.upload_profile_photo_funct}"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role" "get_profile_photo_iam" {
+  name               = "iam-for-lambda-${local.get_profile_photo_funct}"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
