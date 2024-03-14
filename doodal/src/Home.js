@@ -89,7 +89,7 @@ function Home() {
               <h1>{prompts[idx]["prompt"]}</h1>
               <img
                 src={
-                  images[idx]["s3_url"] ? images[idx]["s3_url"] : "octopus.PNG" 
+                  images[idx]["s3_url"] ? images[idx]["s3_url"] : "empty_comp.png" 
                 } 
                 width={550}
                 className="home-imgs"
