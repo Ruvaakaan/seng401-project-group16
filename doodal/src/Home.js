@@ -44,13 +44,13 @@ function Home() {
     let image_list = [];
     let post_info_list = [];
     try {
-      for (let i = 0; i < body["items"].length; i++) {
-        let url = body["items"][i]["s3_url"]["S"];
-        let post_info = {};
-        post_info["drawing_id"] = body["items"][i]["drawing_id"]["S"];
-        post_info["likes"] = body["items"][i]["likes"]["N"];
-        post_info["user_id"] = body["items"][i]["user_id"]["S"];
-        post_info["date_created"] = body["items"][i]["date_created"]["S"];
+      for (let i = 0; i < body.length; i++) {
+        let url = body[i]["s3_url"]["S"];
+        let post_info = {}; 
+        post_info["drawing_id"] = body[i]["drawing_id"]["S"];
+        post_info["likes"] = body[i]["likes"]["N"];
+        post_info["user_id"] = body[i]["user_id"]["S"];
+        post_info["date_created"] = body[i]["date_created"]["S"];
         post_info_list.push(post_info);
         image_list.push(url);
       }
