@@ -14,6 +14,7 @@ function Account() {
   //User state
   const [user, setUser] = useState({
     id: "example_id",
+    picture: "https://i.etsystatic.com/16421349/r/il/c49bf5/2978449787/il_fullxfull.2978449787_hgl5.jpg",
     username: "example_user",
     email: "example@example.com",
     bio: "Bio here",
@@ -54,10 +55,33 @@ function Account() {
 
   // Function to handle profile picture change
   const handleProfilePictureChange = (file) => {
-    // Perform actions with the selected file, such as updating the profile picture
+    console.log("File received:", file);
+    if (!file) {
+        console.error("No file received.");
+        return;
+    }
+    const imageUrl = URL.createObjectURL(file);
+    console.log("Temporary image URL:", imageUrl);
+    if (!imageUrl) {
+        console.error("Failed to create temporary image URL.");
+        return;
+    }
     console.log("Selected file:", file);
+    setUser(prevUser => {
+        console.log("Previous user state:", prevUser);
+
+        if (!prevUser) {
+            console.error("Previous user state is empty or undefined.");
+            return null; // or any fallback value
+        }
+
+        const updatedUser = { ...prevUser, picture: imageUrl};
+        console.log("Updated user state:", updatedUser);
+        return updatedUser;
+    });
+
     setIsProfilePopupOpen(false);
-  };
+};
 
   useEffect(() => {
     async function fetchUserData() {
@@ -124,8 +148,8 @@ function Account() {
       <div className="user-info">
         <div className="profile-picture-container">
             <img
-                src="https://i.etsystatic.com/16421349/r/il/c49bf5/2978449787/il_fullxfull.2978449787_hgl5.jpg"
-                alt="Profile"
+                src={user.picture || "https://i.etsystatic.com/16421349/r/il/c49bf5/2978449787/il_fullxfull.2978449787_hgl5.jpg"}
+                alt="Profile Picture"
                 className="profile-picture"
                 onClick={handleEditProfile}
             />
