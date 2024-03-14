@@ -100,6 +100,10 @@ body {
   margin-bottom: 25px;
 }
 
+.home-imgs:hover{
+  cursor: pointer;
+}
+
 .like {
   background-color: transparent;
   border: none;
