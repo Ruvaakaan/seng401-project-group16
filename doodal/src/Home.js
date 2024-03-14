@@ -24,6 +24,7 @@ function Home() {
       }
     );
     let extracted = await res.json();
+    console.log(extracted)
     let { body } = extracted;
     let newPrompts = [];
 

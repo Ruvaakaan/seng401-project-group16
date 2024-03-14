@@ -13,6 +13,7 @@ export const getImages = async (id) => {
   }
   
   let body = res.items;
+  console.log(body);
   
   return body;
 };

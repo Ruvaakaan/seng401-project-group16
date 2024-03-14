@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getImages } from "./getImages.js";
 import { sortImages } from "./sortDrawings.js";
 import { likeUnlike } from "./LikeAndUnlike.js";
+import "./Gallery.css"
 
 function GalleryPage() {
   const [user_likes, setUserLikes] = useState([]); // array of all posts liked by user
@@ -74,6 +75,7 @@ function GalleryPage() {
         post_info["likes"] = body[i]["likes"]["N"];
         post_info["user_id"] = body[i]["user_id"]["S"];
         post_info["date_created"] = body[i]["date_created"]["S"];
+        post_info["username"] = body[i]["username"]["S"];
         post_info_list.push(post_info);
 
         if (body[i]["liked_by_user"]) {

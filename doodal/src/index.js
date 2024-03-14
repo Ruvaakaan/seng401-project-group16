@@ -4,6 +4,7 @@ import Home from './Home';
 import Draw from './DrawPage';
 import Account from './Account';
 import Gallery from './GalleryPage';
+import ViewAccount from './ViewAccount';
 import reportWebVitals from './reportWebVitals';
 import ReactDOM from "react-dom/client";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -12,9 +13,6 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Cookies from 'js-cookie';
-
-const authenticationToken = Cookies.get('authentication');
 
 const router = createBrowserRouter([
   {
@@ -24,8 +22,9 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "/home", element: <Home /> },
       { path: "/draw", element: <Draw /> },
-      { path: "/profile", element: <Account authenticationToken={authenticationToken}/> },
-      { path: "/gallery", element: <Gallery/> }
+      { path: "/profile", element: <Account/> },
+      { path: "/gallery", element: <Gallery/> },
+      { path: "/viewaccount", element: <ViewAccount/> }
     ],
   },
 ]);
