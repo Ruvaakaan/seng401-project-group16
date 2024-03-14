@@ -1,5 +1,6 @@
 import boto3
 import json
+import datetime 
 
 dynamodb_client = boto3.client("dynamodb")
 
@@ -17,14 +18,18 @@ def update_drawing_likes(drawing_id, like_val):
   return updated_likes
 
 def delete_users_liked_photos(user_id, drawing_id):
-  statement = "DELETE FROM \"doodal-likes\" WHERE user_id = ? AND drawing_id = ?"
-  params = [{"S": str(user_id)}, {"S": str(drawing_id)}]
-  response = dynamodb_client.execute_statement(
-    Statement=statement,
-    Parameters=params
-  )
-  print(f"delete_users_liked_photos Response: {response}")
-  return response
+  try:
+    statement = "DELETE FROM \"doodal-likes\" WHERE user_id = ? AND drawing_id = ?"
+    params = [{"S": str(user_id)}, {"S": str(drawing_id)}]
+    response = dynamodb_client.execute_statement(
+      Statement=statement,
+      Parameters=params
+    )
+    print(f"delete_users_liked_photos Response: {response}")
+    return response
+  except Exception as e:
+    print(f"An error occurred: {e}")
+    return None
 
 def check_if_user_already_liked(user_id, drawing_id):
   response = dynamodb_client.scan(
@@ -40,29 +45,34 @@ def check_if_user_already_liked(user_id, drawing_id):
   return items
 
 def add_to_users_liked_photos(user_id, drawing_id):
-  dynamodb_client.put_item(
-    TableName="doodal-likes",
-    Item={
-      'user_id': {"S": str(user_id)},
-      'drawing_id': {"S": str(drawing_id)}
-    }
-  )
+  try:
+    dynamodb_client.put_item(
+      TableName="doodal-likes",
+      Item={
+        'user_id': {"S": str(user_id)},
+        'drawing_id': {"S": str(drawing_id)}
+      }
+    )
+
+  except Exception as e:
+    print(f"An error occurred while putting item: {e}")
 
 def like_unlike(event, context):
   try: 
-
+    print(event)
     body = json.loads(event['body'])
-    drawing_id = body.get('drawing_id')
+    drawing_id = body['drawing_id']
     user_id = event['headers']["user_id"]
 
     items = check_if_user_already_liked(user_id, drawing_id)
+    print(f"items: {items}")
     
     if not items:   
       add_to_users_liked_photos(user_id, drawing_id)
       updated_likes = update_drawing_likes(drawing_id, 1)
       return {
         "statusCode": 200,
-        "headers": {"Content-Type": "application/json",
+        "headers": {"Content-Type": "application/json", 
                     "Access-Control-Allow-Headers" : "Content-Type",
                     "Access-Control-Allow-Origin": "*",
                     "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"},
@@ -70,7 +80,9 @@ def like_unlike(event, context):
       }
     else:    
       updated_likes = update_drawing_likes(drawing_id, -1)  
-      delete_users_liked_photos(user_id, drawing_id)
+      print(f"updated likes after deleting: {updated_likes}")
+      response = delete_users_liked_photos(user_id, drawing_id)
+      print(f"after delete from like table: {response}")
       
       return {
         "statusCode": 200,
@@ -83,9 +95,6 @@ def like_unlike(event, context):
   except Exception as e:
     return {
       "statusCode": 500,
-      "headers": {"Content-Type": "application/json",
-                  "Access-Control-Allow-Headers" : "Content-Type",
-                  "Access-Control-Allow-Origin": "*",
-                  "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"},
+      "headers": {"Content-Type": "application/json"},
       "body": False
     }

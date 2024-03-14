@@ -46,6 +46,13 @@ function Home() {
     try {
       for (let i = 0; i < body.length; i++) {
         let url = body[i]["s3_url"]["S"];
+        let post_info = {};
+        post_info["drawing_id"] = body[i]["drawing_id"]["S"];
+        post_info["likes"] = body[i]["likes"]["N"];
+        post_info["user_id"] = body[i]["user_id"]["S"];
+        post_info["date_created"] = body[i]["date_created"]["S"];
+      for (let i = 0; i < body.length; i++) {
+        let url = body[i]["s3_url"]["S"];
         let post_info = {}; 
         post_info["drawing_id"] = body[i]["drawing_id"]["S"];
         post_info["likes"] = body[i]["likes"]["N"];
