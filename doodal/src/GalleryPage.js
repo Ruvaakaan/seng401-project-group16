@@ -18,6 +18,7 @@ function GalleryPage() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImageUserName, setSelectedImageUserName] = useState(null);
   const [selectedImageCreationDate, setSelectedImageCreationDate] = useState(null);
+  const [selectedImageDrawingID, setSelectedImageDrawingID] = useState(null);
 
   const nav = useNavigate();
   const {version} = useParams();
@@ -27,10 +28,11 @@ function GalleryPage() {
   const comp_id = location.state?.comp_id; // get competition id as prop
 
 
-  const handleImageClick = (image, username, dateCreated) => {
+  const handleImageClick = (image, username, dateCreated, drawingID) => {
     setSelectedImage(image);
     setSelectedImageUserName(username);
     setSelectedImageCreationDate(dateCreated);
+    setSelectedImageDrawingID(drawingID);
     setShowPopUp(true);
   };
 
@@ -183,7 +185,7 @@ function GalleryPage() {
             {images.map((val, idx) => (
               <Col key={idx}>
                 <Card>
-                  <Card.Img variant="top" src={val["s3_url"]} onClick={() => handleImageClick(val["s3_url"], val["username"], val["date_created"])}/>
+                  <Card.Img variant="top" src={val["s3_url"]} onClick={() => handleImageClick(val["s3_url"], val["username"], val["date_created"], val["drawing_id"])}/>
                   <Card.Body id="card">
                   
                     <div className="user_info">
@@ -223,6 +225,7 @@ function GalleryPage() {
           username={selectedImageUserName}
           prompt={prompt}
           dateCreated={selectedImageCreationDate}
+          drawingID={selectedImageDrawingID}
         />
       )} 
     </>

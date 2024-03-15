@@ -50,14 +50,20 @@ resource "aws_dynamodb_table" "doodal-likes" {
 resource "aws_dynamodb_table" "doodal-comments" {
   name         = "doodal-comments"
   billing_mode = "PROVISIONED"
-  hash_key     = "comment_id"
+  hash_key     = "drawing_id"
+  range_key    = "username"  
 
   read_capacity  = 1
   write_capacity = 1
 
   attribute {
-    name = "comment_id"
+    name = "drawing_id"
     type = "S"
+  }
+
+  attribute {
+    name = "username"
+    type = "S"           
   }
 }
 

@@ -3,7 +3,7 @@ import { Modal, Image } from "react-bootstrap";
 import './PopUp.css';
 import CommentsSidebar from "./CommentsSidebar";
 
-const Popup = ({ show, handleClose, selectedImage, username, prompt, dateCreated }) => {
+const Popup = ({ show, handleClose, selectedImage, username, prompt, dateCreated, drawingID }) => {
   const [liked, setLiked] = useState(false);
   const [comments, setComments] = useState([
     "Great work!",
@@ -23,11 +23,10 @@ const Popup = ({ show, handleClose, selectedImage, username, prompt, dateCreated
     setComments([...comments, comment]);
   };
 
+  // get the comments here
   // useEffect(() => {
-  //   if (selectedImage) {
-  //     console.log("Selected Image:", selectedImage);
-  //   }
-  // }, [selectedImage]);
+    
+  // }, [show]);
 
   return (
     <Modal
@@ -47,6 +46,7 @@ const Popup = ({ show, handleClose, selectedImage, username, prompt, dateCreated
           </div>
           <div className="comments">
             <CommentsSidebar
+              drawingID={drawingID}
               username={username}
               likes={liked ? 1 : 0}
               comments={comments}

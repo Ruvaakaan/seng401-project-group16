@@ -1,17 +1,22 @@
 import React, { useState, useEffect,  } from "react";
 import './CommentsSidebar.css';
 import { Toast, Image, Form, Button } from "react-bootstrap";
+import { GetComments } from "./GetComments";
 
-const CommentsSidebar = ({ username, likes, comments, dateCreated }) => {
+const CommentsSidebar = ({ drawingID, username, likes, comments, dateCreated }) => {
   const [newComment, setNewComment] = useState("");
   const [timeDifference, setTimeDifference] = useState("");
+
 
   const handleCommentChange = (event) => {
     setNewComment(event.target.value);
   };
 
-  const handlePostComment = () => {
-    console.log("New comment:", newComment);
+  // also add the comment to the database
+  const handlePostComment =  async (comment) => {
+    let body = await GetComments(drawingID, comment);
+    console.log("comment response", body)
+
     setNewComment("");
   };
 
@@ -55,13 +60,17 @@ const CommentsSidebar = ({ username, likes, comments, dateCreated }) => {
       <h3>Comments: </h3>
       <Form className="post-comment-form">
         <Form.Group controlId="newComment">
-          <Form.Control 
-            type="text" 
-            placeholder="Press enter to post comment" 
-            value={newComment} 
-            onChange={handleCommentChange} 
-            onEnter={handlePostComment}
-          />
+        <Form.Control 
+          type="text" 
+          placeholder="Press enter to post comment" 
+          value={newComment} 
+          onChange={handleCommentChange} 
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handlePostComment(newComment);
+            }
+          }}
+        />
         </Form.Group>
       </Form>
 
