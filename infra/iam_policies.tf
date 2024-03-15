@@ -72,8 +72,8 @@ resource "aws_iam_policy" "get_user_info_policy" {
 EOF
 }
 
-resource "aws_iam_policy" "get_competition_drawings_policy" {
-  name        = "lambda-logging-${local.get_competition_drawings_funct}"
+resource "aws_iam_policy" "update_prompts_policy" {
+  name        = "lambda-logging-${local.update_prompts_funct}"
   description = "IAM policy for logging from a lambda"
 
   policy = <<EOF
@@ -100,30 +100,9 @@ resource "aws_iam_policy" "get_competition_drawings_policy" {
       ],
       "Resource": [
         "arn:aws:logs:*:*:*",
-        "${aws_dynamodb_table.doodal-drawings.arn}",
-        "${aws_dynamodb_table.doodal-likes.arn}"
+        "${aws_dynamodb_table.doodal-prompts.arn}"
       ],
       "Effect": "Allow"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:GetObject"
-      ],
-      "Resource": "arn:aws:s3:::doodals-bucket-seng401/*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:ListBucket",
-        "s3:GetBucketLocation"
-      ],
-      "Resource": "arn:aws:s3:::doodals-bucket-seng401"
-    },
-    {
-      "Effect": "Allow",
-      "Action": "dynamodb:Query",
-      "Resource": "${aws_dynamodb_table.doodal-likes.arn}"
     }
   ]
 }
@@ -223,7 +202,8 @@ resource "aws_iam_policy" "create_prompt_policy" {
         "ssm:GetParameter",
         "ssm:PutParameter",
         "dynamodb:PutItem",
-        "dynamodb:PartiQLSelect"
+        "dynamodb:PartiQLSelect",
+        "dynamodb:Scan"
       ],
       "Resource": [
         "arn:aws:logs:*:*:*",
@@ -495,9 +475,9 @@ resource "aws_iam_role_policy_attachment" "get_user_info_logs" {
   policy_arn = aws_iam_policy.get_user_info_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "get_competition_drawings_logs" {
-  role       = aws_iam_role.get_competition_drawings_iam.name
-  policy_arn = aws_iam_policy.get_competition_drawings_policy.arn
+resource "aws_iam_role_policy_attachment" "update_prompts_logs" {
+  role       = aws_iam_role.update_prompts_iam.name
+  policy_arn = aws_iam_policy.update_prompts_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "upload_drawing_logs" {

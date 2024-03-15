@@ -37,8 +37,8 @@ resource "aws_iam_role" "get_user_info_iam" {
 EOF
 }
 
-resource "aws_iam_role" "get_competition_drawings_iam" {
-  name               = "iam-for-lambda-${local.get_competition_drawings_funct}"
+resource "aws_iam_role" "update_prompts_iam" {
+  name               = "iam-for-lambda-${local.update_prompts_funct}"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
