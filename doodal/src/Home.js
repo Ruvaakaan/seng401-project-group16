@@ -1,4 +1,3 @@
-import { Button } from "react-bootstrap";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { useNavigate } from "react-router-dom";
@@ -96,7 +95,7 @@ function Home() {
                 width={550}
                 className="home-imgs"
                 onClick={() =>
-                  nav("/gallery", {
+                  nav(`/gallery/${prompts[idx]["comp_id"]}`, {
                     state: {
                       prompt: prompts[idx]["prompt"],
                       comp_id: prompts[idx]["comp_id"],

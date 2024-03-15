@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { Button } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
-import { getImages } from "./getImages.js";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { sortImages } from "./sortDrawings.js";
 import { likeUnlike } from "./LikeAndUnlike.js";
 import "./Gallery.css";
@@ -16,23 +15,36 @@ function GalleryPage() {
   const [title, setTitle] = useState("Gallery"); // title of page
 
   const nav = useNavigate();
+  const {version} = useParams();
+
   const location = useLocation();
   const prompt = location.state?.prompt; // get prompt as prop
   const comp_id = location.state?.comp_id; // get competition id as prop
 
-  useEffect(() => { // when loaded, check if we are in a competiion or main gallery, do stuff based on where
+  const fetchData = useCallback(async () => {
+    // Call your function to fetch data based on current URL (with or without version)
+    const prompt = location.state?.prompt; // get prompt as prop
+    const comp_id = location.state?.comp_id; // get competition id as prop
+
+    let data = await callSorter("likes-descend");
+    if (!data) {
+      return;
+    }
+    setImages(data);
+  }, [location, version]); // Re-run useEffect on location or version change
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  useEffect(() => {
+    // when loaded, check if we are in a competiion or main gallery, do stuff based on where
     if (prompt) {
       setTitle(prompt);
       setUserEnter(true);
-      handleImages(comp_id);
-    } else {
-      callSorter("likes-descend");
     }
+    callSorter("likes-descend");
   }, []);
-
-  // useEffect(() => {
-  //   console.log(user_likes);
-  // }, [user_likes]);
 
   function like_change(val) {
     // this function changes the heart icon for liking and unliking
@@ -62,39 +74,10 @@ function GalleryPage() {
     }
   };
 
-  const handleImages = async (id) => { // get the image and image info from the api call
-    let body = await getImages(id);
-    let post_info_list = []; // tragedy isnt it?
-    let userLikesList = [];
-
-    try {
-      for (let i = 0; i < body.length; i++) { // process the return
-        let post_info = {};
-        post_info["s3_url"] = body[i]["s3_url"]["S"];
-        post_info["competition_id"] = body[i]["competition_id"]["S"];
-        post_info["drawing_id"] = body[i]["drawing_id"]["S"];
-        post_info["likes"] = body[i]["likes"]["N"];
-        post_info["user_id"] = body[i]["user_id"]["S"];
-        post_info["date_created"] = body[i]["date_created"]["S"];
-        post_info["username"] = body[i]["username"]["S"];
-        post_info_list.push(post_info);
-        if (body[i]["liked_by_user"]) {
-          userLikesList.push(body[i]["drawing_id"]["S"]);
-        }
-      }
-    } catch {}
-
-    if (!post_info_list) {
-      return;
-    }
-    setImages(post_info_list);
-    setUserLikes(userLikesList);
-  };
-
   const callSorter = async (s) => {
     var i = comp_id ? comp_id : ""; // if in a comp, pass in comp id, else it is empty for no compettion
     let body = await sortImages(s, i, -1); // s is sort type, i is competition id, -1 is for amount which returns all
-    if (!body) { 
+    if (!body) {
       return;
     }
     setImages(body);
@@ -103,6 +86,10 @@ function GalleryPage() {
   // useEffect(() => {
   //   console.log("images:", images); // debugging
   // }, [images]);
+
+  // useEffect(() => {
+  //   console.log(user_likes);
+  // }, [user_likes]);
 
   return (
     <>
@@ -168,32 +155,38 @@ function GalleryPage() {
           <h1>No images yet!</h1>
         ) : (
           <Row xs={6} className="g-4">
-        {images.map((val, idx) => (
-          <Col key={idx}>
-            <Card>
-              <Card.Img variant="top" src={val["s3_url"]} />
-              <Card.Body id="card">
-                <div className="user_info">
-                  <img src="octopus.PNG" width={60} />
-                  <text className="name">{val["username"]}</text>
-                </div>
-                <div className="like-container">
-                  {user_likes.includes(val['drawing_id']) ? (
-                    <button className="like" onClick={() => handleLikes(val['drawing_id'])}>
-                      <i className="fa-solid fa-heart fa-2xs"></i>
-                    </button>
-                  ) : (
-                    <button className="like" onClick={() => handleLikes(val['drawing_id'])}>
-                      <i className="fa-regular fa-heart fa-2xs"></i>
-                    </button>
-                  )}
-                  <div className="like-counter">{val["likes"]}</div>
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+            {images.map((val, idx) => (
+              <Col key={idx}>
+                <Card>
+                  <Card.Img variant="top" src={val["s3_url"]} />
+                  <Card.Body id="card">
+                    <div className="user_info">
+                      <img src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG" width={60} />
+                      <p className="name">{val["username"]}</p>
+                    </div>
+                    <div className="like-container">
+                      {user_likes.includes(val["drawing_id"]) ? (
+                        <button
+                          className="like"
+                          onClick={() => handleLikes(val["drawing_id"])}
+                        >
+                          <i className="fa-solid fa-heart fa-2xs"></i>
+                        </button>
+                      ) : (
+                        <button
+                          className="like"
+                          onClick={() => handleLikes(val["drawing_id"])}
+                        >
+                          <i className="fa-regular fa-heart fa-2xs"></i>
+                        </button>
+                      )}
+                      <div className="like-counter">{val["likes"]}</div>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
         )}
       </div>
     </>

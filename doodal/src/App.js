@@ -27,6 +27,7 @@ function App() {
 
             try {
                 const user = await makeApiCall("https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/getdata", "GET", "");
+                console.log(user)
                 Cookies.set("userInfo", JSON.stringify(user));
             } catch (error) {
                 console.error("Error fetching user data:", error);
