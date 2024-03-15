@@ -13,7 +13,8 @@ function Home() {
   const [prompts, setPrompts] = useState([]); // array of prompts
   const [images, setImages] = useState([]); // array of images
 
-  const getPrompts = async () => { // fetches the prompts from the prompts table
+  const getPrompts = async () => {
+    // fetches the prompts from the prompts table
     let res = await fetch(
       `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/get_prompts`,
       {
@@ -24,23 +25,25 @@ function Home() {
       }
     );
     let extracted = await res.json();
-    console.log(extracted)
     let { body } = extracted;
-    let newPrompts = [];
+    var compToAdd = [];
 
     var len = body.length < 5 ? body.length : 5; // len decides how many prompts to pull, if we have less than 5 prompts, we get all, otherwise 5 at most
 
     for (let i = 0; i < len; i++) {
+      let newPrompts = {};
+      newPrompts["prompt"] = body[i]["prompt"]["S"];
+      newPrompts["comp_id"] = body[i]["competition_id"]["S"];
+      compToAdd.push(newPrompts); // add prompt to the prompts list
       await handleImages(body[i]["competition_id"]["S"]); // call handle image to get the top image for that prompt
-      newPrompts.push(body[i]["prompt"]["S"]); // add prompt to the prompts list
     }
-    setPrompts(newPrompts);
+    setPrompts(compToAdd);
   };
 
   const handleImages = async (id) => {
     let body = await sortImages("likes-descend", id, 1); // uses the sort api call to get the most liked post for the given competition
-
-    if (!body[0]) { // if there are no photos for the competition we have an empty item added
+    if (!body[0]) {
+      // if there are no photos for the competition we have an empty item added
       setImages((images) => [...images, []]);
       return;
     }
@@ -79,24 +82,24 @@ function Home() {
         navigation
       >
         {images.length === 0 ? (
-          <SwiperSlide>
-            <h1>No images yet!</h1>
-          </SwiperSlide>
+          <h1>No images yet!</h1>
         ) : (
-          images.map((val, idx) => (
+          prompts.map((val, idx) => (
             <SwiperSlide key={idx}>
-              <h1>{prompts[idx]}</h1>
+              <h1>{prompts[idx]["prompt"]}</h1>
               <img
                 src={
-                  images[idx]["s3_url"] ? images[idx]["s3_url"] : "octopus.PNG" 
-                } 
+                  images[idx]["s3_url"]
+                    ? images[idx]["s3_url"]
+                    : "empty_comp.png"
+                }
                 width={550}
                 className="home-imgs"
                 onClick={() =>
                   nav("/gallery", {
                     state: {
-                      prompt: prompts[idx],
-                      comp_id: images[idx]["competition_id"],
+                      prompt: prompts[idx]["prompt"],
+                      comp_id: prompts[idx]["comp_id"],
                     },
                   })
                 }
