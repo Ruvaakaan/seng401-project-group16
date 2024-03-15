@@ -1,0 +1,18 @@
+.profile {
+    /* Other styles */
+    border-radius: 50%;
+    overflow: hidden;
+    width: 85px; 
+    height: 85px;
+    display: flex;
+    justify-content: center; /* Center the content horizontally */
+    align-items: center; /* Center the content vertically */
+  }
+  
+  .profile img {
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+
+  }
+  

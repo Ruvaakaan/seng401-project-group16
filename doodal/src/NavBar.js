@@ -1,9 +1,31 @@
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import DropdownMenu from "./DropdownMenu";
+import makeApiCall from "./makeApiCall";
+import './NavBar.css';
 
 function NavBar({ loggedIn }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [profilePicture, setProfilePicture] = useState("");
+
+  const fetchProfilePicture = async () => {
+    try {
+      const response = await makeApiCall(`https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/getdata`, "GET", {});
+      console.log("response:", response)
+      if (response) {
+        setProfilePicture(response.profile_photo_url.S)
+      } else {
+        console.error("Failed to fetch profile picture");
+      }
+    } catch (error) {
+      console.error("Error fetching profile picture:", error);
+    }
+  };
+
+  // Fetch profile picture only when logged in
+  if (loggedIn) {
+    fetchProfilePicture(); 
+  }
 
   return (
     <>
@@ -30,7 +52,7 @@ function NavBar({ loggedIn }) {
                 className={isDropdownOpen ? 'profile dropdown-opened reg-hover' : 'profile reg-hover'}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-                <img src="" alt="O"></img>
+                <img src={profilePicture} alt="Account"></img>
               </div>
               {isDropdownOpen && <DropdownMenu/>}
             </div>

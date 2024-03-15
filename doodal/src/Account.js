@@ -84,9 +84,9 @@ function Account() {
             id: response.user_id.S,
             username: response.username.S,
             email: response.email.S,
-            bio: response.bio.S, // You may want to set this to a default value or leave it empty initially
-            picture: "https://i.etsystatic.com/16421349/r/il/c49bf5/2978449787/il_fullxfull.2978449787_hgl5.jpg",
-            exp: parseInt(response.experience.N), // Convert experience to a number
+            bio: response.bio.S, 
+            picture: response.profile_photo_url.S,
+            exp: parseInt(response.experience.N),
           });
           // Do something with userData, such as updating state
         } else {
