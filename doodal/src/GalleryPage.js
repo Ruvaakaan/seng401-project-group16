@@ -23,8 +23,6 @@ function GalleryPage() {
 
   const fetchData = useCallback(async () => {
     // Call your function to fetch data based on current URL (with or without version)
-    const prompt = location.state?.prompt; // get prompt as prop
-    const comp_id = location.state?.comp_id; // get competition id as prop
 
     let data = await callSorter("likes-descend");
     if (!data) {
@@ -80,6 +78,14 @@ function GalleryPage() {
     if (!body) {
       return;
     }
+    let arr = []
+    for (let i=0;i<body.length;i++){
+      if (body[i]["liked_by_user"] == true){
+        arr.push(body[i]["drawing_id"]);
+      }
+    }
+
+    setUserLikes(arr);
     setImages(body);
   };
 
