@@ -11,7 +11,7 @@ def create_user(event, context):
     username = event["userName"]
     email = event["request"]["userAttributes"]["email"]
     xp = 0
-    bio = "Create a bio."
+    bio = "Create a bio!"
     date_created = str(datetime.datetime.now().timestamp())
     
     table.put_item(Item={

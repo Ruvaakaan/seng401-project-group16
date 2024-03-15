@@ -9,16 +9,16 @@ def upload_profile_photo(event, context):
   try:
     # print(event)
     body = json.loads(event["body"])
-    user_id = event['headers']["user_id"]
+    username = event['headers']["username"]
     image_data = base64.b64decode(body["image_data"])
     
-    filepath = f"profile_photos/{user_id}.jpg"
-    profile_photo_url = f"https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/profile_photos/{user_id}.jpg"
+    filepath = f"profile_photos/{username}.jpg"
+    profile_photo_url = f"https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/profile_photos/{username}.jpg"
     
     response = dynamodb.update_item(
       TableName="doodal-users",
       Key={
-        'user_id': {"S": str(user_id)}
+        'username': {"S": str(username)}
       },
       UpdateExpression='SET profile_photo_url = :val',
       ExpressionAttributeValues={":val": {"S":str(profile_photo_url)}},

@@ -6,13 +6,13 @@ dynamodb_client = boto3.client("dynamodb")
 def update_bio(event, context):
   try:
     body = json.loads(event["body"])
-    user_id = event['headers']["user_id"]
+    username = event['headers']["username"]
     bio = body["bio"]
     
     response = dynamodb_client.update_item(
       TableName="doodal-users",
       Key={
-        'user_id': {"S": str(user_id)}
+        'username': {"S": str(username)}
       },
       UpdateExpression='SET bio = :val',
       ExpressionAttributeValues={":val": {"S":str(bio)}},

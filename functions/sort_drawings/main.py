@@ -5,6 +5,26 @@ import random
 dynamodb_resource = boto3.client("dynamodb")
 table_name = "doodal-drawings"
 
+def get_users_liked(username, drawing_ids):
+    users_liked_drawings = {}
+    for drawing_id in drawing_ids:
+        try:
+            statement = "SELECT * FROM \"doodal-likes\" WHERE username = ? AND drawing_id = ?"
+            params = [{"S": str(username)}, {"S": str(drawing_id)}]
+            response = dynamodb_resource.execute_statement(
+                Statement=statement,
+                Parameters=params
+            )
+            print(f"response from query: {response}")
+            if response.get('Items'):
+                users_liked_drawings[drawing_id] = True
+            else:
+                users_liked_drawings[drawing_id] = False
+        except Exception as e:
+            print(f"An error occurred: {e}")
+    print(f"users liked drawings: {users_liked_drawings}")
+    return users_liked_drawings
+
 def randomize(data):
     return random.sample(data, len(data))
 
@@ -60,6 +80,11 @@ def sort_drawings_handler(event, context):
         competition_by = body["competition_type"]
         sort_by = body["sort_type"]
         amount = body["amount"]
+        
+        try:
+            username = event["headers"]["username"]
+        except Exception:
+            username = None
        
         print(sort_by)
         print(competition_by)
@@ -78,7 +103,7 @@ def sort_drawings_handler(event, context):
             date_created = float(item.get('date_created', {}).get('S', ''))
             likes = int(item.get('likes', {}).get('N', 0))
             s3_url = item.get('s3_url', {}).get('S', '')
-            user_id = item.get('user_id', {}).get('S', '')
+            username = item.get('username', {}).get('S', '')
             username = item.get('username', {}).get('S', '')
 
             item_dict = {
@@ -87,18 +112,18 @@ def sort_drawings_handler(event, context):
                 'date_created': date_created,
                 'likes': likes,
                 's3_url': s3_url,
-                'user_id': user_id,
+                'username': username,
                 'username': username
             }
 
             data.append(item_dict)
 
-        print(data)
+        # print(data)
 
         if competition_by != "":
             data = [item for item in data if item['competition_id'] == competition_by]
 
-        print(data)
+        # print(data)
 
         if sort_by == "random":
             data = randomize(data)
@@ -113,12 +138,26 @@ def sort_drawings_handler(event, context):
         else:
             data = randomize(data)
 
-        print(data)
+        # print(data)
 
         if isinstance(amount, int) and amount >= 0:
             data = data[:amount]
 
-        print(data)
+        print(f"data before: {data}")
+        
+        drawing_ids = [item["drawing_id"] for item in data]
+        print(f"drawing ids: {drawing_ids}")
+
+        users_liked = {}
+        if username:
+            users_liked = get_users_liked(username, drawing_ids)
+            
+        for item in data:
+            drawing_id = item["drawing_id"]
+            item["liked_by_user"] = users_liked.get(drawing_id, False)
+        # print(items)
+        
+        print(f"data after: {data}")
 
         return {
             "statusCode": 200,
