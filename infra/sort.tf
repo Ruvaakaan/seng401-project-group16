@@ -1,16 +1,3 @@
-# terraform {
-#   required_providers {
-#     aws = {
-#       version = ">= 4.0.0"
-#       source  = "hashicorp/aws"
-#     }
-#   }
-# }
-
-# provider "aws" {
-#   region = "us-west-2"
-# }
-
 locals {
   sort_drawings_funct    = "sort-drawings"
   sort_drawings_handler  = "main.sort_drawings_handler"
@@ -84,7 +71,8 @@ resource "aws_iam_policy" "sort_drawings_policy" {
             ],
             "Resource": [
                 "arn:aws:logs:*:*:*",
-                "arn:aws:dynamodb:us-west-2:905418414303:table/doodal-drawings"
+                "${aws_dynamodb_table.doodal-drawings.arn}",
+                "${aws_dynamodb_table.doodal-likes.arn}"
             ]
         }
     ]

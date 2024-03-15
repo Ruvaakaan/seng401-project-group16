@@ -8,10 +8,10 @@ def get_profile_photo(event, context):
   try:
     print(event)
     body = json.loads(event["body"])
-    user_id = body["user_id"]
+    username = body["username"]
 
-    statement = "SELECT profile_photo_url FROM \"doodal-users\" WHERE user_id = ?"
-    params = [{"S": str(user_id)}]
+    statement = "SELECT profile_photo_url FROM \"doodal-users\" WHERE username = ?"
+    params = [{"S": str(username)}]
 
     response = dynamodb.execute_statement(
       Statement=statement,

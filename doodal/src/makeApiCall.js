@@ -20,10 +20,15 @@ async function makeApiCall(url, method, request) {
 
             //retrieve userinfo cookie to get userid
             const userInfo = Cookies.get("userInfo");
+            console.log("userinfo", userInfo)
             if (userInfo) {
+                // console.log("aasdasdasd")
                 const userInfoObj = JSON.parse(userInfo);
                 
                 headers["username"] = userInfoObj["username"]["S"];
+
+                // console.log(userInfoObj["username"]["S"])
+
             }
             response = await axios.post(url, request, { headers });
 

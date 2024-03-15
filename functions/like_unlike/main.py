@@ -17,10 +17,10 @@ def update_drawing_likes(drawing_id, like_val):
   updated_likes = response['Attributes']['likes']
   return updated_likes
 
-def delete_users_liked_photos(user_id, drawing_id):
+def delete_users_liked_photos(username, drawing_id):
   try:
-    statement = "DELETE FROM \"doodal-likes\" WHERE user_id = ? AND drawing_id = ?"
-    params = [{"S": str(user_id)}, {"S": str(drawing_id)}]
+    statement = "DELETE FROM \"doodal-likes\" WHERE username = ? AND drawing_id = ?"
+    params = [{"S": str(username)}, {"S": str(drawing_id)}]
     response = dynamodb_client.execute_statement(
       Statement=statement,
       Parameters=params
@@ -31,12 +31,12 @@ def delete_users_liked_photos(user_id, drawing_id):
     print(f"An error occurred: {e}")
     return None
 
-def check_if_user_already_liked(user_id, drawing_id):
+def check_if_user_already_liked(username, drawing_id):
   response = dynamodb_client.scan(
     TableName="doodal-likes",
-    FilterExpression="user_id = :uid AND drawing_id = :did",
+    FilterExpression="username = :uid AND drawing_id = :did",
     ExpressionAttributeValues={
-      ":uid": {"S": str(user_id)},
+      ":uid": {"S": str(username)},
       ":did": {"S": str(drawing_id)}
     }
   )
@@ -44,12 +44,12 @@ def check_if_user_already_liked(user_id, drawing_id):
   items = response.get("Items", [])
   return items
 
-def add_to_users_liked_photos(user_id, drawing_id):
+def add_to_users_liked_photos(username, drawing_id):
   try:
     dynamodb_client.put_item(
       TableName="doodal-likes",
       Item={
-        'user_id': {"S": str(user_id)},
+        'username': {"S": str(username)},
         'drawing_id': {"S": str(drawing_id)}
       }
     )
@@ -62,13 +62,13 @@ def like_unlike(event, context):
     print(event)
     body = json.loads(event['body'])
     drawing_id = body['drawing_id']
-    user_id = event['headers']["user_id"]
+    username = event['headers']["username"]
 
-    items = check_if_user_already_liked(user_id, drawing_id)
+    items = check_if_user_already_liked(username, drawing_id)
     print(f"items: {items}")
     
     if not items:   
-      add_to_users_liked_photos(user_id, drawing_id)
+      add_to_users_liked_photos(username, drawing_id)
       updated_likes = update_drawing_likes(drawing_id, 1)
       return {
         "statusCode": 200,
@@ -81,7 +81,7 @@ def like_unlike(event, context):
     else:    
       updated_likes = update_drawing_likes(drawing_id, -1)  
       print(f"updated likes after deleting: {updated_likes}")
-      response = delete_users_liked_photos(user_id, drawing_id)
+      response = delete_users_liked_photos(username, drawing_id)
       print(f"after delete from like table: {response}")
       
       return {
