@@ -81,7 +81,7 @@ function Account() {
         console.log("response:", response)
         if (response) {
           setUser({
-            id: response.user_id.S,
+            // id: response.user_id.S,
             username: response.username.S,
             email: response.email.S,
             bio: response.bio.S, // You may want to set this to a default value or leave it empty initially

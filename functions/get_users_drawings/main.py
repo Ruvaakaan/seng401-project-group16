@@ -5,12 +5,12 @@ dynamodb = boto3.client("dynamodb")
 
 def get_users_drawings(event, context):
   print(event)
-  user_id = event["requestContext"]["authorizer"]["claims"]["sub"]
-  print(user_id)
+  username = event["requestContext"]["authorizer"]["claims"]["sub"]
+  print(username)
   
   try:
-    statement = "SELECT * FROM \"doodal-drawings\" WHERE user_id = ?"
-    params = [{"S": str(user_id)}]
+    statement = "SELECT * FROM \"doodal-drawings\" WHERE username = ?"
+    params = [{"S": str(username)}]
     response = dynamodb.execute_statement(
       Statement=statement,
       Parameters=params
