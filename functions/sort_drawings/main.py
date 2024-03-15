@@ -79,6 +79,7 @@ def sort_drawings_handler(event, context):
             likes = int(item.get('likes', {}).get('N', 0))
             s3_url = item.get('s3_url', {}).get('S', '')
             user_id = item.get('user_id', {}).get('S', '')
+            username = item.get('username', {}).get('S', '')
 
             item_dict = {
                 'drawing_id': drawing_id,
@@ -86,7 +87,8 @@ def sort_drawings_handler(event, context):
                 'date_created': date_created,
                 'likes': likes,
                 's3_url': s3_url,
-                'user_id': user_id
+                'user_id': user_id,
+                'username': username
             }
 
             data.append(item_dict)
@@ -135,7 +137,7 @@ def sort_drawings_handler(event, context):
                   "Access-Control-Allow-Headers" : "Content-Type",
                   "Access-Control-Allow-Origin": "*",
                   "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"},
-            "body": json.dumps({"error": "Missing Request Body"})
+            "body": json.dumps({"error": ve})
         }
     except Exception as e:
         # Handle unexpected errors
@@ -146,5 +148,5 @@ def sort_drawings_handler(event, context):
                   "Access-Control-Allow-Headers" : "Content-Type",
                   "Access-Control-Allow-Origin": "*",
                   "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"},
-            "body": json.dumps({"error": "Internal Server Error"})
+            "body": json.dumps({"error": e})
         }
