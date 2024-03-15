@@ -15,7 +15,7 @@ def upload_drawing(event, context):
     
     body = json.loads(event["body"])
     competition_id = body["competition_id"]
-    user_id = event['headers']["user_id"]
+    username = event['headers']["username"]
     username = event['requestContext']['authorizer']['claims']['username']
     print(username)
     image_data = base64.b64decode(body["image_data"])
@@ -31,7 +31,7 @@ def upload_drawing(event, context):
     table.put_item(Item={
       "drawing_id": drawing_id,
       "competition_id": competition_id,
-      "user_id": user_id,
+      "username": username,
       "likes": likes,
       "date_created": date_created,
       "s3_url": f"https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/{competition_id}/{drawing_id}.jpg",

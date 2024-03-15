@@ -4,12 +4,12 @@ import json
 s3 = boto3.client("s3")
 dynamodb = boto3.client("dynamodb")
 
-def get_users_liked(user_id, drawing_ids):
+def get_users_liked(username, drawing_ids):
     users_liked_drawings = {}
     for drawing_id in drawing_ids:
         try:
-            statement = "SELECT * FROM \"doodal-likes\" WHERE user_id = ? AND drawing_id = ?"
-            params = [{"S": str(user_id)}, {"S": str(drawing_id)}]
+            statement = "SELECT * FROM \"doodal-likes\" WHERE username = ? AND drawing_id = ?"
+            params = [{"S": str(username)}, {"S": str(drawing_id)}]
             response = dynamodb.execute_statement(
                 Statement=statement,
                 Parameters=params
@@ -29,7 +29,7 @@ def get_competition_drawings(event, context):
         print(event)
         body = json.loads(event['body'])
         competition_id = body["competition_id"]
-        user_id = event.get('headers', {}).get("user_id")
+        username = event.get('headers', {}).get("username")
 
         statement = "SELECT * FROM \"doodal-drawings\" WHERE competition_id = ?"
         params = [{"S": str(competition_id)}]
@@ -44,8 +44,8 @@ def get_competition_drawings(event, context):
         print(f"drawing ids: {drawing_ids}")
 
         users_liked = {}
-        if user_id:
-            users_liked = get_users_liked(user_id, drawing_ids)
+        if username:
+            users_liked = get_users_liked(username, drawing_ids)
 
         # Update items with user likes information
         for item in items:

@@ -31,9 +31,9 @@ function NavBar({ loggedIn }) {
     <>
       <div id="bar">
         <div className="logos">
-          <img src="octopus.PNG" alt="logo" width={150}></img>
+          <img src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG" alt="logo" width={150}></img>
           <Link to="/home">
-            <img src="doodalnew.PNG" alt="doodal" width={275} id="doodal"></img>
+            <img src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/doodalnew.png" alt="doodal" width={275} id="doodal"></img>
           </Link>
         </div>
         <div className="nav">
@@ -43,9 +43,6 @@ function NavBar({ loggedIn }) {
           <Link to="/gallery" className="items">
             Gallery
           </Link>
-          {/* <Link to="/draw" className="items">
-            Draw
-          </Link> */}
           {loggedIn !== false ? (
             <div className="dropdown-click">
               <div
