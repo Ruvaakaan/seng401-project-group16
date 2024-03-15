@@ -26,7 +26,9 @@ async function makeApiCall(url, method, request) {
                 const userInfoObj = JSON.parse(userInfo);
                 
                 headers["username"] = userInfoObj["username"]["S"];
+
                 // console.log(userInfoObj["username"]["S"])
+
             }
             response = await axios.post(url, request, { headers });
 

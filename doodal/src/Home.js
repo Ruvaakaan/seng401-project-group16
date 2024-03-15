@@ -96,7 +96,7 @@ function Home() {
                 width={550}
                 className="home-imgs"
                 onClick={() =>
-                  nav("/gallery", {
+                  nav(`/gallery/${prompts[idx]["comp_id"]}`, {
                     state: {
                       prompt: prompts[idx]["prompt"],
                       comp_id: prompts[idx]["comp_id"],

@@ -3,7 +3,7 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { Button } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getImages } from "./getImages.js";
 import { sortImages } from "./sortDrawings.js";
 import { likeUnlike } from "./LikeAndUnlike.js";
@@ -20,7 +20,10 @@ function GalleryPage() {
   const prompt = location.state?.prompt; // get prompt as prop
   const comp_id = location.state?.comp_id; // get competition id as prop
 
-  useEffect(() => { // when loaded, check if we are in a competiion or main gallery, do stuff based on where
+  const { version } = useParams();
+
+  useEffect(() => {
+    // when loaded, check if we are in a competiion or main gallery, do stuff based on where
     if (prompt) {
       setTitle(prompt);
       setUserEnter(true);
@@ -62,13 +65,15 @@ function GalleryPage() {
     }
   };
 
-  const handleImages = async (id) => { // get the image and image info from the api call
+  const handleImages = async (id) => {
+    // get the image and image info from the api call
     let body = await getImages(id);
     let post_info_list = []; // tragedy isnt it?
     let userLikesList = [];
 
     try {
-      for (let i = 0; i < body.length; i++) { // process the return
+      for (let i = 0; i < body.length; i++) {
+        // process the return
         let post_info = {};
         post_info["s3_url"] = body[i]["s3_url"]["S"];
         post_info["competition_id"] = body[i]["competition_id"]["S"];
@@ -94,7 +99,7 @@ function GalleryPage() {
   const callSorter = async (s) => {
     var i = comp_id ? comp_id : ""; // if in a comp, pass in comp id, else it is empty for no compettion
     let body = await sortImages(s, i, -1); // s is sort type, i is competition id, -1 is for amount which returns all
-    if (!body) { 
+    if (!body) {
       return;
     }
     setImages(body);
@@ -168,32 +173,38 @@ function GalleryPage() {
           <h1>No images yet!</h1>
         ) : (
           <Row xs={6} className="g-4">
-        {images.map((val, idx) => (
-          <Col key={idx}>
-            <Card>
-              <Card.Img variant="top" src={val["s3_url"]} />
-              <Card.Body id="card">
-                <div className="user_info">
-                  <img src="octopus.PNG" width={60} />
-                  <text className="name">{val["username"]}</text>
-                </div>
-                <div className="like-container">
-                  {user_likes.includes(val['drawing_id']) ? (
-                    <button className="like" onClick={() => handleLikes(val['drawing_id'])}>
-                      <i className="fa-solid fa-heart fa-2xs"></i>
-                    </button>
-                  ) : (
-                    <button className="like" onClick={() => handleLikes(val['drawing_id'])}>
-                      <i className="fa-regular fa-heart fa-2xs"></i>
-                    </button>
-                  )}
-                  <div className="like-counter">{val["likes"]}</div>
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+            {images.map((val, idx) => (
+              <Col key={idx}>
+                <Card>
+                  <Card.Img variant="top" src={val["s3_url"]} />
+                  <Card.Body id="card">
+                    <div className="user_info">
+                      <img src="octopus.PNG" width={60} />
+                      <p className="name">{val["username"]}</p>
+                    </div>
+                    <div className="like-container">
+                      {user_likes.includes(val["drawing_id"]) ? (
+                        <button
+                          className="like"
+                          onClick={() => handleLikes(val["drawing_id"])}
+                        >
+                          <i className="fa-solid fa-heart fa-2xs"></i>
+                        </button>
+                      ) : (
+                        <button
+                          className="like"
+                          onClick={() => handleLikes(val["drawing_id"])}
+                        >
+                          <i className="fa-regular fa-heart fa-2xs"></i>
+                        </button>
+                      )}
+                      <div className="like-counter">{val["likes"]}</div>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
         )}
       </div>
     </>
