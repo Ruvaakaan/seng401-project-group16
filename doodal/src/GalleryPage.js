@@ -7,12 +7,17 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { sortImages } from "./sortDrawings.js";
 import { likeUnlike } from "./LikeAndUnlike.js";
 import "./Gallery.css";
+import Popup from "./PopUp.js";
 
 function GalleryPage() {
   const [user_likes, setUserLikes] = useState([]); // array of all posts liked by user
   const [images, setImages] = useState([]); // array of images
   const [userEnter, setUserEnter] = useState(false); // determines if in the main gallery or in a competition page
   const [title, setTitle] = useState("Gallery"); // title of page
+  const [showPopUp, setShowPopUp] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImageUserName, setSelectedImageUserName] = useState(null);
+  const [selectedImageCreationDate, setSelectedImageCreationDate] = useState(null);
 
   const nav = useNavigate();
   const {version} = useParams();
@@ -20,6 +25,18 @@ function GalleryPage() {
   const location = useLocation();
   const prompt = location.state?.prompt; // get prompt as prop
   const comp_id = location.state?.comp_id; // get competition id as prop
+
+
+  const handleImageClick = (image, username, dateCreated) => {
+    setSelectedImage(image);
+    setSelectedImageUserName(username);
+    setSelectedImageCreationDate(dateCreated);
+    setShowPopUp(true);
+  };
+
+  const handleClosePopUp = () => {
+    setShowPopUp(false);
+  }
 
   const fetchData = useCallback(async () => {
     // Call your function to fetch data based on current URL (with or without version)
@@ -80,12 +97,20 @@ function GalleryPage() {
     if (!body) {
       return;
     }
+    let arr = []
+    for (let i=0;i<body.length;i++){
+      if (body[i]["liked_by_user"] == true){
+        arr.push(body[i]["drawing_id"]);
+      }
+    }
+
+    setUserLikes(arr);
     setImages(body);
   };
 
-  // useEffect(() => {
-  //   console.log("images:", images); // debugging
-  // }, [images]);
+  useEffect(() => {
+    console.log("images:", images); // debugging
+  }, [images]);
 
   // useEffect(() => {
   //   console.log(user_likes);
@@ -158,10 +183,11 @@ function GalleryPage() {
             {images.map((val, idx) => (
               <Col key={idx}>
                 <Card>
-                  <Card.Img variant="top" src={val["s3_url"]} />
+                  <Card.Img variant="top" src={val["s3_url"]} onClick={() => handleImageClick(val["s3_url"], val["username"], val["date_created"])}/>
                   <Card.Body id="card">
+                  
                     <div className="user_info">
-                      <img src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG" width={60} />
+                      <img src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG" width={60}/>
                       <p className="name">{val["username"]}</p>
                     </div>
                     <div className="like-container">
@@ -189,6 +215,16 @@ function GalleryPage() {
           </Row>
         )}
       </div>
+      {showPopUp && (
+        <Popup
+          show={showPopUp}
+          handleClose={handleClosePopUp}
+          selectedImage={selectedImage}
+          username={selectedImageUserName}
+          prompt={prompt}
+          dateCreated={selectedImageCreationDate}
+        />
+      )} 
     </>
   );
 }

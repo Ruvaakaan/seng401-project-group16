@@ -20,7 +20,7 @@ async function makeApiCall(url, method, request) {
 
             //retrieve userinfo cookie to get userid
             const userInfo = Cookies.get("userInfo");
-            // console.log("userinfo", userInfo)
+            console.log("userinfo", userInfo)
             if (userInfo) {
                 // console.log("aasdasdasd")
                 const userInfoObj = JSON.parse(userInfo);
