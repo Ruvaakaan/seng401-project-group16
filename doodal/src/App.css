@@ -25,6 +25,7 @@ body {
 
 .logos {
   margin-top:0.75%;
+  margin-left: 0.75%
 }
 
 .nav {
@@ -97,6 +98,10 @@ body {
 .home-imgs{
   margin-top:25px;
   margin-bottom: 25px;
+}
+
+.home-imgs:hover{
+  cursor: pointer;
 }
 
 .like {
