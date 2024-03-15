@@ -168,36 +168,32 @@ function GalleryPage() {
           <h1>No images yet!</h1>
         ) : (
           <Row xs={6} className="g-4">
-            {images.map((val, idx) => (
-              <Col key={idx}>
-                <Card>
-                  <Card.Img variant="top" src={val["s3_url"]} />
-                  <Card.Body id="card">
-                    <div className="user_info">
-                      <img src="octopus.PNG" width={60} />
-                      <text className="name">{val["username"]}</text>
-                    </div>
-                    <div className="like-counter">{val["likes"]} Likes</div>
-                    {user_likes.includes(val["drawing_id"]) ? (
-                      <button
-                        className="like"
-                        onClick={() => handleLikes(val["drawing_id"])}
-                      >
-                        &#9829;
-                      </button>
-                    ) : (
-                      <button
-                        className="like"
-                        onClick={() => handleLikes(val["drawing_id"])}
-                      >
-                        &#9825;
-                      </button>
-                    )}
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Row>
+        {images.map((val, idx) => (
+          <Col key={idx}>
+            <Card>
+              <Card.Img variant="top" src={val["s3_url"]} />
+              <Card.Body id="card">
+                <div className="user_info">
+                  <img src="octopus.PNG" width={60} />
+                  <text className="name">{val["username"]}</text>
+                </div>
+                <div className="like-container">
+                  {user_likes.includes(val['drawing_id']) ? (
+                    <button className="like" onClick={() => handleLikes(val['drawing_id'])}>
+                      <i className="fa-solid fa-heart fa-2xs"></i>
+                    </button>
+                  ) : (
+                    <button className="like" onClick={() => handleLikes(val['drawing_id'])}>
+                      <i className="fa-regular fa-heart fa-2xs"></i>
+                    </button>
+                  )}
+                  <div className="like-counter">{val["likes"]}</div>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
         )}
       </div>
     </>
