@@ -186,9 +186,8 @@ function GalleryPage() {
             {images.map((val, idx) => (
               <Col key={idx}>
                 <Card>
-                  <Card.Img variant="top" src={val["s3_url"]} onClick={() => handleImageClick(val["s3_url"], val["username"], val["date_created"], val["drawing_id"])}/>
+                  <Card.Img variant="top" src={val["s3_url"]}  className="gallery-img" onClick={() => handleImageClick(val["s3_url"], val["username"], val["date_created"], val["drawing_id"])}/>
                   <Card.Body id="card">
-                  
                     <div className="user_info">
                       <img src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG" width={60}/>
                       <p className="name">{val["username"]}</p>

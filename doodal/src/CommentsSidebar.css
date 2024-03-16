@@ -47,3 +47,15 @@
 .comments-section::-webkit-scrollbar-thumb:hover {
   background: #EFF1F2;
 }
+
+
+.dark-mode .modal-content, .dark-mode .comments-section,
+.dark-mode .custom-toast, .dark-mode .custom-toast-header,
+.dark-mode #newComment::placeholder, .dark-mode #newComment{  
+  background-color: #333;
+  color: white;
+}
+
+.dark-mode .btn-close{
+  color:white;
+}
