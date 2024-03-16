@@ -5,7 +5,7 @@ export const getComments = async (drawingID) => {
     drawing_id: drawingID,
   });
 
-  let res = await makeApiCall(``, "GET", request)
+  let res = await makeApiCall(`https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/get_comments`, "POST", request)
   
   return res;
 };

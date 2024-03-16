@@ -3,7 +3,7 @@ import json
 
 dynamodb = boto3.client("dynamodb")
 
-def get_profile_photo(event, context):
+def get_comments(event, context):
   try:
     print(event)
     body = json.loads(event["body"])
@@ -20,12 +20,20 @@ def get_profile_photo(event, context):
 
     return {
       "statusCode": 200,
-      "headers": {"Content-Type": "application/json"},
+      "headers": {"Content-Type": "application/json",
+                  "Access-Control-Allow-Headers" : "Content-Type",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"
+      },
       "body": json.dumps(response["Items"])
     }
   except Exception as e:
     return {
       "statusCode": 500,
-      "headers": {"Content-Type": "application/json"},
+      "headers": {"Content-Type": "application/json",
+                  "Access-Control-Allow-Headers" : "Content-Type",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"
+      },
       "body": json.dumps({"error": str(e)})
     }
