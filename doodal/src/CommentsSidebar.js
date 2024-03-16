@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./CommentsSidebar.css";
 import { Toast, Image, Form, Button } from "react-bootstrap";
+import Cookies from "js-cookie";
 import { addComments } from "./AddComments";
+import { likeUnlike } from "./LikeAndUnlike.js";
 
 const CommentsSidebar = ({
   drawingID,
@@ -10,25 +12,30 @@ const CommentsSidebar = ({
   comments,
   dateCreated,
 }) => {
+  const [postComments, setPostComments] = useState(comments);
   const [newComment, setNewComment] = useState("");
   const [timeDifference, setTimeDifference] = useState("");
-
+  const [liked, setLiked] = useState(likes);
   const handleCommentChange = (event) => {
     setNewComment(event.target.value);
   };
 
-  const handlePostComment = async (comment) => {
-    let body = await addComments(drawingID, comment);
-    console.log("comment response", body);
+  const handleLike = async () => {
+    await likeUnlike(drawingID);
+    setLiked(!liked);
+  };
 
-    setNewComment("");
+  const handlePostComment = async () => {
+    if (newComment.trim()) {
+      let body = await addComments(drawingID, newComment);
+      setPostComments([newComment, ...postComments]);
+      setNewComment("");
+    }
   };
 
   useEffect(() => {
-    console.log("date created", dateCreated);
     const currentDateSeconds = Math.floor(new Date().getTime() / 1000);
-    const dateCreatedSeconds = dateCreated;
-    const timeDifferenceSeconds = currentDateSeconds - dateCreatedSeconds;
+    const timeDifferenceSeconds = currentDateSeconds - dateCreated;
 
     if (timeDifferenceSeconds < 60) {
       setTimeDifference(`${timeDifferenceSeconds} seconds ago`);
@@ -58,11 +65,19 @@ const CommentsSidebar = ({
           <span className="username">By: {username}</span>
           <span className="posted-time">Posted: {timeDifference}</span>
         </div>
-        <i className="fa-regular fa-heart fa-2xl" style={{ color: "red" }}></i>
+        {liked ? (
+          <button className="like" onClick={() => handleLike(drawingID)}>
+            <i className="fa-solid fa-heart fa-2xs"></i>
+          </button>
+        ) : (
+          <button className="like" onClick={() => handleLike(drawingID)}>
+            <i className="fa-regular fa-heart fa-2xs"></i>
+          </button>
+        )}
       </div>
 
       <h3>Comments: </h3>
-      <Form className="post-comment-form">
+      <Form className="post-comment-form" onSubmit={(e) => e.preventDefault()}>
         <Form.Group controlId="newComment">
           <Form.Control
             type="text"
@@ -72,23 +87,22 @@ const CommentsSidebar = ({
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
-                handlePostComment(newComment);
+                handlePostComment();
               }
             }}
           />
         </Form.Group>
         <Button
           variant="primary"
-          type="submit"
           onClick={handlePostComment}
-          disabled={!newComment.trim()}
+          disabled={!newComment.trim() || !Cookies.get("userInfo")}
         >
           Post
         </Button>
       </Form>
 
       <div className="comments-section">
-        {comments.map((comment, index) => (
+        {postComments.map((comment, index) => (
           <Toast key={index} className="custom-toast">
             <Toast.Header closeButton={false}>
               <Image
@@ -96,8 +110,8 @@ const CommentsSidebar = ({
                 roundedCircle
                 className="profile-photo"
               />
-              <strong className="me-auto">Bootstrap</strong>
-              <small>11 mins ago</small>
+              <strong className="me-auto">{username}</strong>
+              <small>{timeDifference}</small>
             </Toast.Header>
             <Toast.Body>{comment}</Toast.Body>
           </Toast>

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Modal, Image } from "react-bootstrap";
 import './PopUp.css';
 import CommentsSidebar from "./CommentsSidebar";
+import { getComments } from "./GetComments";
 
-const Popup = ({ show, handleClose, selectedImage, username, prompt, dateCreated, drawingID }) => {
-  const [liked, setLiked] = useState(false);
+const Popup = ({ show, handleClose, selectedImage, username, prompt, dateCreated, drawingID, liked }) => {
   const [comments, setComments] = useState([
     "Great work!",
     "Love it!",
@@ -15,18 +15,20 @@ const Popup = ({ show, handleClose, selectedImage, username, prompt, dateCreated
     "YEYEYEYEYYE",
   ]);
 
-  const handleLike = () => {
-    setLiked(!liked);
-  };
-
   const handleAddComment = (comment) => {
     setComments([...comments, comment]);
   };
 
   // get the comments here
+  const handleComments = async () =>{
+    var body = await getComments(drawingID);
+
+    console.log(body);
+  }
+
   // useEffect(() => {
-    
-  // }, [show]);
+  //   handleComments();
+  // }, []);
 
   return (
     <Modal
@@ -48,7 +50,7 @@ const Popup = ({ show, handleClose, selectedImage, username, prompt, dateCreated
             <CommentsSidebar
               drawingID={drawingID}
               username={username}
-              likes={liked ? 1 : 0}
+              likes={liked}
               comments={comments}
               dateCreated={dateCreated}
             />

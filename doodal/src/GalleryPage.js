@@ -19,6 +19,7 @@ function GalleryPage() {
   const [selectedImageUserName, setSelectedImageUserName] = useState(null);
   const [selectedImageCreationDate, setSelectedImageCreationDate] = useState(null);
   const [selectedImageDrawingID, setSelectedImageDrawingID] = useState(null);
+  const [sortType, setSortType] = useState("likes-descend");
 
   const nav = useNavigate();
   const {version} = useParams();
@@ -37,6 +38,7 @@ function GalleryPage() {
   };
 
   const handleClosePopUp = () => {
+    callSorter(sortType); // this pretty much refreshes the gallery in case the user likes within the popup. updates the icon and like count (will not work with random filter)
     setShowPopUp(false);
   }
 
@@ -45,7 +47,7 @@ function GalleryPage() {
     const prompt = location.state?.prompt; // get prompt as prop
     const comp_id = location.state?.comp_id; // get competition id as prop
 
-    let data = await callSorter("likes-descend");
+    let data = await callSorter(sortType);
     if (!data) {
       return;
     }
@@ -62,7 +64,7 @@ function GalleryPage() {
       setTitle(prompt);
       setUserEnter(true);
     }
-    callSorter("likes-descend");
+    callSorter(sortType);
   }, []);
 
   function like_change(val) {
@@ -94,6 +96,7 @@ function GalleryPage() {
   };
 
   const callSorter = async (s) => {
+    setSortType(s);
     var i = comp_id ? comp_id : ""; // if in a comp, pass in comp id, else it is empty for no compettion
     let body = await sortImages(s, i, -1); // s is sort type, i is competition id, -1 is for amount which returns all
     if (!body) {
@@ -110,9 +113,9 @@ function GalleryPage() {
     setImages(body);
   };
 
-  useEffect(() => {
-    console.log("images:", images); // debugging
-  }, [images]);
+  // useEffect(() => {
+  //   console.log("images:", images); // debugging
+  // }, [images]);
 
   // useEffect(() => {
   //   console.log(user_likes);
@@ -226,6 +229,7 @@ function GalleryPage() {
           prompt={prompt}
           dateCreated={selectedImageCreationDate}
           drawingID={selectedImageDrawingID}
+          liked={user_likes.includes(selectedImageDrawingID)}
         />
       )} 
     </>
