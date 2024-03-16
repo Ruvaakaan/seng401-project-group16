@@ -4,15 +4,10 @@ import { Toast, Image, Form, Button } from "react-bootstrap";
 import Cookies from "js-cookie";
 import { addComments } from "./AddComments";
 import { likeUnlike } from "./LikeAndUnlike.js";
+import { getComments } from "./GetComments";
 
-const CommentsSidebar = ({
-  drawingID,
-  username,
-  likes,
-  comments,
-  dateCreated,
-}) => {
-  const [postComments, setPostComments] = useState(comments);
+const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
+  const [postComments, setPostComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [timeDifference, setTimeDifference] = useState("");
   const [liked, setLiked] = useState(likes);
@@ -28,28 +23,54 @@ const CommentsSidebar = ({
   const handlePostComment = async () => {
     if (newComment.trim()) {
       let body = await addComments(drawingID, newComment);
-      setPostComments([newComment, ...postComments]);
+      var newCommentAdded = {};
+      newCommentAdded['user']=JSON.parse(Cookies.get("userInfo"))["username"]["S"];
+      newCommentAdded['text']=newComment;
+      newCommentAdded['date']=Math.floor(new Date().getTime() / 1000);
+      setPostComments([newCommentAdded, ...postComments]);
       setNewComment("");
     }
   };
 
-  useEffect(() => {
+  // get the comments here
+  const handleComments = async () => {
+    var body = await getComments(drawingID);
+    var toAdd = [];
+    for (let i = 0; i < body.length; i++) {
+      var commentToAdd = {};
+      commentToAdd["text"] = body[i]["comment_text"]["S"];
+      commentToAdd["user"] = body[i]["username"]["S"];
+      commentToAdd["date"] = body[i]["date_created"]["S"];
+      toAdd.push(commentToAdd);
+    }
+    setPostComments(toAdd);
+  };
+
+  const timeConverter = (val) => {
     const currentDateSeconds = Math.floor(new Date().getTime() / 1000);
-    const timeDifferenceSeconds = currentDateSeconds - dateCreated;
+    const timeDifferenceSeconds = currentDateSeconds - val;
 
     if (timeDifferenceSeconds < 60) {
-      setTimeDifference(`${timeDifferenceSeconds} seconds ago`);
+      return `${timeDifferenceSeconds} seconds ago`;
     } else if (timeDifferenceSeconds < 60 * 60) {
       const minutes = Math.floor(timeDifferenceSeconds / 60);
-      setTimeDifference(`${minutes} minutes ago`);
+      return `${minutes} minutes ago`;
     } else if (timeDifferenceSeconds < 60 * 60 * 24) {
       const hours = Math.floor(timeDifferenceSeconds / (60 * 60));
-      setTimeDifference(`${hours} hours ago`);
+      return `${hours} hours ago`;
     } else {
       const days = Math.floor(timeDifferenceSeconds / (60 * 60 * 24));
-      setTimeDifference(`${days} days ago`);
+      return `${days} days ago`;
     }
+  };
+
+  useEffect(() => {
+    setTimeDifference(timeConverter(dateCreated));
   }, [dateCreated]);
+
+  useEffect(() => {
+    handleComments();
+  }, []);
 
   return (
     <div className="comments-sidebar">
@@ -110,10 +131,10 @@ const CommentsSidebar = ({
                 roundedCircle
                 className="profile-photo"
               />
-              <strong className="me-auto">{username}</strong>
-              <small>{timeDifference}</small>
+              <strong className="me-auto">{postComments[index]["user"]}</strong>
+              <small>{timeConverter(postComments[index]["date"])}</small>
             </Toast.Header>
-            <Toast.Body>{comment}</Toast.Body>
+            <Toast.Body>{postComments[index]["text"]}</Toast.Body>
           </Toast>
         ))}
       </div>
