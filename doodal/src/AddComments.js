@@ -1,6 +1,6 @@
 import makeApiCall from "./makeApiCall";
 
-export const GetComments = async (drawingID, comment) => {
+export const addComments = async (drawingID, comment) => {
   const request = JSON.stringify({
     drawing_id: drawingID,
     comment_text: comment
