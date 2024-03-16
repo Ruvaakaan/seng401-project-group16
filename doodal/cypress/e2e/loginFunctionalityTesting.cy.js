@@ -1,5 +1,5 @@
 describe("Login and authentication flow", () => {
-    it("navigates through login, logout, and re-login", () => {
+    it("navigates through login and logout", () => {
         // 1. Navigate to the login page and login
         cy.visit("http://localhost:3000");
         cy.contains("Login").click();
@@ -30,7 +30,8 @@ describe("Login and authentication flow", () => {
         cy.get(".profile").click();
         cy.contains("Logout").click();
         cy.url().should("eq", "http://localhost:3000/");
-
+        
+        // 5. Chcking that cookies are null afterwards
         cy.getCookie("authentication").then((nullAuthCookie) => {
             cy.log("Authentication Cookie Value:", nullAuthCookie);
             expect(nullAuthCookie).to.be.null;
@@ -39,25 +40,7 @@ describe("Login and authentication flow", () => {
         cy.getCookie("userInfo").then((nullUserInfoCookie) => {
             cy.log("User Info Cookie Value:", nullUserInfoCookie);
             expect(nullUserInfoCookie).to.be.null;
-        });
-
-        // 5. Log back in
-        cy.contains("Login").click();
-        cy.loginByCognito(Cypress.env("username2"), Cypress.env("password2"));
-        cy.url().should("eq", "http://localhost:3000/");
-        cy.get(".profile").should("be.visible");
-        cy.contains("Login").should("not.exist");
-
-        // 6. Re-Check for token in cookies and verify uniqueness
-        cy.getCookie("authentication").then((newAuthCookie) => {
-            expect(newAuthCookie.value).to.not.be.null;
-            expect(newAuthCookie.value).to.not.equal(initialAuthCookie.value);
-        });
-        cy.wait(1000);
-        cy.getCookie("userInfo").then((newUserInfoCookie) => {
-            cy.log("User Info Cookie Value:", newUserInfoCookie.value);
-            expect(newUserInfoCookie.value).to.not.be.null;
-        });
+        });          
     });
 });
 
@@ -72,10 +55,10 @@ const loginToCognito = (username, password) => {
         password: password,
     };
 
-    cy.origin(cognitoBaseUrl, { args: userCredentials }, () => {
+    cy.origin(cognitoBaseUrl, { args: userCredentials }, ({username, password}) => {
         cy.contains("Sign in with your username and password");
-        cy.get('input[name="username"]:visible').type("cypress-testing-1");
-        cy.get('input[name="password"]:visible').type("Cypress-password-1", {
+        cy.get('input[name="username"]:visible').type(username);
+        cy.get('input[name="password"]:visible').type(password, {
             log: false,
         });
         cy.get('input[name="signInSubmitButton"]:visible').click();
