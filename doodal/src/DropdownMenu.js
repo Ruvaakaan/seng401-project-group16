@@ -9,6 +9,7 @@ function DropdownMenu() {
   const handleLogOut = () => {
     if (Cookies.get("authentication")) {
       Cookies.remove("authentication");
+      Cookies.remove("userInfo");
       window.location.reload();
     }
   };

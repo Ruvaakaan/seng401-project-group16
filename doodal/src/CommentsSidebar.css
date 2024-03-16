@@ -1,0 +1,49 @@
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+}
+
+.profile-photo {
+  width: 50px;
+  height: 50px; 
+}
+
+.post-info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px; 
+}
+
+.fa-heart {
+  margin-left: auto; 
+}
+
+.custom-toast {
+  margin-top: 5px;
+  width: 99% !important;
+}
+
+.comments-section {
+  height: 369px; 
+  /* height is hardcoded so its bad */
+  overflow-y: auto;
+}
+
+.comments-section::-webkit-scrollbar {
+  width: 5px; 
+}
+
+.comments-section::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 5px; 
+}
+
+.comments-section::-webkit-scrollbar-thumb {
+  background: #d5d6d6;
+  border-radius: 5px; 
+}
+
+.comments-section::-webkit-scrollbar-thumb:hover {
+  background: #EFF1F2;
+}
