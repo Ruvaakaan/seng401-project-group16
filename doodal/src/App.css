@@ -122,6 +122,10 @@ body {
   font-size: 2.5em;
 }
 
+.gallery-img:hover {
+  cursor: pointer;
+}
+
 #card{
   display: flex;
   justify-content:space-between;

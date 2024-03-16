@@ -93,7 +93,7 @@ const CommentsSidebar = ({
           />
         </Form.Group>
         <Button
-          variant="primary"
+          variant="outline-dark"
           onClick={handlePostComment}
           disabled={!newComment.trim() || !Cookies.get("userInfo")}
         >
@@ -104,7 +104,7 @@ const CommentsSidebar = ({
       <div className="comments-section">
         {postComments.map((comment, index) => (
           <Toast key={index} className="custom-toast">
-            <Toast.Header closeButton={false}>
+            <Toast.Header closeButton={false} className="custom-toast-header">
               <Image
                 src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"
                 roundedCircle
