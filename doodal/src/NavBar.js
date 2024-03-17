@@ -32,6 +32,7 @@ function NavBar({ loggedIn }) {
 
   return (
     <>
+
       <Navbar className="purple-navbar" style={{ height: "100px" }}>
         <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
           <Navbar.Brand>

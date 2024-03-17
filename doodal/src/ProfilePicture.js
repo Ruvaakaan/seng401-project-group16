@@ -5,28 +5,33 @@ import makeApiCall from "./makeApiCall";
 function ProfilePicture({ onClose, onProfilePictureChange }) {
   const [file, setFile] = useState(null);
   const [fileError, setFileError] = useState(false);
+  const [fileName, setFileName] = useState("");
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
+      console.log("yes file")
       const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
       const allowedTypes = ["image/jpeg", "image/png", "image/gif"]; // Allowed image types
-
+      
       // Check file size
       if (selectedFile.size > maxSizeInBytes) {
         setFileError("File size exceeds 5MB");
         setFile(null);
+        setFileName("")
       } else if (!allowedTypes.includes(selectedFile.type)) {
         // Check file type
         setFileError("Invalid file type. Please select a JPEG, PNG, or GIF file.");
         setFile(null);
+        setFileName("")
       } else {
+        setFileName(selectedFile.name)
         setFile(selectedFile);
         setFileError(false);
       }
     } else {
+      console.log("no file")
       setFileError("Please choose an image");
-      setFile(null);
     }
   };
 
@@ -58,15 +63,21 @@ function ProfilePicture({ onClose, onProfilePictureChange }) {
       <div className="profile-content">
         <h1>Change Profile Picture</h1>
         <p>Select an image for your profile</p>
-        <label htmlFor="file" id="fileText">
-          <input
-            id="file"
-            type="file"
-            required
-            accept="image/jpeg, image/png, image/gif"
-            onChange={handleFileChange}
-          />
+        {/* Hide the default file input */}
+        <input
+          id="file"
+          type="file"
+          style={{ display: 'none' }}
+          required
+          accept="image/jpeg, image/png, image/gif"
+          onChange={handleFileChange}
+        />
+        {/* Use label to trigger file selection */}
+        <label htmlFor="file" id="fileText" className="file-upload-button">
+          Click here to select a file
         </label>
+        {/* Display the file name */}
+        {fileName ? fileName : ""}
         {fileError && <label id="error">{fileError}</label>}
         <div className="buttons">
           {/* Buttons container */}
@@ -75,6 +86,7 @@ function ProfilePicture({ onClose, onProfilePictureChange }) {
         </div>
       </div>
     </div>
+
   );
 }
 

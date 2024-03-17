@@ -107,6 +107,7 @@ function Account() {
     setIsProfilePopupOpen(false);
   };
 
+
   const fetchUserData = async () => {
     try {
       const response = await makeApiCall(
@@ -137,6 +138,7 @@ function Account() {
           bio: "Bio here",
           exp: 0,
         });
+
       }
     } catch (error) {
       console.error("Error fetching user data:", error);

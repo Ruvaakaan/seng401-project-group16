@@ -1,3 +1,4 @@
+/* Light mode */
 .settings-overlay {
     position: fixed;
     top: 0;
@@ -12,8 +13,10 @@
 
 .settings-content {
     background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
+    padding: 2vw; 
+    border-radius: 10px;
+    width: 20vw;
+    max-width: 100%;
 }
 
 .settings-content input,
@@ -27,14 +30,14 @@
 }
 
 .settings-content button {
-    background-color: #4ecca3; 
+    background-color: #007bff; 
     color: #fff; 
     border: none;
     cursor: pointer;
 }
 
 .settings-content button:hover {
-    background-color: #47b78a; 
+    background-color: #0056b3; 
 }
 
 /* Dark Mode Styles */

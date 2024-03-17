@@ -162,6 +162,7 @@ body {
 .dropdown-click {
   position: relative;
   z-index: 1000;
+  
 }
 
 .drop-menu {
@@ -204,6 +205,9 @@ body {
 
 .drop-icons {
   font-size: 0.85em;
+}
+.reg-hover{
+  margin-top: 10px;
 }
 
 .breakline {
