@@ -5,12 +5,15 @@ import Cookies from "js-cookie";
 import { addComments } from "./AddComments";
 import { likeUnlike } from "./LikeAndUnlike.js";
 import { getComments } from "./GetComments";
+import { delComments } from "./DeleteComment.js";
 
 const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
   const [postComments, setPostComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [timeDifference, setTimeDifference] = useState("");
   const [liked, setLiked] = useState(likes);
+  const loggedUser = JSON.parse(Cookies.get("userInfo"))["username"]["S"];
+
   const handleCommentChange = (event) => {
     setNewComment(event.target.value);
   };
@@ -24,9 +27,11 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
     if (newComment.trim()) {
       let body = await addComments(drawingID, newComment);
       var newCommentAdded = {};
-      newCommentAdded['user']=JSON.parse(Cookies.get("userInfo"))["username"]["S"];
-      newCommentAdded['text']=newComment;
-      newCommentAdded['date']=Math.floor(new Date().getTime() / 1000);
+      newCommentAdded["user"] = JSON.parse(Cookies.get("userInfo"))["username"][
+        "S"
+      ];
+      newCommentAdded["text"] = newComment;
+      newCommentAdded["date"] = Math.floor(new Date().getTime() / 1000);
       setPostComments([newCommentAdded, ...postComments]);
       setNewComment("");
     }
@@ -43,7 +48,15 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
       commentToAdd["date"] = body[i]["date_created"]["S"];
       toAdd.push(commentToAdd);
     }
+    toAdd.reverse();
     setPostComments(toAdd);
+  };
+
+  const handleDeleteComment = async (dc, i) => {
+    await delComments(drawingID, dc);
+    var newArray = [...postComments];
+    newArray.splice(i, 1);
+    setPostComments(newArray);
   };
 
   const timeConverter = (val) => {
@@ -51,7 +64,7 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
     const timeDifferenceSeconds = currentDateSeconds - val;
 
     if (timeDifferenceSeconds < 60) {
-      return `${timeDifferenceSeconds} seconds ago`;
+      return `${Math.floor(timeDifferenceSeconds)} seconds ago`;
     } else if (timeDifferenceSeconds < 60 * 60) {
       const minutes = Math.floor(timeDifferenceSeconds / 60);
       return `${minutes} minutes ago`;
@@ -133,6 +146,17 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
               />
               <strong className="me-auto">{postComments[index]["user"]}</strong>
               <small>{timeConverter(postComments[index]["date"])}</small>
+
+              {postComments[index]["user"] == loggedUser ? (
+                <i
+                  className="fa-solid fa-trash comment-action-icon"
+                  onClick={() =>
+                    handleDeleteComment(postComments[index]["date"], index)
+                  }
+                ></i>
+              ) : (
+                <i className="fa-solid fa-flag comment-action-icon"></i>
+              )}
             </Toast.Header>
             <Toast.Body>{postComments[index]["text"]}</Toast.Body>
           </Toast>

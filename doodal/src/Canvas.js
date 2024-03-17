@@ -151,8 +151,8 @@ function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
         onMouseDown={() => startDrawing()}
         onMouseUp={() => stopDrawing()}
         onMouseMove={(event) => draw(event)}
-        width={800}
-        height={600}
+        width={742}
+        height={659}
         style={{ border: "1px solid #000" }}
       ></canvas>
     </div>
