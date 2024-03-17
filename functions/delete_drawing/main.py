@@ -19,7 +19,8 @@ def verify_user(requested,draw_id):
       return True
     else:
       return False
-  except Exception:
+  except Exception as e:
+    print(e)
     return False
 
 def delete_drawing(event, context):
@@ -43,19 +44,19 @@ def delete_drawing(event, context):
       "body": "Unauthorized user tried to delete post."
     }
 
-    statement = "DELETE FROM \"doodal-comments\" WHERE drawing_id = ?"
-    params = [{"S": str(drawing_id)}]
-    response = dynamodb.execute_statement(
-        Statement=statement,
-        Parameters=params
-    )
-
-    statement = "DELETE FROM \"doodal-drawings\" WHERE drawing_id = ?"
-    params = [{"S": str(drawing_id)}]
-    response = dynamodb.execute_statement(
-        Statement=statement,
-        Parameters=params
-    )
+    response = dynamodb.delete_item(
+      TableName="doodal-comments",
+      Key={
+          'drawing_id': {'S': drawing_id}
+        }
+      )
+    
+    response = dynamodb.delete_item(
+      TableName="doodal-drawings",
+      Key={
+          'drawing_id': {'S': drawing_id}
+        }
+      )
 
     bucket_name = 'doodals-bucket-seng401'
     key = f'{competition_id}/{drawing_id}.jpg'
