@@ -23,11 +23,9 @@ function NavBar({ loggedIn }) {
   const handleLogOut = () => {
     Cookies.remove("authentication");
     Cookies.remove("userInfo");
-    window.location.reload();
-  
+    window.location.href = "/home";
   };
   
-
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   return (
