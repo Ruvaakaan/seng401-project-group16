@@ -18,6 +18,7 @@ function Account() {
   //User state
   const [user, setUser] = useState({});
   const [posts, setPosts] = useState([]);
+  const [show, setShow] = useState(false);
   const [isBioOpen, setIsBioOpen] = useState(false);
   const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
@@ -79,18 +80,15 @@ function Account() {
 
   // Function to handle profile picture change
   const handleProfilePictureChange = (file) => {
-    // console.log("File received:", file);
     if (!file) {
       console.error("No file received.");
       return;
     }
     const imageUrl = URL.createObjectURL(file);
-    // console.log("Temporary image URL:", imageUrl);
     if (!imageUrl) {
       console.error("Failed to create temporary image URL.");
       return;
     }
-    // console.log("Selected file:", file);
     setUser((prevUser) => {
       // console.log("Previous user state:", prevUser);
 
@@ -103,7 +101,6 @@ function Account() {
       console.log("Updated user state:", updatedUser);
       return updatedUser;
     });
-
     setIsProfilePopupOpen(false);
   };
 
@@ -128,16 +125,6 @@ function Account() {
         // Do something with userData, such as updating state
       } else {
         console.error("Failed to fetch user data");
-        setUser({
-          id: "example_id",
-          picture:
-            "https://i.etsystatic.com/16421349/r/il/c49bf5/2978449787/il_fullxfull.2978449787_hgl5.jpg",
-          username: "example_user",
-          email: "example@example.com",
-          bio: "Bio here",
-          exp: 0,
-        });
-
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -158,8 +145,6 @@ function Account() {
     fetchUserImages();
     setShow(false);
   };
-
-  const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
 
