@@ -18,7 +18,7 @@ function NavBar({ loggedIn }) {
   const userInfoCookie = Cookies.get("userInfo");
   const profilePhotoUrl = userInfoCookie
     ? JSON.parse(userInfoCookie)["profile_photo_url"]["S"]
-    : null;
+    : "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG";
 
   const handleLogOut = () => {
     Cookies.remove("authentication");
@@ -81,8 +81,6 @@ function NavBar({ loggedIn }) {
                       className="nav-link-custom"
                       src={
                         profilePhotoUrl
-                          ? profilePhotoUrl
-                          : "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"
                       }
                       roundedCircle
                     />
