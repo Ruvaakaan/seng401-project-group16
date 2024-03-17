@@ -259,12 +259,25 @@ resource "aws_iam_policy" "delete_comment_policy" {
         "logs:CreateLogGroup",
         "logs:CreateLogStream",
         "logs:PutLogEvents",
-        "dynamodb:PartiQLDelete",
-        "dynamodb:DeleteItem"
+        "ssm:GetParameters",
+        "ssm:GetParameter",
+        "ssm:PutParameter",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:PartiQLSelect",
+        "s3:DeleteObject"
       ],
       "Resource": [
         "arn:aws:logs:*:*:*",
-        "${aws_dynamodb_table.doodal-comments.arn}"
+        "${aws_dynamodb_table.doodal-comments.arn}",
+        "${aws_dynamodb_table.doodal-drawings.arn}",
+        "${aws_dynamodb_table.doodal-likes.arn}",
+        "arn:aws:s3:::doodals-bucket-seng401/*"
       ],
       "Effect": "Allow"
     }
@@ -461,6 +474,43 @@ resource "aws_iam_policy" "get_profile_photo_policy" {
 }
 EOF
 }
+
+resource "aws_iam_policy" "get_comments_policy" {
+  name        = "lambda-logging-${local.get_comments_funct}"
+  description = "IAM policy for logging from a lambda"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "ssm:GetParameters",
+        "ssm:GetParameter",
+        "ssm:PutParameter",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:PartiQLSelect"
+      ],
+      "Resource": [
+        "arn:aws:logs:*:*:*",
+        "${aws_dynamodb_table.doodal-comments.arn}"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
 # ...
 
 # policy attachments
@@ -528,5 +578,10 @@ resource "aws_iam_role_policy_attachment" "upload_profile_photo_logs" {
 resource "aws_iam_role_policy_attachment" "get_profile_photo_logs" {
   role       = aws_iam_role.get_profile_photo_iam.name
   policy_arn = aws_iam_policy.get_profile_photo_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "get_comments_logs" {
+  role       = aws_iam_role.get_comments_iam.name
+  policy_arn = aws_iam_policy.get_comments_policy.arn
 }
 # ...

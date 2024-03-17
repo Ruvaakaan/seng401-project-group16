@@ -3,7 +3,7 @@ import json
 
 dynamodb = boto3.client("dynamodb")
 
-def get_profile_photo(event, context):
+def get_comments(event, context):
   try:
     print(event)
     body = json.loads(event["body"])
