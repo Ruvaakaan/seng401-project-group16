@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import { Modal, Image } from "react-bootstrap";
 import "./PopUp.css";
 import CommentsSidebar from "./CommentsSidebar";

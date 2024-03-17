@@ -25,7 +25,7 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
 
   const handlePostComment = async () => {
     if (newComment.trim()) {
-      let body = await addComments(drawingID, newComment);
+      await addComments(drawingID, newComment);
       var newCommentAdded = {};
       newCommentAdded["user"] = JSON.parse(Cookies.get("userInfo"))["username"][
         "S"
@@ -147,7 +147,7 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
               <strong className="me-auto">{postComments[index]["user"]}</strong>
               <small>{timeConverter(postComments[index]["date"])}</small>
 
-              {postComments[index]["user"] == loggedUser ? (
+              {postComments[index]["user"] === loggedUser ? (
                 <i
                   className="fa-solid fa-trash comment-action-icon"
                   onClick={() =>

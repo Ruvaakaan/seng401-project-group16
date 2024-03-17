@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDarkMode } from "./DarkModeContext";
 import { sortImages } from "./sortDrawings.js";
-import { Row, Col, Card, Button, Modal } from "react-bootstrap";
+import { Row, Col, Card } from "react-bootstrap";
 
 function Home() {
-  const { isDarkMode, toggleDarkMode } = useDarkMode();
+  const { isDarkMode } = useDarkMode();
   const nav = useNavigate();
 
   const [currentPrompts, setCurrentPrompts] = useState([]); // array of prompts
@@ -15,11 +15,11 @@ function Home() {
   const [images, setImages] = useState([]); // array of images
   const [oldImages, setOldImages] = useState([]);
 
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
 
-  const toggleModal = () => {
-    setShowModal(!showModal);
-  };
+  // const toggleModal = () => {
+  //   setShowModal(!showModal);
+  // };
 
   const convertTime = (dateCreated) => {
     const currentDateSeconds = Math.floor(new Date().getTime() / 1000);
@@ -99,9 +99,9 @@ function Home() {
 
   const handleImages = async (id, version) => {
     let body = await sortImages("likes-descend", id, 1); // uses the sort api call to get the most liked post for the given competition
-    console.log("ID:", id);
-    console.log("Version:", version);
-    console.log("Body:", body);
+    // console.log("ID:", id);
+    // console.log("Version:", version);
+    // console.log("Body:", body);
     if (!body[0]) {
       // if there are no photos for the competition
       if (version === "new") {
@@ -131,7 +131,7 @@ function Home() {
     <>
       <img
         src={isDarkMode ? "blurbannerdark.png" : "blurbanner.png"}
-        className="banner"
+        className="banner" alt="banner"
       ></img>
       <h1 className="memo-banner">
         Welcome to DOODAL! Participate in daily art challenges and share your
