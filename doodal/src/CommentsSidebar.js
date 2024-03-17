@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import { addComments } from "./AddComments";
 import { likeUnlike } from "./LikeAndUnlike.js";
 import { getComments } from "./GetComments";
+import { delComments } from "./DeleteComment.js";
 
 const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
   const [postComments, setPostComments] = useState([]);
@@ -45,6 +46,11 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
     }
     setPostComments(toAdd);
   };
+
+  const handleDeleteComment = async (dc) => {
+    await delComments(drawingID, dc)
+    handleComments();
+  }
 
   const timeConverter = (val) => {
     const currentDateSeconds = Math.floor(new Date().getTime() / 1000);
@@ -133,6 +139,12 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
               />
               <strong className="me-auto">{postComments[index]["user"]}</strong>
               <small>{timeConverter(postComments[index]["date"])}</small>
+              <Button
+          variant="outline-dark"
+          onClick={()=>handleDeleteComment(postComments[index]["date"])}
+        >
+         delete
+        </Button>
             </Toast.Header>
             <Toast.Body>{postComments[index]["text"]}</Toast.Body>
           </Toast>
