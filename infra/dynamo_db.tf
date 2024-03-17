@@ -51,7 +51,7 @@ resource "aws_dynamodb_table" "doodal-comments" {
   name         = "doodal-comments"
   billing_mode = "PROVISIONED"
   hash_key     = "drawing_id"
-  range_key    = "username"  
+  range_key    = "date_created"  
 
   read_capacity  = 1
   write_capacity = 1
@@ -62,7 +62,7 @@ resource "aws_dynamodb_table" "doodal-comments" {
   }
 
   attribute {
-    name = "username"
+    name = "date_created"
     type = "S"           
   }
 }
