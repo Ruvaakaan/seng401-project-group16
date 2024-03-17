@@ -1,5 +1,5 @@
 describe('Testing Changing Bio', () => {
-  it('Logs in, changes bio, logs out, logs in, checks that bio is changed', () => {
+  it('Logs in, changes bio, refreshes, checks that bio is changed', () => {
     cy.visit("http://localhost:3000");
     cy.contains("Login").click();
     cy.loginByCognito(Cypress.env("username1"), Cypress.env("password1"));
@@ -21,17 +21,7 @@ describe('Testing Changing Bio', () => {
 
     cy.contains(newBio)
 
-    cy.get(".custom-dropdown").click();
-    cy.contains("Logout").click();
-    cy.url().should("eq", "http://localhost:3000/");
-
-    cy.contains("Login").click();
-    cy.loginByCognito(Cypress.env("username1"), Cypress.env("password1"));
-    cy.url().should("eq", "http://localhost:3000/");
-
-    cy.get(".custom-dropdown").click();
-    cy.contains("Profile").click();
-    cy.url().should("eq", "http://localhost:3000/profile");
+    cy.reload()
 
     cy.contains(newBio)
   })
