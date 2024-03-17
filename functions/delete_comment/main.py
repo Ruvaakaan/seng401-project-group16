@@ -3,10 +3,10 @@ import json
 
 dynamodb = boto3.client("dynamodb")
 
-def verify_user(requested,draw_id):
+def verify_user(requested,draw_id,dc):
   try:
-    statement = "SELECT * FROM \"doodal-comments\" WHERE drawing_id = ?"
-    params = [{"S": str(draw_id)}]
+    statement = "SELECT * FROM \"doodal-comments\" WHERE drawing_id = ? AND date_created = ?"
+    params = [{"S": str(draw_id)}, {"S": str(dc)}]
     response = dynamodb.execute_statement(
         Statement=statement,
         Parameters=params
@@ -30,7 +30,7 @@ def delete_comment(event, context):
     username = event['headers']["username"]
     date_created = body["date_created"]
 
-    res = verify_user(username,drawing_id)
+    res = verify_user(username,drawing_id,date_created)
 
     if not res:
       return {
@@ -47,7 +47,7 @@ def delete_comment(event, context):
       TableName="doodal-comments",
       Key={
           'drawing_id': {'S': drawing_id},
-          'date_created': {'S': date_created}
+          'date_created': {'S': str(date_created)}
         }
       )
 
