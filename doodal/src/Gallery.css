@@ -1,12 +1,95 @@
-.like-container {
+
+.gallery-banner {
   display: flex;
   flex-direction: column;
+  padding: 10px 5px;
+}
+
+.gallery-title h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.filter-options{
+  font-size: small;
+  text-transform: uppercase;
+  /* padding-top: 5px; */
+}
+
+.filter-list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+.filter-item {
+  cursor: pointer;
+  margin-right: 20px;
+  padding: 10px 10px;
+  border-radius: 20px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.filter-item:hover {
+  background-color: #c086d6; 
+  color: black;
+}
+
+.gal {
+  padding: 20px 35px;
+}
+
+#card {
+  padding: 0 10px;
+}
+
+.card {
+  margin-bottom: 20px;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+  width: 100%; 
+  height: 200px; 
+  object-fit: cover; 
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.card-body {
+  padding: 20px; 
+}
+
+.user_info {
+  display: flex;
+  align-items: center;
+}
+
+.user_info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.like-container {
+  display: flex;
+  align-items: center;
 }
 
 .like {
-  margin-bottom: -10px; /* Adjust as needed */
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
 }
 
 .like-counter {
-  margin-top: -17px; /* Adjust as needed */
+  font-size: 16px;
 }
