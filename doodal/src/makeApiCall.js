@@ -34,6 +34,11 @@ async function makeApiCall(url, method, request) {
 
             
         } else if (method === "DELETE"){ //delete method not currently being used as of mar 2
+            const userInfo = Cookies.get("userInfo");
+            if (userInfo) {
+                const userInfoObj = JSON.parse(userInfo);
+                headers["username"] = userInfoObj["username"]["S"];
+            }
             response = await axios.delete(url, request, {headers})
         }
         
