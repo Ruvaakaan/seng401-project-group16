@@ -4,6 +4,8 @@ import ProfilePicture from "./ProfilePicture.js";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 import "./Account.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { getUserImages } from "./getUserImages.js";
@@ -19,11 +21,35 @@ function Account() {
   const [isBioOpen, setIsBioOpen] = useState(false);
   const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImageUserName, setSelectedImageUserName] = useState(null);
+  const [selectedImageCreationDate, setSelectedImageCreationDate] =
+    useState(null);
+  const [selectedImageDrawingID, setSelectedImageDrawingID] = useState(null);
+  const [selectedUserLiked, setSelectedUserLiked] = useState(null);
+  const [selectedCompetitionID, setSelectedCompetitionID] = useState(null);
+
+  const handlePopup = (
+    image,
+    username,
+    dateCreated,
+    drawingID,
+    userLiked,
+    compID
+  ) => {
+    setSelectedImage(image);
+    setSelectedImageUserName(username);
+    setSelectedImageCreationDate(dateCreated);
+    setSelectedImageDrawingID(drawingID);
+    setSelectedUserLiked(userLiked);
+    setSelectedCompetitionID(compID);
+    setShowPopUp(true);
+  };
 
   const handleClosePopUp = async () => {
     fetchUserImages();
     setShowPopUp(false);
-  }
+  };
 
   //Calculate the level based on experience points
   function calculateLevel(exp) {
@@ -126,10 +152,22 @@ function Account() {
     }
   };
 
-  const handleDeletePost= async (cid, did) =>{
-    await delPost(did, cid)
+  const handleDeletePost = async () => {
+    await delPost(selectedImageDrawingID, selectedCompetitionID);
     fetchUserImages();
-  }
+    setShow(false);
+  };
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+
+  const handleShow = (image, drawingID, compID) => {
+    setSelectedImage(image);
+    setSelectedImageDrawingID(drawingID);
+    setSelectedCompetitionID(compID);
+    setShow(true);
+  };
 
   useEffect(() => {
     fetchUserData();
@@ -191,26 +229,29 @@ function Account() {
                 <Card.Img
                   variant="top"
                   src={item["s3_url"]}
-                  onClick={() => setShowPopUp(true)}
-                />
-                <Card.Body id="card"><i
-                  className="fa-solid fa-trash comment-action-icon"
                   onClick={() =>
-                    handleDeletePost(item.competition_id,item.drawing_id)
+                    handlePopup(
+                      item.s3_url,
+                      item.username,
+                      item.date_created,
+                      item.drawing_id,
+                      item.liked_by_user,
+                      item.competition_id
+                    )
                   }
-                ></i></Card.Body>
-                {showPopUp && (
-                  <Popup
-                    show={showPopUp}
-                    handleClose={handleClosePopUp}
-                    selectedImage={item.s3_url}
-                    username={item.username}
-                    prompt={prompt}
-                    dateCreated={item.date_created}
-                    drawingID={item.drawing_id}
-                    liked={item.liked_by_user}
-                  />
-                )}
+                />
+                <Card.Body id="card">
+                  <i
+                    className="fa-solid fa-trash comment-action-icon"
+                    onClick={() =>
+                      handleShow(
+                        item.s3_url,
+                        item.drawing_id,
+                        item.competition_id
+                      )
+                    }
+                  ></i>
+                </Card.Body>
               </Card>
             </Col>
           ))}
@@ -226,6 +267,36 @@ function Account() {
         <ProfilePicture
           onClose={() => setIsProfilePopupOpen(false)}
           onProfilePictureChange={handleProfilePictureChange}
+        />
+      )}
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Card.Img variant="top" src={selectedImage} />
+          Are you sure you want to delete this post?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShow(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={() => handleDeletePost()}>
+            Delete!
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {showPopUp && (
+        <Popup
+          show={showPopUp}
+          handleClose={handleClosePopUp}
+          selectedImage={selectedImage}
+          username={selectedImageUserName}
+          prompt={prompt}
+          dateCreated={selectedImageCreationDate}
+          drawingID={selectedImageDrawingID}
+          liked={selectedUserLiked}
         />
       )}
     </div>
