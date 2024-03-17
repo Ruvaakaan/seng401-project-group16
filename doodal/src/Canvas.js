@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import NotLoggedIn from "./NotLoggedIn.js";
-import Cookies from "js-cookie";
 import makeApiCall from "./makeApiCall.js";
 // resetting canvas when transparent background doesnt work correctly
 // going off screen whilst holding mouse button and then letting go of mouse leaves mouse pressed
@@ -114,7 +113,7 @@ function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
 
       const jsonString = JSON.stringify(jsonData);
       const link = `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/upload_drawing`;
-      const res = makeApiCall(link, "POST", jsonString)
+      makeApiCall(link, "POST", jsonString)
     } catch (error) {
       console.error("Error uploading drawing:", error);
     }
@@ -151,8 +150,8 @@ function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
         onMouseDown={() => startDrawing()}
         onMouseUp={() => stopDrawing()}
         onMouseMove={(event) => draw(event)}
-        width={800}
-        height={600}
+        width={742}
+        height={659}
         style={{ border: "1px solid #000" }}
       ></canvas>
     </div>

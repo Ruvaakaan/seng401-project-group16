@@ -78,10 +78,6 @@ body {
   width:100%;
 }
 
-.prompt-title {
-  padding: 0.5%;
-}
-
 .prev-prompt{
   display:flex;
   justify-content: center;
@@ -120,6 +116,10 @@ body {
 .gallery-title {
   padding: 0.5%;
   font-size: 2.5em;
+}
+
+.gallery-img:hover {
+  cursor: pointer;
 }
 
 #card{
@@ -245,6 +245,19 @@ body {
   color: white;
 }
 
+.dark-mode .card-header {
+  background-color: #333; 
+  color: white; 
+}
+
+.dark-mode .card-footer {
+  background-color: #333;
+  color: white;
+}
+
+.dark-mode .prompt-title {
+  background-color: #30303A
+}
 .dark-mode .btn-outline-dark {
   --bs-btn-color: #f8f9fa;
   --bs-btn-border-color: #f8f9fa;
@@ -261,3 +274,78 @@ body {
   --bs-btn-disabled-border-color: #f8f9fa;
   --bs-gradient: none;
 }
+
+body {
+  overflow-x: hidden; 
+}
+
+.custom-dropdown .dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: -17px; /* Adjust this value to position the arrow */
+  left: calc(60% - 21px); /* Adjust this value to horizontally center the arrow */
+  border-width: 0 17px 17px 17px; /* Adjust the width and height of the arrow */
+  border-style: solid;
+  border-color: transparent transparent #8D949E transparent; /* Change black to the outline color you want */
+}
+
+.custom-dropdown .dropdown-menu::after {
+  content: '';
+  position: absolute;
+  top: -16px; /* Adjust this value to position the border arrow */
+  left: calc(60% - 21px); /* Adjust this value to horizontally center the border arrow */
+  border-width: 0 17px 17px 17px; /* Adjust the width and height of the border arrow */
+  border-style: solid;
+  border-color: transparent transparent white transparent; /* Change white to the border color you want */
+}
+
+.nav-link-custom {
+  /* display: flex; */
+  margin: 10px;
+  font-size: 2em;
+  text-decoration: none;
+  color: white;
+  width: 75px;
+  height: 75px;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-link-custom-extra {
+  display: flex;
+  margin: 10px;
+  font-size: 2em;
+  text-decoration: none;
+  color: white;
+  width: 75px;
+  height: 75px;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-link {
+  text-decoration: none;
+}
+
+
+.custom-dropdown.show > .dropdown-toggle::before,
+.custom-dropdown.show > .dropdown-toggle::after {
+  display: none !important;
+  content: none !important;
+}
+
+
+.purple-navbar {
+  background-color: #712CF9;
+}
+
+.prompt-title {
+  padding: 0.5%;
+  margin: 0;
+  text-align: center;
+  flex: 1;
+  background-color: #8D949E;
+  color: white;
+}
+
+
