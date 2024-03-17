@@ -311,6 +311,18 @@ body {
   justify-content: center;
 }
 
+.nav-link-custom-extra {
+  display: flex;
+  margin: 10px;
+  font-size: 2em;
+  text-decoration: none;
+  color: white;
+  width: 75px;
+  height: 75px;
+  align-items: center;
+  justify-content: center;
+}
+
 .profile-link {
   text-decoration: none;
 }
