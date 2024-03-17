@@ -48,8 +48,11 @@ def get_users_drawings(event, context):
         users_liked = get_users_liked(username, drawing_ids)
         
     for item in items:
-        drawing_id = item["drawing_id"]
+
+        drawing_id = item["drawing_id"]["S"]
         item["liked_by_user"] = users_liked.get(drawing_id, False)
+        
+    print(items)
     
     return {
       "statusCode": 200,
