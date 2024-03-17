@@ -2,7 +2,7 @@ import boto3
 import json
 
 s3 = boto3.client("s3")
-dynamodb = boto3.resource("dynamodb")
+dynamodb = boto3.client("dynamodb")
 
 def verify_user(requested,draw_id):
   try:
@@ -44,13 +44,22 @@ def delete_drawing(event, context):
       "body": "Unauthorized user tried to delete post."
     }
 
-    response = dynamodb.delete_item(
-      TableName="doodal-comments",
-      Key={
-          'drawing_id': {'S': drawing_id}
-        }
+    scan_response = dynamodb.scan(
+        TableName="doodal-comments",
+        FilterExpression="drawing_id = :val",  # Assuming "drawing_id" is the attribute name
+        ExpressionAttributeValues={':val': {'S': drawing_id}}
+    )
+
+    for item in scan_response['Items']:
+      print(item)
+      delete_response = dynamodb.delete_item(
+          TableName="doodal-comments",
+          Key={
+              'drawing_id': item['drawing_id'],
+              'date_created': item['date_created']  # Use retrieved sort key
+          }
       )
-    
+
     response = dynamodb.delete_item(
       TableName="doodal-drawings",
       Key={
