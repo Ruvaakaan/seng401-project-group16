@@ -27,7 +27,7 @@ function GalleryPage() {
   const location = useLocation();
   const prompt = location.state?.prompt; // get prompt as prop
   const comp_id = location.state?.comp_id; // get competition id as prop
-
+  const oldPrompt = location.state?.old_prompt; // get competition id as prop
 
   const handleImageClick = (image, username, dateCreated, drawingID) => {
     setSelectedImage(image);
@@ -130,7 +130,7 @@ function GalleryPage() {
         <div className="gallery-title">
           <h1>
             {title}
-            {userEnter && (
+            {userEnter && !oldPrompt && (
               <Button
                 variant="outline-dark"
                 className="entry-button"
@@ -190,7 +190,7 @@ function GalleryPage() {
           <Row xs={6} className="g-4">
             {images.map((val, idx) => (
               <Col key={idx}>
-                <Card>
+                <Card >
                   <Card.Img variant="top" src={val["s3_url"]}  className="gallery-img" onClick={() => handleImageClick(val["s3_url"], val["username"], val["date_created"], val["drawing_id"])}/>
                   <Card.Body id="card">
                     <div className="user_info">

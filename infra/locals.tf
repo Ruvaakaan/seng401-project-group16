@@ -14,6 +14,7 @@ locals {
   upload_profile_photo_funct = "upload_profile_photo"
   get_profile_photo_funct = "get_profile_photo"
   get_comments_funct = "get_comments"
+    delete_drawing_funct = "delete_drawing"
   # ...
 
   # handlers
@@ -31,6 +32,7 @@ locals {
   upload_profile_photo_handler = "main.upload_profile_photo"  
   get_profile_photo_handler = "main.get_profile_photo"  
   get_comments_handler = "main.get_comments" 
+    delete_drawing_handler = "main.delete_drawing" 
   # ...
 
   # artifacts
@@ -48,6 +50,7 @@ locals {
   upload_profile_photo_artifact = "${local.upload_profile_photo_funct}/artifact.zip"
   get_profile_photo_artifact = "${local.get_profile_photo_funct}/artifact.zip"
   get_comments_artifact = "${local.get_comments_funct}/artifact.zip"
+    delete_drawing_artifact = "${local.delete_drawing_funct}/artifact.zip"
   # ...
 
   # lambda urls 
@@ -107,6 +110,10 @@ locals {
     {
       name = "get_comments_url"
       url  = aws_lambda_function_url.get_comments_url.function_url
+    },
+    {
+      name = "delete_drawing_url"
+      url  = aws_lambda_function_url.delete_drawing_url.function_url
     },
     # ...
   ]
