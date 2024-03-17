@@ -132,7 +132,8 @@ function Home() {
     <>
       <img
         src={isDarkMode ? "blurbannerdark.png" : "blurbanner.png"}
-        className="banner" alt="banner"
+        className="banner"
+        alt="banner"
       ></img>
       <h1 className="memo-banner">
         Welcome to DOODAL! Participate in daily art challenges and share your
@@ -147,12 +148,7 @@ function Home() {
             width: "100%",
           }}
         >
-          <h1
-            className="prompt-title"
-            style={{ margin: 0, textAlign: "center", flex: 1 }}
-          >
-            Current Competitions
-          </h1>
+          <h1 className="prompt-title">Current Competitions</h1>
         </div>
       </div>
 
@@ -173,7 +169,14 @@ function Home() {
                 className="swiper-card"
                 border={getBorderColor(currentPrompts[idx]?.difficulty)}
               >
-                <Card.Header style={{ display: "flex", alignItems: "center", justifyContent: "center"}}>
+                <Card.Header
+                  className="card-header"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
                   {currentPrompts[idx] && (
                     <p
                       style={{
@@ -206,13 +209,15 @@ function Home() {
                     })
                   }
                 />
-                <Card.Footer>
+                <Card.Footer className="card-footer">
                   {currentPrompts[idx] && (
-                    <p style={{
-                      fontWeight: "bold",
-                      fontSize: "1.2em",
-                      margin: 0,
-                    }}>
+                    <p
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "1.2em",
+                        margin: 0,
+                      }}
+                    >
                       Posted {convertTime(currentPrompts[idx]["date_created"])}
                     </p>
                   )}
@@ -249,19 +254,27 @@ function Home() {
             {oldImages.map((val, idx) => (
               <Col key={idx}>
                 <Card border={getBorderColor(oldPrompts[idx]?.difficulty)}>
-                <Card.Header style={{ display: "flex", alignItems: "center", justifyContent: "center"}}>
-                  {oldPrompts[idx] && (
-                    <p
-                      style={{
-                        fontWeight: "bold",
-                        fontSize: "2em",
-                        margin: 0,
-                      }}
-                    >
-                      {oldPrompts[idx]["prompt"]}
-                    </p>
-                  )}
-                </Card.Header>
+                  <Card.Header
+                    className="card-header"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      
+                    }}
+                  >
+                    {oldPrompts[idx] && (
+                      <p
+                        style={{
+                          fontWeight: "bold",
+                          fontSize: "2em",
+                          margin: 0,
+                        }}
+                      >
+                        {oldPrompts[idx]["prompt"]}
+                      </p>
+                    )}
+                  </Card.Header>
                   <Card.Img
                     variant="top"
                     src={val["s3_url"]}
@@ -279,13 +292,16 @@ function Home() {
                     }
                   />
 
-                  <Card.Footer>
+                  <Card.Footer className="card-footer" >
+                    
                     {oldPrompts[idx] && (
-                      <p style={{
-                        fontWeight: "bold",
-                        fontSize: "1.2em",
-                        margin: 0,
-                      }}>
+                      <p
+                        style={{
+                          fontWeight: "bold",
+                          fontSize: "1.2em",
+                          margin: 0,
+                        }}
+                      >
                         Posted {convertTime(oldPrompts[idx]["date_created"])}
                       </p>
                     )}

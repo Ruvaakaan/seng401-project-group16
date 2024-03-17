@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import { useDarkMode } from './DarkModeContext';
 
 function DropdownMenu() {
-  const { isDarkMode, toggleDarkMode } = useDarkMode();
+
 
   const handleLogOut = () => {
     if (Cookies.get("authentication")) {
