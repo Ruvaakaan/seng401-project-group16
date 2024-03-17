@@ -6,7 +6,7 @@ dynamodb = boto3.resource("dynamodb")
 
 def verify_user(requested,draw_id):
   try:
-    statement = "SELECT FROM \"doodal-drawings\" WHERE drawing_id = ?"
+    statement = "SELECT * FROM \"doodal-drawings\" WHERE drawing_id = ?"
     params = [{"S": str(draw_id)}]
     response = dynamodb.execute_statement(
         Statement=statement,
@@ -22,7 +22,7 @@ def verify_user(requested,draw_id):
   except Exception:
     return False
 
-def upload_drawing(event, context):
+def delete_drawing(event, context):
   try:
     print(event)
     body = json.loads(event["body"])
