@@ -264,4 +264,23 @@ resource "aws_iam_role" "get_comments_iam" {
 }
 EOF
 }
+
+resource "aws_iam_role" "delete_drawing_iam" {
+  name               = "iam-for-lambda-${local.delete_drawing_funct}"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
 # ...

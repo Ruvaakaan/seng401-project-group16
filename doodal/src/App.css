@@ -266,3 +266,8 @@ body {
   --bs-gradient: none;
 }
 
+.profile-photo-nav {
+  width: 100px;
+  height: 100px;
+}
+

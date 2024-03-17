@@ -53,6 +53,7 @@ function Home() {
         return "dark";
     }
   };
+
   const getPrompts = async () => {
     // fetches the prompts from the prompts table
     let res = await fetch(
@@ -99,9 +100,9 @@ function Home() {
 
   const handleImages = async (id, version) => {
     let body = await sortImages("likes-descend", id, 1); // uses the sort api call to get the most liked post for the given competition
-    console.log("ID:", id);
-    console.log("Version:", version);
-    console.log("Body:", body);
+    // console.log("ID:", id);
+    // console.log("Version:", version);
+    // console.log("Body:", body);
     if (!body[0]) {
       // if there are no photos for the competition
       if (version === "new") {
@@ -177,7 +178,7 @@ function Home() {
                     <p
                       style={{
                         fontWeight: "bold",
-                        fontSize: "2em",
+                        fontSize: "1.3em",
                         margin: 0,
                       }}
                     >
@@ -200,6 +201,7 @@ function Home() {
                       state: {
                         prompt: currentPrompts[idx]["prompt"],
                         comp_id: currentPrompts[idx]["comp_id"],
+                        old_prompt: false,
                       },
                     })
                   }
@@ -271,6 +273,7 @@ function Home() {
                         state: {
                           prompt: oldPrompts[idx]["prompt"],
                           comp_id: oldPrompts[idx]["comp_id"],
+                          old_prompt: true,
                         },
                       })
                     }

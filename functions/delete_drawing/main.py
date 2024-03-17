@@ -9,8 +9,8 @@ def verify_user(requested,draw_id):
     statement = "SELECT * FROM \"doodal-drawings\" WHERE drawing_id = ?"
     params = [{"S": str(draw_id)}]
     response = dynamodb.execute_statement(
-        Statement=statement,
-        Parameters=params
+      Statement=statement,
+      Parameters=params
     )
     items = response["Items"]
     print(items)

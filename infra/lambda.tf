@@ -110,6 +110,14 @@ data "archive_file" "get_comments_archive" {
   source_dir  = "../functions/get_comments"
   output_path = local.get_comments_artifact
 }
+
+data "archive_file" "delete_drawing_archive" {
+  type = "zip"
+  # this file (main.py) needs to exist in the same folder as this 
+  # Terraform configuration file
+  source_dir  = "../functions/delete_drawing"
+  output_path = local.delete_drawing_artifact
+}
 # ...
 
 # create lambda functions
@@ -275,6 +283,18 @@ resource "aws_lambda_function" "get_comments_lambda" {
   handler          = local.get_comments_handler
   filename         = local.get_comments_artifact
   source_code_hash = data.archive_file.get_comments_archive.output_base64sha256
+  timeout          = 20
+
+  # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
+  runtime = "python3.9"
+}
+
+resource "aws_lambda_function" "delete_drawing_lambda" {
+  role             = aws_iam_role.delete_drawing_iam.arn
+  function_name    = local.delete_drawing_funct
+  handler          = local.delete_drawing_handler
+  filename         = local.delete_drawing_artifact
+  source_code_hash = data.archive_file.delete_drawing_archive.output_base64sha256
   timeout          = 20
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
@@ -461,6 +481,19 @@ resource "aws_lambda_function_url" "get_comments_url" {
     allow_credentials = true
     allow_origins     = ["*"]
     allow_methods     = ["GET"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+resource "aws_lambda_function_url" "delete_drawing_url" {
+  function_name      = aws_lambda_function.delete_drawing_lambda.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["POST"]
     allow_headers     = ["*"]
     expose_headers    = ["keep-alive", "date"]
   }

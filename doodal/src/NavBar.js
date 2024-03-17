@@ -1,17 +1,32 @@
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import DropdownMenu from "./DropdownMenu";
+import Cookies from "js-cookie";
+import { Image } from "react-bootstrap";
 
 function NavBar({ loggedIn }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const userInfoCookie = Cookies.get("userInfo");
+  const profilePhotoUrl = userInfoCookie
+    ? JSON.parse(userInfoCookie)["profile_photo_url"]
+    : null;
 
   return (
     <>
       <div id="bar">
         <div className="logos">
-          <img src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG" alt="logo" width={150}></img>
+          <img
+            src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"
+            alt="logo"
+            width={150}
+          ></img>
           <Link to="/home">
-            <img src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/doodalnew.png" alt="doodal" width={275} id="doodal"></img>
+            <img
+              src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/doodalnew.png"
+              alt="doodal"
+              width={275}
+              id="doodal"
+            ></img>
           </Link>
         </div>
         <div className="nav">
@@ -24,12 +39,24 @@ function NavBar({ loggedIn }) {
           {loggedIn !== false ? (
             <div className="dropdown-click">
               <div
-                className={isDropdownOpen ? 'profile dropdown-opened reg-hover' : 'profile reg-hover'}
+                className={
+                  isDropdownOpen
+                    ? "profile dropdown-opened reg-hover"
+                    : "profile reg-hover"
+                }
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-                <img src="" alt="O"></img>
+                <Image
+                  src={
+                    profilePhotoUrl
+                      ? profilePhotoUrl
+                      : "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"
+                  }
+                  roundedCircle
+                  className="profile-photo-nav"
+                />
               </div>
-              {isDropdownOpen && <DropdownMenu/>}
+              {isDropdownOpen && <DropdownMenu />}
             </div>
           ) : (
             <Link
