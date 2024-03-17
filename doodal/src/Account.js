@@ -12,6 +12,7 @@ import { getUserImages } from "./getUserImages.js";
 import makeApiCall from "./makeApiCall";
 import Popup from "./PopUp.js";
 import { delPost } from "./DeletePost.js";
+import { useProfilePicture } from "./ProfilePictureContext";
 
 function Account() {
   // Receive authenticationToken as a prop
@@ -24,8 +25,7 @@ function Account() {
   const [showPopUp, setShowPopUp] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImageUserName, setSelectedImageUserName] = useState(null);
-  const [selectedImageCreationDate, setSelectedImageCreationDate] =
-    useState(null);
+  const [selectedImageCreationDate, setSelectedImageCreationDate] = useState(null);
   const [selectedImageDrawingID, setSelectedImageDrawingID] = useState(null);
   const [selectedUserLiked, setSelectedUserLiked] = useState(null);
   const [selectedCompetitionID, setSelectedCompetitionID] = useState(null);
@@ -51,6 +51,8 @@ function Account() {
     fetchUserImages();
     setShowPopUp(false);
   };
+
+  const { updateProfilePictureUrl } = useProfilePicture();
 
   //Calculate the level based on experience points
   function calculateLevel(exp) {
@@ -79,16 +81,12 @@ function Account() {
   };
 
   // Function to handle profile picture change
-  const handleProfilePictureChange = (file) => {
-    if (!file) {
-      console.error("No file received.");
-      return;
-    }
-    const imageUrl = URL.createObjectURL(file);
+  const handleProfilePictureChange = (imageUrl) => {
     if (!imageUrl) {
       console.error("Failed to create temporary image URL.");
       return;
     }
+    updateProfilePictureUrl(imageUrl);
     setUser((prevUser) => {
       // console.log("Previous user state:", prevUser);
 

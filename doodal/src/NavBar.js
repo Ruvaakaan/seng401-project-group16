@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { Image } from "react-bootstrap";
+import { useProfilePicture } from "./ProfilePictureContext";
 import {
   Navbar,
   Container,
@@ -15,6 +16,7 @@ import {
 import { useDarkMode } from "./DarkModeContext";
 
 function NavBar({ loggedIn }) {
+  const { profilePictureUrl } = useProfilePicture();
   const userInfoCookie = Cookies.get("userInfo");
   const profilePhotoUrl = userInfoCookie
     ? JSON.parse(userInfoCookie)["profile_photo_url"]["S"]
@@ -80,9 +82,7 @@ function NavBar({ loggedIn }) {
                   title={
                     <Image
                       className="nav-link-custom"
-                      src={
-                        profilePhotoUrl
-                      }
+                      src= {profilePictureUrl || profilePhotoUrl}
                       roundedCircle
                     />
                   }

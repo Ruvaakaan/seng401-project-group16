@@ -37,7 +37,8 @@ function ProfilePicture({ onClose, onProfilePictureChange }) {
   async function handleSubmit(){
     if (file) {
       try {
-        onProfilePictureChange(file);
+        const imageUrl = URL.createObjectURL(file);
+        onProfilePictureChange(imageUrl);
         const reader = new FileReader();
         reader.onload = async (event) => {
           const imgData = event.target.result.replace(/^data:image\/(png|jpeg);base64,/, "");
@@ -85,6 +86,7 @@ function ProfilePicture({ onClose, onProfilePictureChange }) {
         </div>
       </div>
     </div>
+    
 
   );
 }
