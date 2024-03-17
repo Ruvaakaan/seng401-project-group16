@@ -1,5 +1,38 @@
-describe('template spec', () => {
-  it('passes', () => {
-    cy.visit('https://example.cypress.io')
+describe('Testing Changing Bio', () => {
+  it('Logs in, changes bio, logs out, logs in, checks that bio is changed', () => {
+    cy.visit("http://localhost:3000");
+    cy.contains("Login").click();
+    cy.loginByCognito(Cypress.env("username1"), Cypress.env("password1"));
+    cy.url().should("eq", "http://localhost:3000/");
+
+
+    cy.get(".custom-dropdown").click();
+    cy.contains("Profile").click();
+    cy.url().should("eq", "http://localhost:3000/profile");
+
+    cy.get('.edit-icon').click();
+
+    const now = new Date();
+    const currentTime = `${now.getHours()}:${now.getMinutes().toString().padStart(2, "0")}`;
+    const newBio = `Brand New Bio - ${currentTime}`;
+
+    cy.get('input[type="text"]').type(newBio);
+    cy.get('button').contains('Update').click();
+
+    cy.contains(newBio)
+
+    cy.get(".custom-dropdown").click();
+    cy.contains("Logout").click();
+    cy.url().should("eq", "http://localhost:3000/");
+
+    cy.contains("Login").click();
+    cy.loginByCognito(Cypress.env("username1"), Cypress.env("password1"));
+    cy.url().should("eq", "http://localhost:3000/");
+
+    cy.get(".custom-dropdown").click();
+    cy.contains("Profile").click();
+    cy.url().should("eq", "http://localhost:3000/profile");
+
+    cy.contains(newBio)
   })
 })

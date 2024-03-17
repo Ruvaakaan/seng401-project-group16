@@ -7,7 +7,7 @@ describe("Login and authentication flow", () => {
 
         // 2. Check for successful login indicators
         cy.url().should("eq", "http://localhost:3000/");
-        cy.get(".profile").should("be.visible");
+        cy.get(".custom-dropdown").should("be.visible");
         cy.contains("Login").should("not.exist");
 
         // 3. Check for token in cookies
@@ -27,7 +27,7 @@ describe("Login and authentication flow", () => {
 
         // 4. Checking log out functionality
 
-        cy.get(".profile").click();
+        cy.get(".custom-dropdown").click();
         cy.contains("Logout").click();
         cy.url().should("eq", "http://localhost:3000/");
         
@@ -44,28 +44,3 @@ describe("Login and authentication flow", () => {
     });
 });
 
-const loginToCognito = (username, password) => {
-    // Extract the base URL from the provided URL
-    const cognitoBaseUrl =
-        "https://doodal.auth.us-west-2.amazoncognito.com/login";
-
-    // Define the query parameters as a separate object
-    const userCredentials = {
-        username: username,
-        password: password,
-    };
-
-    cy.origin(cognitoBaseUrl, { args: userCredentials }, ({username, password}) => {
-        cy.contains("Sign in with your username and password");
-        cy.get('input[name="username"]:visible').type(username);
-        cy.get('input[name="password"]:visible').type(password, {
-            log: false,
-        });
-        cy.get('input[name="signInSubmitButton"]:visible').click();
-    });
-};
-
-// Integrate custom command into test
-Cypress.Commands.add("loginByCognito", (username, password) => {
-    return loginToCognito(username, password);
-});
