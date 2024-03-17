@@ -122,6 +122,10 @@ body {
   font-size: 2.5em;
 }
 
+.gallery-img:hover {
+  cursor: pointer;
+}
+
 #card{
   display: flex;
   justify-content:space-between;
@@ -265,3 +269,9 @@ body {
   --bs-btn-disabled-border-color: #f8f9fa;
   --bs-gradient: none;
 }
+
+.profile-photo-nav {
+  width: 100px;
+  height: 100px;
+}
+

@@ -7,12 +7,19 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { sortImages } from "./sortDrawings.js";
 import { likeUnlike } from "./LikeAndUnlike.js";
 import "./Gallery.css";
+import Popup from "./PopUp.js";
 
 function GalleryPage() {
   const [user_likes, setUserLikes] = useState([]); // array of all posts liked by user
   const [images, setImages] = useState([]); // array of images
   const [userEnter, setUserEnter] = useState(false); // determines if in the main gallery or in a competition page
   const [title, setTitle] = useState("Gallery"); // title of page
+  const [showPopUp, setShowPopUp] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImageUserName, setSelectedImageUserName] = useState(null);
+  const [selectedImageCreationDate, setSelectedImageCreationDate] = useState(null);
+  const [selectedImageDrawingID, setSelectedImageDrawingID] = useState(null);
+  const [sortType, setSortType] = useState("likes-descend");
 
   const nav = useNavigate();
   const {version} = useParams();
@@ -20,18 +27,35 @@ function GalleryPage() {
   const location = useLocation();
   const prompt = location.state?.prompt; // get prompt as prop
   const comp_id = location.state?.comp_id; // get competition id as prop
+  const oldPrompt = location.state?.old_prompt; // get competition id as prop
+
+  const handleImageClick = (image, username, dateCreated, drawingID) => {
+    setSelectedImage(image);
+    setSelectedImageUserName(username);
+    setSelectedImageCreationDate(dateCreated);
+    setSelectedImageDrawingID(drawingID);
+    setShowPopUp(true);
+  };
+
+  const handleClosePopUp = () => {
+    callSorter(sortType); // this pretty much refreshes the gallery in case the user likes within the popup. updates the icon and like count (will not work with random filter)
+    setShowPopUp(false);
+  }
 
   const fetchData = useCallback(async () => {
-    // Call your function to fetch data based on current URL (with or without version)
-    const prompt = location.state?.prompt; // get prompt as prop
-    const comp_id = location.state?.comp_id; // get competition id as prop
-
-    let data = await callSorter("likes-descend");
+    const prompt = location.state?.prompt;
+    if (!prompt){
+      setTitle("Gallery")
+      setUserEnter(false)
+    }
+    else{
+      setTitle(prompt)}
+    let data = await callSorter(sortType);
     if (!data) {
       return;
     }
     setImages(data);
-  }, [location, version]); // Re-run useEffect on location or version change
+  }, [location, version]);
 
   useEffect(() => {
     fetchData();
@@ -43,7 +67,7 @@ function GalleryPage() {
       setTitle(prompt);
       setUserEnter(true);
     }
-    callSorter("likes-descend");
+    callSorter(sortType);
   }, []);
 
   function like_change(val) {
@@ -75,11 +99,20 @@ function GalleryPage() {
   };
 
   const callSorter = async (s) => {
+    setSortType(s);
     var i = comp_id ? comp_id : ""; // if in a comp, pass in comp id, else it is empty for no compettion
     let body = await sortImages(s, i, -1); // s is sort type, i is competition id, -1 is for amount which returns all
     if (!body) {
       return;
     }
+    let arr = []
+    for (let i=0;i<body.length;i++){
+      if (body[i]["liked_by_user"] == true){
+        arr.push(body[i]["drawing_id"]);
+      }
+    }
+
+    setUserLikes(arr);
     setImages(body);
   };
 
@@ -97,7 +130,7 @@ function GalleryPage() {
         <div className="gallery-title">
           <h1>
             {title}
-            {userEnter && (
+            {userEnter && !oldPrompt && (
               <Button
                 variant="outline-dark"
                 className="entry-button"
@@ -157,11 +190,11 @@ function GalleryPage() {
           <Row xs={6} className="g-4">
             {images.map((val, idx) => (
               <Col key={idx}>
-                <Card>
-                  <Card.Img variant="top" src={val["s3_url"]} />
+                <Card >
+                  <Card.Img variant="top" src={val["s3_url"]}  className="gallery-img" onClick={() => handleImageClick(val["s3_url"], val["username"], val["date_created"], val["drawing_id"])}/>
                   <Card.Body id="card">
                     <div className="user_info">
-                      <img src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG" width={60} />
+                      <img src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG" width={60}/>
                       <p className="name">{val["username"]}</p>
                     </div>
                     <div className="like-container">
@@ -189,6 +222,18 @@ function GalleryPage() {
           </Row>
         )}
       </div>
+      {showPopUp && (
+        <Popup
+          show={showPopUp}
+          handleClose={handleClosePopUp}
+          selectedImage={selectedImage}
+          username={selectedImageUserName}
+          prompt={prompt}
+          dateCreated={selectedImageCreationDate}
+          drawingID={selectedImageDrawingID}
+          liked={user_likes.includes(selectedImageDrawingID)}
+        />
+      )} 
     </>
   );
 }

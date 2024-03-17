@@ -34,6 +34,11 @@ async function makeApiCall(url, method, request) {
 
             
         } else if (method === "DELETE"){ //delete method not currently being used as of mar 2
+            const userInfo = Cookies.get("userInfo");
+            if (userInfo) {
+                const userInfoObj = JSON.parse(userInfo);
+                headers["username"] = userInfoObj["username"]["S"];
+            }
             response = await axios.delete(url, request, {headers})
         }
         
@@ -64,7 +69,7 @@ function handleUnauthorizedError(unfinishedCall) {
     const redirectUri = encodeURIComponent("http://localhost:3000/");
     const fullRedirectUrl = `https://doodal.auth.us-west-2.amazoncognito.com/login?client_id=6c1og3jvcp62aqmkhjcgkjkvgq&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=${redirectUri}`;
 
-    // window.location.href = fullRedirectUrl;
+    window.location.href = fullRedirectUrl;
 }
 
 export default makeApiCall;

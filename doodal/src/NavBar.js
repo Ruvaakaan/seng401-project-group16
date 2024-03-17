@@ -1,39 +1,33 @@
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import DropdownMenu from "./DropdownMenu";
-import makeApiCall from "./makeApiCall";
-import './NavBar.css';
+
+import Cookies from "js-cookie";
+import { Image } from "react-bootstrap";
 
 function NavBar({ loggedIn }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [profilePicture, setProfilePicture] = useState("");
-
-  const fetchProfilePicture = async () => {
-    try {
-      const response = await makeApiCall(`https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/getdata`, "GET", {});
-      console.log("response:", response)
-      if (response) {
-        setProfilePicture(response.profile_photo_url.S)
-      } else {
-        console.error("Failed to fetch profile picture");
-      }
-    } catch (error) {
-      console.error("Error fetching profile picture:", error);
-    }
-  };
-
-  // Fetch profile picture only when logged in
-  if (loggedIn) {
-    fetchProfilePicture(); 
-  }
+  const userInfoCookie = Cookies.get("userInfo");
+  const profilePhotoUrl = userInfoCookie
+    ? JSON.parse(userInfoCookie)["profile_photo_url"]
+    : null;
 
   return (
     <>
       <div id="bar">
         <div className="logos">
-          <img src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG" alt="logo" width={150}></img>
+          <img
+            src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"
+            alt="logo"
+            width={150}
+          ></img>
           <Link to="/home">
-            <img src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/doodalnew.png" alt="doodal" width={275} id="doodal"></img>
+            <img
+              src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/doodalnew.png"
+              alt="doodal"
+              width={275}
+              id="doodal"
+            ></img>
           </Link>
         </div>
         <div className="nav">
@@ -46,12 +40,25 @@ function NavBar({ loggedIn }) {
           {loggedIn !== false ? (
             <div className="dropdown-click">
               <div
-                className={isDropdownOpen ? 'profile dropdown-opened reg-hover' : 'profile reg-hover'}
+                className={
+                  isDropdownOpen
+                    ? "profile dropdown-opened reg-hover"
+                    : "profile reg-hover"
+                }
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-                <img src={profilePicture} alt="Account"></img>
+
+                <Image
+                  src={
+                    profilePhotoUrl
+                      ? profilePhotoUrl
+                      : "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"
+                  }
+                  roundedCircle
+                  className="profile-photo-nav"
+                />
               </div>
-              {isDropdownOpen && <DropdownMenu/>}
+              {isDropdownOpen && <DropdownMenu />}
             </div>
           ) : (
             <Link

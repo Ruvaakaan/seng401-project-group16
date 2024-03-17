@@ -10,8 +10,16 @@ def get_prompts(event, context):
     response = dynamodb.execute_statement(
       Statement=statement
     )
-    print("response:", response)
-    print("items", response["Items"])
+    prompts = response["Items"]
+    
+    new_prompts = []
+    old_prompts = []
+    
+    for prompt in prompts:
+      if prompt["old_prompt"]["BOOL"] == True:
+        old_prompts.append(prompt)  # add prompt to old prompts
+      else:
+        new_prompts.append(prompt)  # add prompt to new prompts
     
     return {
       "statusCode": 200,
@@ -20,7 +28,7 @@ def get_prompts(event, context):
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"
             },
-      "body": response["Items"]
+      "body": {"new_prompts": new_prompts, "old_prompts": old_prompts}
     }
   except Exception as e:
     return {
