@@ -2,13 +2,13 @@
 resource "aws_dynamodb_table" "doodal-users" {
   name         = "doodal-users"
   billing_mode = "PROVISIONED"
-  hash_key     = "user_id"
+  hash_key     = "username"
 
   read_capacity  = 1
   write_capacity = 1
 
   attribute {
-    name = "user_id"
+    name = "username"
     type = "S"
   }
 }
@@ -28,30 +28,42 @@ resource "aws_dynamodb_table" "doodal-drawings" {
 }
 
 resource "aws_dynamodb_table" "doodal-likes" {
-  name         = "doodal-likes"
-  billing_mode = "PROVISIONED"
-  hash_key     = "user_id"
+  name           = "doodal-likes"
+  billing_mode   = "PROVISIONED"
+  hash_key       = "username"
+  range_key      = "drawing_id"  
 
   read_capacity  = 1
   write_capacity = 1
 
   attribute {
-    name = "user_id"
+    name = "username"
     type = "S"
+  }
+
+  attribute {
+    name = "drawing_id"
+    type = "S"           
   }
 }
 
 resource "aws_dynamodb_table" "doodal-comments" {
   name         = "doodal-comments"
   billing_mode = "PROVISIONED"
-  hash_key     = "comment_id"
+  hash_key     = "drawing_id"
+  range_key    = "date_created"  
 
   read_capacity  = 1
   write_capacity = 1
 
   attribute {
-    name = "comment_id"
+    name = "drawing_id"
     type = "S"
+  }
+
+  attribute {
+    name = "date_created"
+    type = "S"           
   }
 }
 

@@ -72,8 +72,8 @@ resource "aws_iam_policy" "get_user_info_policy" {
 EOF
 }
 
-resource "aws_iam_policy" "get_drawings_policy" {
-  name        = "lambda-logging-${local.get_drawings_funct}"
+resource "aws_iam_policy" "update_prompts_policy" {
+  name        = "lambda-logging-${local.update_prompts_funct}"
   description = "IAM policy for logging from a lambda"
 
   policy = <<EOF
@@ -81,28 +81,28 @@ resource "aws_iam_policy" "get_drawings_policy" {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Effect": "Allow",
       "Action": [
         "logs:CreateLogGroup",
         "logs:CreateLogStream",
-        "logs:PutLogEvents"
+        "logs:PutLogEvents",
+        "ssm:GetParameters",
+        "ssm:GetParameter",
+        "ssm:PutParameter",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:PartiQLSelect",
+        "dynamodb:PartiQLDelete"
       ],
-      "Resource": "arn:aws:logs:*:*:*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:GetObject"
+      "Resource": [
+        "arn:aws:logs:*:*:*",
+        "${aws_dynamodb_table.doodal-prompts.arn}"
       ],
-      "Resource": "arn:aws:s3:::doodals-bucket-seng401/*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:ListBucket",
-        "s3:GetBucketLocation"
-      ],
-      "Resource": "arn:aws:s3:::doodals-bucket-seng401"
+      "Effect": "Allow"
     }
   ]
 }
@@ -202,7 +202,8 @@ resource "aws_iam_policy" "create_prompt_policy" {
         "ssm:GetParameter",
         "ssm:PutParameter",
         "dynamodb:PutItem",
-        "dynamodb:PartiQLSelect"
+        "dynamodb:PartiQLSelect",
+        "dynamodb:Scan"
       ],
       "Resource": [
         "arn:aws:logs:*:*:*",
@@ -258,8 +259,18 @@ resource "aws_iam_policy" "delete_comment_policy" {
         "logs:CreateLogGroup",
         "logs:CreateLogStream",
         "logs:PutLogEvents",
-        "dynamodb:PartiQLDelete",
-        "dynamodb:DeleteItem"
+        "ssm:GetParameters",
+        "ssm:GetParameter",
+        "ssm:PutParameter",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:PartiQLSelect",
+        "s3:DeleteObject"
       ],
       "Resource": [
         "arn:aws:logs:*:*:*",
@@ -346,8 +357,8 @@ resource "aws_iam_policy" "get_prompts_policy" {
 EOF
 }
 
-resource "aws_iam_policy" "get_prompt_policy" {
-  name        = "lambda-logging-${local.get_prompt_funct}"
+resource "aws_iam_policy" "get_users_drawings_policy" {
+  name        = "lambda-logging-${local.get_users_drawings_funct}"
   description = "IAM policy for logging from a lambda"
 
   policy = <<EOF
@@ -374,7 +385,8 @@ resource "aws_iam_policy" "get_prompt_policy" {
       ],
       "Resource": [
         "arn:aws:logs:*:*:*",
-        "${aws_dynamodb_table.doodal-prompts.arn}"
+        "${aws_dynamodb_table.doodal-drawings.arn}",
+        "${aws_dynamodb_table.doodal-likes.arn}"
       ],
       "Effect": "Allow"
     }
@@ -460,6 +472,80 @@ resource "aws_iam_policy" "get_profile_photo_policy" {
 }
 EOF
 }
+
+resource "aws_iam_policy" "get_comments_policy" {
+  name        = "lambda-logging-${local.get_comments_funct}"
+  description = "IAM policy for logging from a lambda"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "ssm:GetParameters",
+        "ssm:GetParameter",
+        "ssm:PutParameter",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:PartiQLSelect"
+      ],
+      "Resource": [
+        "arn:aws:logs:*:*:*",
+        "${aws_dynamodb_table.doodal-comments.arn}"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_policy" "delete_drawing_policy" {
+  name        = "lambda-logging-${local.delete_drawing_funct}"
+  description = "IAM policy for logging from a lambda"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:PartiQLSelect",
+        "s3:DeleteObject"
+      ],
+      "Resource": [
+        "arn:aws:logs:*:*:*",
+        "${aws_dynamodb_table.doodal-comments.arn}",
+        "${aws_dynamodb_table.doodal-likes.arn}",
+        "${aws_dynamodb_table.doodal-drawings.arn}",
+        "arn:aws:s3:::doodals-bucket-seng401/*"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
 # ...
 
 # policy attachments
@@ -474,9 +560,9 @@ resource "aws_iam_role_policy_attachment" "get_user_info_logs" {
   policy_arn = aws_iam_policy.get_user_info_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "get_drawings_logs" {
-  role       = aws_iam_role.get_drawings_iam.name
-  policy_arn = aws_iam_policy.get_drawings_policy.arn
+resource "aws_iam_role_policy_attachment" "update_prompts_logs" {
+  role       = aws_iam_role.update_prompts_iam.name
+  policy_arn = aws_iam_policy.update_prompts_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "upload_drawing_logs" {
@@ -514,9 +600,9 @@ resource "aws_iam_role_policy_attachment" "get_prompts_logs" {
   policy_arn = aws_iam_policy.get_prompts_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "get_prompt_logs" {
-  role       = aws_iam_role.get_prompt_iam.name
-  policy_arn = aws_iam_policy.get_prompt_policy.arn
+resource "aws_iam_role_policy_attachment" "get_users_drawings_logs" {
+  role       = aws_iam_role.get_users_drawings_iam.name
+  policy_arn = aws_iam_policy.get_users_drawings_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "upload_profile_photo_logs" {
@@ -527,5 +613,15 @@ resource "aws_iam_role_policy_attachment" "upload_profile_photo_logs" {
 resource "aws_iam_role_policy_attachment" "get_profile_photo_logs" {
   role       = aws_iam_role.get_profile_photo_iam.name
   policy_arn = aws_iam_policy.get_profile_photo_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "get_comments_logs" {
+  role       = aws_iam_role.get_comments_iam.name
+  policy_arn = aws_iam_policy.get_comments_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "delete_drawing_logs" {
+  role       = aws_iam_role.delete_drawing_iam.name
+  policy_arn = aws_iam_policy.delete_drawing_policy.arn
 }
 # ...

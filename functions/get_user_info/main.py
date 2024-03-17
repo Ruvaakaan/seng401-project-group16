@@ -23,17 +23,17 @@ def get_user_info(event, context):
         print("Decoded token:", decoded_token)
         
         # Extract user ID from the decoded token
-        user_id = decoded_token.get("sub")
-        print(user_id)
-        if not user_id:
+        username = decoded_token.get("username")
+        print(username)
+        if not username:
             return {
                 "statusCode": 400,
                 "body": "User ID is missing in the JWT token"
             }
 
         # Construct the PartiQL query statement
-        statement = "SELECT * FROM \"doodal-users\" WHERE user_id = ?"
-        params = [{"S": str(user_id)}]
+        statement = "SELECT * FROM \"doodal-users\" WHERE username = ?"
+        params = [{"S": str(username)}]
 
         # Execute the PartiQL query
         response = dynamodb.execute_statement(

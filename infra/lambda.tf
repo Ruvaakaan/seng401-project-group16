@@ -15,12 +15,12 @@ data "archive_file" "get_user_info_archive" {
   output_path = local.get_user_info_artifact
 }
 
-data "archive_file" "get_drawings_archive" {
+data "archive_file" "update_prompts_archive" {
   type = "zip"
   # this file (main.py) needs to exist in the same folder as this 
   # Terraform configuration file
-  source_dir  = "../functions/get_drawings"
-  output_path = local.get_drawings_artifact
+  source_dir  = "../functions/update_prompts"
+  output_path = local.update_prompts_artifact
 }
 
 data "archive_file" "upload_drawing_archive" {
@@ -79,12 +79,12 @@ data "archive_file" "get_prompts_archive" {
   output_path = local.get_prompts_artifact
 }
 
-data "archive_file" "get_prompt_archive" {
+data "archive_file" "get_users_drawings_archive" {
   type = "zip"
   # this file (main.py) needs to exist in the same folder as this 
   # Terraform configuration file
-  source_dir  = "../functions/get_prompt"
-  output_path = local.get_prompt_artifact
+  source_dir  = "../functions/get_users_drawings"
+  output_path = local.get_users_drawings_artifact
 }
 
 data "archive_file" "upload_profile_photo_archive" {
@@ -101,6 +101,22 @@ data "archive_file" "get_profile_photo_archive" {
   # Terraform configuration file
   source_dir  = "../functions/get_profile_photo"
   output_path = local.get_profile_photo_artifact
+}
+
+data "archive_file" "get_comments_archive" {
+  type = "zip"
+  # this file (main.py) needs to exist in the same folder as this 
+  # Terraform configuration file
+  source_dir  = "../functions/get_comments"
+  output_path = local.get_comments_artifact
+}
+
+data "archive_file" "delete_drawing_archive" {
+  type = "zip"
+  # this file (main.py) needs to exist in the same folder as this 
+  # Terraform configuration file
+  source_dir  = "../functions/delete_drawing"
+  output_path = local.delete_drawing_artifact
 }
 # ...
 
@@ -129,12 +145,12 @@ resource "aws_lambda_function" "get_user_info_lambda" {
   runtime = "python3.9"
 }
 
-resource "aws_lambda_function" "get_drawings_lambda" {
-  role             = aws_iam_role.get_drawings_iam.arn
-  function_name    = local.get_drawings_funct
-  handler          = local.get_drawings_handler
-  filename         = local.get_drawings_artifact
-  source_code_hash = data.archive_file.get_drawings_archive.output_base64sha256
+resource "aws_lambda_function" "update_prompts_lambda" {
+  role             = aws_iam_role.update_prompts_iam.arn
+  function_name    = local.update_prompts_funct
+  handler          = local.update_prompts_handler
+  filename         = local.update_prompts_artifact
+  source_code_hash = data.archive_file.update_prompts_archive.output_base64sha256
   timeout          = 20
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
@@ -225,12 +241,12 @@ resource "aws_lambda_function" "get_prompts_lambda" {
   runtime = "python3.9"
 }
 
-resource "aws_lambda_function" "get_prompt_lambda" {
-  role             = aws_iam_role.get_prompt_iam.arn
-  function_name    = local.get_prompt_funct
-  handler          = local.get_prompt_handler
-  filename         = local.get_prompt_artifact
-  source_code_hash = data.archive_file.get_prompt_archive.output_base64sha256
+resource "aws_lambda_function" "get_users_drawings_lambda" {
+  role             = aws_iam_role.get_users_drawings_iam.arn
+  function_name    = local.get_users_drawings_funct
+  handler          = local.get_users_drawings_handler
+  filename         = local.get_users_drawings_artifact
+  source_code_hash = data.archive_file.get_users_drawings_archive.output_base64sha256
   timeout          = 20
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
@@ -255,6 +271,30 @@ resource "aws_lambda_function" "get_profile_photo_lambda" {
   handler          = local.get_profile_photo_handler
   filename         = local.get_profile_photo_artifact
   source_code_hash = data.archive_file.get_profile_photo_archive.output_base64sha256
+  timeout          = 20
+
+  # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
+  runtime = "python3.9"
+}
+
+resource "aws_lambda_function" "get_comments_lambda" {
+  role             = aws_iam_role.get_comments_iam.arn
+  function_name    = local.get_comments_funct
+  handler          = local.get_comments_handler
+  filename         = local.get_comments_artifact
+  source_code_hash = data.archive_file.get_comments_archive.output_base64sha256
+  timeout          = 20
+
+  # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
+  runtime = "python3.9"
+}
+
+resource "aws_lambda_function" "delete_drawing_lambda" {
+  role             = aws_iam_role.delete_drawing_iam.arn
+  function_name    = local.delete_drawing_funct
+  handler          = local.delete_drawing_handler
+  filename         = local.delete_drawing_artifact
+  source_code_hash = data.archive_file.delete_drawing_archive.output_base64sha256
   timeout          = 20
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
@@ -290,8 +330,8 @@ resource "aws_lambda_function_url" "get_user_info_url" {
   }
 }
 
-resource "aws_lambda_function_url" "get_drawings_url" {
-  function_name      = aws_lambda_function.get_drawings_lambda.function_name
+resource "aws_lambda_function_url" "update_prompts_url" {
+  function_name      = aws_lambda_function.update_prompts_lambda.function_name
   authorization_type = "NONE"
 
   cors {
@@ -362,7 +402,7 @@ resource "aws_lambda_function_url" "delete_comment_url" {
   cors {
     allow_credentials = true
     allow_origins     = ["*"]
-    allow_methods     = ["DELETE"]
+    allow_methods     = ["POST"]
     allow_headers     = ["*"]
     expose_headers    = ["keep-alive", "date"]
   }
@@ -394,8 +434,8 @@ resource "aws_lambda_function_url" "get_prompts_url" {
   }
 }
 
-resource "aws_lambda_function_url" "get_prompt_url" {
-  function_name      = aws_lambda_function.get_prompt_lambda.function_name
+resource "aws_lambda_function_url" "get_users_drawings_url" {
+  function_name      = aws_lambda_function.get_users_drawings_lambda.function_name
   authorization_type = "NONE"
 
   cors {
@@ -428,6 +468,32 @@ resource "aws_lambda_function_url" "get_profile_photo_url" {
     allow_credentials = true
     allow_origins     = ["*"]
     allow_methods     = ["GET"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+resource "aws_lambda_function_url" "get_comments_url" {
+  function_name      = aws_lambda_function.get_comments_lambda.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["GET"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+resource "aws_lambda_function_url" "delete_drawing_url" {
+  function_name      = aws_lambda_function.delete_drawing_lambda.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["POST"]
     allow_headers     = ["*"]
     expose_headers    = ["keep-alive", "date"]
   }

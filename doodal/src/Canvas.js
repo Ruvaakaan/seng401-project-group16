@@ -1,7 +1,9 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Button, ButtonGroup, Form } from "react-bootstrap";
 import {FaEraser, FaUndo, FaTrash, FaRegSquare, FaSlash} from "react-icons/fa";
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
+import { Button, Form } from "react-bootstrap";
+import NotLoggedIn from "./NotLoggedIn.js";
+import makeApiCall from "./makeApiCall.js";
 
 // resetting canvas when transparent background doesnt work correctly
 // going off screen whilst holding mouse button and then letting go of mouse leaves mouse pressed
@@ -9,7 +11,7 @@ import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 // add maybe a fill function
 // add maybe a straight line function
 
-function Canvas({ lineColor, brushSize, backgroundColor }) {
+function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [context, setContext] = useState(null);
@@ -20,6 +22,7 @@ function Canvas({ lineColor, brushSize, backgroundColor }) {
   const [triangleMode, setTriangleeMode] = useState(false);
   const [startPoint, setStartPoint] = useState({ x: 0, y: 0 });
   const [endPoint, setEndPoint] = useState({ x: 0, y: 0 });
+  const [userNotLogged, setUserNotLogged] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -30,9 +33,9 @@ function Canvas({ lineColor, brushSize, backgroundColor }) {
     saveCanvasState();
   }, [backgroundColor]);
 
-  useEffect(() => {
-    console.log(canvasStates);
-  }, [canvasStates]);
+  // useEffect(() => {
+  //   console.log(canvasStates);
+  // }, [canvasStates]);
 
   const saveCanvasState = () => {
     const canvas = canvasRef.current;
@@ -205,6 +208,24 @@ function Canvas({ lineColor, brushSize, backgroundColor }) {
     saveCanvasState();
   };
 
+  const handleUpload = () => {
+    try {      
+      const canvas = canvasRef.current;
+      const img = canvas.toDataURL("image/jpeg");
+      const img_data = img.replace(/^data:image\/jpeg;base64,/, "");
+      const jsonData = {
+        competition_id: comp_id
+      };
+      jsonData.image_data = img_data;
+
+      const jsonString = JSON.stringify(jsonData);
+      const link = `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/upload_drawing`;
+      makeApiCall(link, "POST", jsonString)
+    } catch (error) {
+      console.error("Error uploading drawing:", error);
+    }
+  };
+
   return (
       <>
         <div style={{ display: "flex", justifyContent: "center", marginBottom: "10px" }}>
@@ -251,6 +272,23 @@ function Canvas({ lineColor, brushSize, backgroundColor }) {
         </div>
 
 
+      <Button variant="primary" onClick={handleUpload}>
+        Upload
+      </Button>
+
+      <Form.Check
+        type="checkbox"
+        id="eraserMode"
+        label="Eraser Mode"
+        checked={eraserMode}
+        onChange={toggleEraserMode}
+      />
+
+      <NotLoggedIn
+        isOpen={userNotLogged}
+        onClose={() => setUserNotLogged(false)}
+      />
+
         <canvas
             ref={canvasRef}
             onMouseDown={(event) => startDrawing(event)}
@@ -261,7 +299,7 @@ function Canvas({ lineColor, brushSize, backgroundColor }) {
             height={600}
             style={{ border: "1px solid #000" }}
         ></canvas>
-      </>
+    </>
 
   );
 }

@@ -1,0 +1,20 @@
+/* Set custom width for the modals */
+.modal-dialog.modal-90w {
+  max-width: 60% !important;
+  max-height: 30% !important;
+}
+
+.image-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60%; 
+  float: left;
+  flex-direction: column;
+}
+
+.comments {
+  width: 39%;
+  float: right;
+  flex-direction: column;
+}
