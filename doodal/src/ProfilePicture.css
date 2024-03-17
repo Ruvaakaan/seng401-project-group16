@@ -35,7 +35,7 @@
 
   .file-upload-button {
     padding: 0.5vw 1vw;
-    background-color: #007bff;
+    background-color: #712CF9;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -43,7 +43,7 @@
   }
   
   .file-upload-button:hover {
-    background-color: #0056b3; 
+    background-color: #6C22A6; 
   }
   
   .profile-content #file {
@@ -63,7 +63,7 @@
   
   .profile-content button {
     padding: 0.5vw 1vw;
-    background-color: #007bff;
+    background-color: #712CF9;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -71,7 +71,7 @@
   }
   
   .profile-content button:hover {
-    background-color: #0056b3; 
+    background-color: #6C22A6; 
   }
   
   /* Dark mode */
@@ -92,11 +92,15 @@
   }
   
   .dark-mode .profile-content button {
-    background-color: #007bff;
+    background-color: #712CF9;
     color: #fff;
   }
   
   .dark-mode .profile-content button:hover {
-    background-color: #0056b3;
+    background-color: #9F70FD;
+  }
+
+  .dark-mode .file-upload-button:hover{
+    background-color: #9F70FD;
   }
   

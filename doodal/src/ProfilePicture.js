@@ -10,7 +10,6 @@ function ProfilePicture({ onClose, onProfilePictureChange }) {
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      console.log("yes file")
       const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
       const allowedTypes = ["image/jpeg", "image/png", "image/gif"]; // Allowed image types
       

@@ -30,14 +30,14 @@
 }
 
 .settings-content button {
-    background-color: #007bff; 
+    background-color: #712CF9; 
     color: #fff; 
     border: none;
     cursor: pointer;
 }
 
 .settings-content button:hover {
-    background-color: #0056b3; 
+    background-color: #6C22A6; 
 }
 
 /* Dark Mode Styles */
@@ -50,13 +50,14 @@
     color: #fff; /* Light text color */
 }
 
-.dark-mode .settings-content input,
-.dark-mode .settings-content button {
+.dark-mode .settings-content input{
     border-color: #666; /* Dark border color */
     background-color: #444; /* Dark background color for input and button */
     color: #fff; /* Light text color */
 }
-
+.dark-mode .settings-content button{
+    background-color: #712CF9;
+}
 .dark-mode .settings-content button:hover {
-    background-color: #666; /* Dark hover color for button */
+    background-color: #9F70FD; /* Dark hover color for button */
 }
