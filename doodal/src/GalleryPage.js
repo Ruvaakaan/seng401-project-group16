@@ -43,14 +43,19 @@ function GalleryPage() {
   }
 
   const fetchData = useCallback(async () => {
-    // Call your function to fetch data based on current URL (with or without version)
-
+    const prompt = location.state?.prompt;
+    if (!prompt){
+      setTitle("Gallery")
+      setUserEnter(false)
+    }
+    else{
+      setTitle(prompt)}
     let data = await callSorter(sortType);
     if (!data) {
       return;
     }
     setImages(data);
-  }, [location, version]); // Re-run useEffect on location or version change
+  }, [location, version]);
 
   useEffect(() => {
     fetchData();
