@@ -44,7 +44,7 @@ async function makeApiCall(url, method, request) {
     }
   } catch (error) {
     console.error("makeApiCall ~ error:", error);
-    if (error.code === "ERR_NETWORK" || error.code === "ERR_BAD_REQUEST") {
+    if (error.response.status === 400 || error.response.status === 401) {
       // Handle 401 error
       console.log("Unauthorized Error");
       const apiCallToStore = {
