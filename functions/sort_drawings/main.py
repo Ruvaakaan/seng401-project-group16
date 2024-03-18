@@ -119,7 +119,6 @@ def sort_drawings_handler(event, context):
             likes = int(item.get('likes', {}).get('N', 0))
             s3_url = item.get('s3_url', {}).get('S', '')
             username = item.get('username', {}).get('S', '')
-            profile_photo = get_users_pfp(username)
 
             item_dict = {
                 'drawing_id': drawing_id,
@@ -128,7 +127,6 @@ def sort_drawings_handler(event, context):
                 'likes': likes,
                 's3_url': s3_url,
                 'username': username,
-                'profile_photo': profile_photo
             }
 
             data.append(item_dict)
@@ -176,6 +174,8 @@ def sort_drawings_handler(event, context):
         for item in data:
             drawing_id = item["drawing_id"]
             item["liked_by_user"] = users_liked.get(drawing_id, False)
+            item["profile_photo"] = get_users_pfp(item["username"])
+            
         # print(items)
         
         print(f"data after: {data}")
