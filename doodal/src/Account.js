@@ -13,6 +13,7 @@ import makeApiCall from "./makeApiCall";
 import Popup from "./PopUp.js";
 import { delPost } from "./DeletePost.js";
 import { useProfilePicture } from "./ProfilePictureContext";
+import { timeConverter } from "./TimeConverter.js";
 
 function Account() {
   // Receive authenticationToken as a prop
@@ -201,9 +202,10 @@ function Account() {
                     )
                   }
                 />
-                <Card.Body id="card">
+                <Card.Body id="account-card">
+                  <p className="account-post-date">Posted {timeConverter(item.date_created)}</p>
                   <i
-                    className="fa-solid fa-trash comment-action-icon"
+                    className="fa-solid fa-trash account-action-icon"
                     onClick={() =>
                       handleShow(
                         item.s3_url,

@@ -57,6 +57,47 @@
     text-align: center;
 }
 
+#account-card{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #eeeeee;
+    padding: 0;
+}
+
+.dark-mode #account-card{
+    background-color: #333;
+    color:white;
+}
+
+.account-post-date{
+    margin: 0.69em;
+    text-align: center;
+    flex-grow: 1;
+}
+
+.account-trash{
+}
+
+.account-action-icon{
+    margin-right: 0.69em;
+    color:#333;
+  }
+
+.account-action-icon:hover{
+    color:#9F70FD;
+    cursor: pointer;
+}
+
+.dark-mode .account-action-icon{
+    color:white;
+}
+
+.dark-mode .account-action-icon:hover{
+    color:#9F70FD;
+    cursor: pointer;
+}
+
 .likes h2 {
     color: #222831; 
 }
