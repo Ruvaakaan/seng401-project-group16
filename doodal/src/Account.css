@@ -49,9 +49,18 @@
     text-align: center;
 }
 
+.dark-mode .likes {
+    margin-bottom: 20px;
+    background-color: #333; 
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
 .likes h2 {
     color: #222831; 
 }
+
 .image-gallery {
     flex: 3; /* Allow the image-gallery to grow */
     margin-left: 20px;
