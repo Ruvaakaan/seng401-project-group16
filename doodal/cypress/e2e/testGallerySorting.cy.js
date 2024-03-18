@@ -5,55 +5,107 @@ describe("Gallery Sorting", () => {
     cy.url().should("eq", "http://localhost:3000/");
 
     cy.get(".swiper-wrapper .swiper-slide-active") // Target the first  tile
-    .within(() => {
+      .within(() => {
         cy.get(".card-img-flush").click(); // Click the image within the first tile
       });
   });
 
-  function getImageUrls() {
-    // Get all image elements within cards
-    return cy.get('.gal .row .col .card .card-img-top.gallery-img').then(($images) => {
-      // Extract image URLs from each element
-      return $images.map(($img) => $img.prop('src'));
+  it("Sorts by Least Liked", () => {
+    cy.get('.filter-list li.filter-item:contains("Least Liked")').click();
+    //delay needed while values sorted
+    cy.wait(1000)
+    // Get all like counters in the order displayed
+    cy.get('.gal .row .col .card .like-container .like-counter').then(($likeCounters) => {
+      cy.log('$likeCounters');
+      cy.log('test')
+
+      for (let i = 1; i < $likeCounters.length; i++) {
+        const previousCount = parseInt($likeCounters.eq(i - 1).text());
+        const currentCount = parseInt($likeCounters.eq(i).text());
+        cy.wrap(currentCount).should('be.gte', previousCount);
+      }
     });
-    
+  });
+
+
+  it("Sorts by Most Liked", () => {
+    cy.get('.filter-list li.filter-item:contains("Most Liked")').click();
+    //delay needed while values sorted
+    cy.wait(1000)
+    // Get all like counters in the order displayed
+    cy.get('.gal .row .col .card .like-container .like-counter').then(($likeCounters) => {
+      for (let i = 1; i < $likeCounters.length; i++) {
+        const previousCount = parseInt($likeCounters.eq(i - 1).text());
+        const currentCount = parseInt($likeCounters.eq(i).text());
+        cy.wrap(currentCount).should('be.lte', previousCount);
+      }
+    });
+  });
+
+  function convertToSeconds(timeString) {
+    const timeParts = timeString.split(" ");
+    const value = parseInt(timeParts[1]);
+    const unit = timeParts[2].toLowerCase();
+
+    switch (unit) {
+      case "seconds":
+        return value;
+      case "minutes":
+        return value * 60;
+      case "hours":
+        return value * 60 * 60;
+      case "days":
+        return value * 60 * 60 * 24;
+      default:
+        throw new Error(`Unsupported time unit: ${unit}`);
+    }
   }
 
-  it("Sorts by Least Liked/Most Liked", () => {
-    const likeFilters = ['Least Liked', 'Most Liked'];
+  it("Sorts by Newest", () => {
 
-    for (const filterText of likeFilters) {
-      // Click the current filter
-      cy.get('.filter-list li.filter-item:contains("' + filterText + '")').click();
+    const convertedTimes = [];
 
-      // Get image URLs after applying the filter
-      getImageUrls().then((sortedUrls) => {
-        // Expected order depends on the filter (ascending/descending)
-        const expectedOrder = filterText === 'Least Liked' ? sortedUrls : sortedUrls.slice().reverse();
+    cy.get('.filter-list li.filter-item:contains("Newest")').click();
 
-        // Get image URLs again and compare with expected order
-        getImageUrls().then((currentUrls) => {
-          cy.wrap(currentUrls).should('deep.eq', expectedOrder);
-        });
+    cy.get('.gal .row .col .card').each(($card, index) => {
+      // Click each card to open the popup
+      cy.wrap($card).click();
+
+      // Extract posted time from the popup
+      cy.get('.posted-time').invoke('text').then(($postedTime) => {
+        const convertedTime = convertToSeconds($postedTime.trim());
+
+        convertedTimes.push(convertedTime);
+        if (index > 0) {
+          cy.wrap(convertedTimes[index]).should('be.gte', convertedTimes[index - 1]);
+        }
       });
-    }
+      cy.get('.btn-close').click();
+    })
   });
 
-  it("Sorts by Newest/Oldest (Limited Verification)", () => {
-    const timeFilters = ['Newest', 'Oldest'];
+  it("Sorts by Oldest", () => {
 
-    for (const filterText of timeFilters) {
-      // Click the current filter
-      cy.get('.filter-list li.filter-item:contains("' + filterText + '")').click();
+    const convertedTimes = [];
 
-      // Unfortunately, Cypress alone cannot reliably determine image creation time.
-      // Consider these approaches for limited verification:
-      
-      // 1. Check if order changes after applying the filter (basic test)
-      cy.get('.gal .row .col:first .card .card-img-top.gallery-img').should('not.eq', cy.get('.gal .row .col:last .card .card-img-top.gallery-img'));
+    cy.get('.filter-list li.filter-item:contains("Oldest")').click();
 
-      // 2. Leverage server-side information (if available)
-      // You might need to make additional API calls or use custom commands to access creation timestamps.
-    }
+    cy.get('.gal .row .col .card').each(($card, index) => {
+      // Click each card to open the popup
+      cy.wrap($card).click();
+
+      // Extract posted time from the popup
+      cy.get('.posted-time').invoke('text').then(($postedTime) => {
+        const convertedTime = convertToSeconds($postedTime.trim());
+
+        convertedTimes.push(convertedTime);
+        if (index > 0) {
+          cy.wrap(convertedTimes[index]).should('be.lte', convertedTimes[index - 1]);
+        }
+      });
+      cy.get('.btn-close').click();
+    })
   });
+
+
 });
