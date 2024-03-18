@@ -126,24 +126,8 @@ function ViewAccount() {
         <h2>
           {user.username}'s Profile
         </h2>
-        <div className="exp-bar">
-          <h2>Level {calculateLevel(user.exp)}</h2>
-          <div className="exp-progress">
-            <div
-              className="exp-fill"
-              style={{
-                width: `${
-                  ((user.exp % (calculateLevel(user.exp) * 100)) /
-                    (calculateLevel(user.exp) * 100)) *
-                  100
-                }%`,
-              }}
-            ></div>
-          </div>
-          <p>
-            {user.exp % (calculateLevel(user.exp) * 100)} /{" "}
-            {calculateLevel(user.exp) * 100} EXP
-          </p>
+        <div className="likes">
+          <h2>Total Likes: {user.likes} </h2>
         </div>
         <h2>
           Bio

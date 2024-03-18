@@ -54,18 +54,6 @@ function Account() {
 
   const { updateProfilePictureUrl } = useProfilePicture();
 
-  //Calculate the level based on experience points
-  function calculateLevel(exp) {
-    let level = 1;
-    let expNeeded = 100;
-
-    while (exp >= expNeeded) {
-      level++;
-      expNeeded += level * 100;
-    }
-    return level;
-  }
-
   //Function to update user bio
   function updateBio(newBio) {
     setUser((prevUser) => ({
@@ -118,10 +106,12 @@ function Account() {
           email: response.email.S,
           bio: response.bio.S, // You may want to set this to a default value or leave it empty initially
           picture: response.profile_photo_url.S,
-          exp: parseInt(response.experience.N), // Convert experience to a number
+          likes: 0, // Convert experience to a number
         });
         // Do something with userData, such as updating state
-      } else {
+        updateProfilePictureUrl(response.profile_photo_url.S);
+      }
+       else {
         console.error("Failed to fetch user data");
       }
     } catch (error) {
@@ -163,10 +153,7 @@ function Account() {
       <div className="user-info">
         <div className="profile-picture-container">
           <img
-            src={
-              user.picture ||
-              "https://i.etsystatic.com/16421349/r/il/c49bf5/2978449787/il_fullxfull.2978449787_hgl5.jpg"
-            }
+            src={user.picture}
             alt="Profile Picture"
             className="profile-picture"
             onClick={handleEditProfile}
@@ -176,24 +163,8 @@ function Account() {
           </span>
         </div>
         <h2>Hello {user.username}!</h2>
-        <div className="exp-bar">
-          <h2>Level {calculateLevel(user.exp)}</h2>
-          <div className="exp-progress">
-            <div
-              className="exp-fill"
-              style={{
-                width: `${
-                  ((user.exp % (calculateLevel(user.exp) * 100)) /
-                    (calculateLevel(user.exp) * 100)) *
-                  100
-                }%`,
-              }}
-            ></div>
-          </div>
-          <p>
-            {user.exp % (calculateLevel(user.exp) * 100)} /{" "}
-            {calculateLevel(user.exp) * 100} EXP
-          </p>
+        <div className="likes">
+          <h2>Total Likes: {user.likes} </h2>
         </div>
         <h2>
           Bio
