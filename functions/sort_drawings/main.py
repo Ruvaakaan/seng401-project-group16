@@ -16,7 +16,7 @@ def get_users_pfp(username):
         )
         print(f"response from query: {response}")
         item = response["Items"]
-        return item[0]["profile_photo"]["S"]
+        return item[0]["profile_photo_url"]["S"]
     except Exception as e:
         print(f"An error occurred: {e}")
         return False
