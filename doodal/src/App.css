@@ -348,4 +348,59 @@ body {
   color: white;
 }
 
+.canvas-container {
+  display: flex;
+  align-items: center; 
+  margin-right: 200px;
+  justify-content: center;
+}
 
+.canvas-container canvas {
+  border: 1px solid #000;
+  margin: 40px; 
+}
+
+.color-selector {
+  background-color: #8D949E !important;
+}
+
+.button-choice-group {
+  border: 3px solid black;
+  border-radius: 10px;
+}
+
+.selected {
+  background-color: #712CF9 !important;/* Adjust the brightness to make the icon darker */
+}
+
+.upload-button {
+  background-color: #8D949E !important;
+  font-size: 2em !important;
+  font-weight: bold;
+}
+
+.upload-button:hover {
+  background-color: #712CF9 !important; /* Change to your desired color */
+}
+
+.color-selector:hover {
+  background-color: #712CF9 !important; /* Change to your desired color */
+}
+
+.dark-mode .upload-button:hover {
+  background-color: #712CF9 !important; /* Change to your desired color */
+}
+
+.dark-mode .color-selector:hover {
+  background-color: #712CF9 !important; /* Change to your desired color */
+}
+
+.dark-mode .color-selector {
+  background-color: #30303A !important;
+}
+
+.dark-mode .upload-button {
+  background-color: #30303A !important;
+  font-size: 2em !important;
+  font-weight: bold;
+}

@@ -1,17 +1,30 @@
 import React, { useRef, useEffect, useState } from "react";
-import {FaEraser, FaUndo, FaTrash, FaRegSquare, FaSlash} from "react-icons/fa";
-import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
-import { Button, Form } from "react-bootstrap";
-import NotLoggedIn from "./NotLoggedIn.js";
+import {
+  Button,
+  Form,
+  ButtonGroup,
+  ButtonToolbar,
+  Dropdown,
+  DropdownButton,
+  Row,
+  Col,
+} from "react-bootstrap";
 import makeApiCall from "./makeApiCall.js";
+import ColorPicker from "./ColorPicker";
+import Brush from "./Brush";
+import NotLoggedIn from "./NotLoggedIn.js";
 
-// resetting canvas when transparent background doesnt work correctly
-// going off screen whilst holding mouse button and then letting go of mouse leaves mouse pressed
-// add drawing with shapes
-// add maybe a fill function
-// add maybe a straight line function
-
-function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
+function Canvas({
+  lineColor,
+  brushSize,
+  backgroundColor,
+  comp_id,
+  backgroundColorPickerEnabled,
+  brushColorPickerEnabled,
+  handleBackgroundChange,
+  handleColorChange,
+  handleBrushSizeChange,
+}) {
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [context, setContext] = useState(null);
@@ -19,10 +32,26 @@ function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
   const [canvasStates, setCanvasStates] = useState([]);
   const [straightLineMode, setStraightLineMode] = useState(false);
   const [rectangleMode, setRectangleMode] = useState(false);
-  const [triangleMode, setTriangleeMode] = useState(false);
+  const [triangleMode, setTriangleMode] = useState(false);
   const [startPoint, setStartPoint] = useState({ x: 0, y: 0 });
-  const [endPoint, setEndPoint] = useState({ x: 0, y: 0 });
+  const [showBackgroundColorOptions, setShowBackgroundColorOptions] =
+    useState(false);
+  const [showBrushColorOptions, setShowBrushColorOptions] = useState(false);
+  const [showBrushRangePicker, setShowBrushRangePicker] = useState(false);
   const [userNotLogged, setUserNotLogged] = useState(false);
+
+  const toggleBackgroundColorOptions = () => {
+    console.log("toggled");
+    setShowBackgroundColorOptions(!showBackgroundColorOptions);
+  };
+
+  const toggleBrushColorOptions = () => {
+    setShowBrushColorOptions(!showBrushColorOptions);
+  };
+
+  const toggleBrushRangePicker = () => {
+    setShowBrushRangePicker(!showBrushRangePicker);
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -32,10 +61,6 @@ function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     saveCanvasState();
   }, [backgroundColor]);
-
-  // useEffect(() => {
-  //   console.log(canvasStates);
-  // }, [canvasStates]);
 
   const saveCanvasState = () => {
     const canvas = canvasRef.current;
@@ -51,9 +76,9 @@ function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
       const rect = canvas.getBoundingClientRect();
       setStartPoint({
         x: event.clientX - rect.left,
-        y: event.clientY - rect.top
+        y: event.clientY - rect.top,
       });
-      }
+    }
   };
 
   const stopDrawing = () => {
@@ -71,14 +96,14 @@ function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
       context.strokeStyle = eraserMode ? backgroundColor : lineColor;
 
       context.lineTo(
-          event.clientX - canvasRef.current.offsetLeft,
-          event.clientY - canvasRef.current.offsetTop
+        event.clientX - canvasRef.current.offsetLeft,
+        event.clientY - canvasRef.current.offsetTop
       );
       context.stroke();
       context.beginPath();
       context.moveTo(
-          event.clientX - canvasRef.current.offsetLeft,
-          event.clientY - canvasRef.current.offsetTop
+        event.clientX - canvasRef.current.offsetLeft,
+        event.clientY - canvasRef.current.offsetTop
       );
     }
   };
@@ -112,7 +137,9 @@ function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
     ctx.strokeStyle = eraserMode ? backgroundColor : lineColor;
     ctx.lineWidth = brushSize;
 
-    const baseLength = Math.sqrt((point2.x - point1.x) ** 2 + (point2.y - point1.y) ** 2);
+    const baseLength = Math.sqrt(
+      (point2.x - point1.x) ** 2 + (point2.y - point1.y) ** 2
+    );
     const height = (Math.sqrt(3) / 2) * baseLength;
 
     const midPointX = (point1.x + point2.x) / 2;
@@ -128,7 +155,6 @@ function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
     ctx.stroke();
   };
 
-
   const draw = (event) => {
     if (!isDrawing) return;
 
@@ -138,7 +164,7 @@ function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
 
     const currentPoint = {
       x: event.clientX - rect.left,
-      y: event.clientY - rect.top
+      y: event.clientY - rect.top,
     };
 
     if (!straightLineMode && !rectangleMode && !triangleMode) {
@@ -151,35 +177,34 @@ function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
         drawLine(startPoint, currentPoint);
       } else if (rectangleMode) {
         drawRectangle(startPoint, currentPoint);
-      }
-        else if(triangleMode) {
+      } else if (triangleMode) {
         drawTriangle(startPoint, currentPoint);
-        }
       }
+    }
   };
 
   const toggleStraightLineMode = () => {
     setRectangleMode(false);
-    setTriangleeMode(false);
+    setTriangleMode(false);
     setStraightLineMode(!straightLineMode);
   };
 
   const toggleRectangleMode = () => {
     setStraightLineMode(false);
-    setTriangleeMode(false);
+    setTriangleMode(false);
     setRectangleMode(!rectangleMode);
   };
 
   const toggleTriangleMode = () => {
     setStraightLineMode(false);
     setRectangleMode(false);
-    setTriangleeMode(!triangleMode);
+    setTriangleMode(!triangleMode);
   };
 
   const toggleEraserMode = () => {
     setStraightLineMode(false);
     setRectangleMode(false);
-    setTriangleeMode(false)
+    setTriangleMode(false);
     setEraserMode(!eraserMode);
   };
 
@@ -209,98 +234,128 @@ function Canvas({ lineColor, brushSize, backgroundColor, comp_id }) {
   };
 
   const handleUpload = () => {
-    try {      
+    try {
       const canvas = canvasRef.current;
       const img = canvas.toDataURL("image/jpeg");
       const img_data = img.replace(/^data:image\/jpeg;base64,/, "");
       const jsonData = {
-        competition_id: comp_id
+        competition_id: comp_id,
       };
       jsonData.image_data = img_data;
 
       const jsonString = JSON.stringify(jsonData);
       const link = `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/upload_drawing`;
-      makeApiCall(link, "POST", jsonString)
+      makeApiCall(link, "POST", jsonString);
     } catch (error) {
       console.error("Error uploading drawing:", error);
     }
   };
 
   return (
-      <>
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: "10px" }}>
-          <Button
-              variant={straightLineMode ? "danger" : "primary"}
-              onClick={toggleStraightLineMode}
-              className="me-2"
-              style={{ width: "50px" }}
-          >
-            <FaSlash /> {straightLineMode ? "" : ""}
-          </Button>
-          <Button
-              variant={rectangleMode ? "danger" : "primary"}
-              onClick={toggleRectangleMode}
-              className="me-2"
-              style={{ width: "50px" }}
-          >
-            <FaRegSquare /> {rectangleMode ? "" : ""}
-          </Button>
-          <Button
-              variant={triangleMode ? "danger" : "primary"}
-              onClick={toggleTriangleMode}
-              className="me-2"
-              style={{ width: "50px" }}
-          >
-            <ChangeHistoryIcon /> {triangleMode ? "" : ""}
-          </Button>
-        </div>
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: "10px" }}>
-          <Button variant="primary" onClick={handleResetCanvas} className="me-2" style={{ width: "50px" }}>
-            <FaTrash />
-          </Button>
-          <Button variant="primary" onClick={handleUndo} className="me-2" style={{ width: "50px" }}>
-            <FaUndo />
-          </Button>
-          <Button
-              variant={eraserMode ? "danger" : "primary"}
-              onClick={toggleEraserMode}
-              className="me-2"
-              style={{ width: "50px" }}
-          >
-            <FaEraser /> {eraserMode ? "" : ""}
-          </Button>
-        </div>
+    <>
+      <div className="canvas-container">
+        <NotLoggedIn
+          isOpen={userNotLogged}
+          onClose={() => setUserNotLogged(false)}
+        />
 
+        <ButtonGroup vertical className="button-choice-group">
+          <Button className="upload-button" onClick={handleUpload}>
+            Upload
+          </Button>
 
-      <Button variant="primary" onClick={handleUpload}>
-        Upload
-      </Button>
+          <Button
+            className="color-selector"
+            onClick={toggleBackgroundColorOptions}
+          >
+            <i className="fa fa-fill"></i>
 
-      <Form.Check
-        type="checkbox"
-        id="eraserMode"
-        label="Eraser Mode"
-        checked={eraserMode}
-        onChange={toggleEraserMode}
-      />
+            <div>
+              <ColorPicker
+                value={backgroundColor}
+                onChange={handleBackgroundChange}
+              />
+            </div>
+          </Button>
 
-      <NotLoggedIn
-        isOpen={userNotLogged}
-        onClose={() => setUserNotLogged(false)}
-      />
+          <Button className="color-selector" onClick={toggleBrushColorOptions}>
+            <i className="fa fa-palette"></i>
+
+            <div>
+              <ColorPicker value={lineColor} onChange={handleColorChange} />
+            </div>
+          </Button>
+
+          <Button className="color-selector">
+            <i className="fa fa-paint-brush"></i>
+          </Button>
+
+          <div style={{ margin: "20px" }}>
+            <Brush value={brushSize} onChange={handleBrushSizeChange} />
+            <ButtonToolbar>
+              <ButtonGroup>
+                {[1, 5.75, 10.5, 15.25, 20].map((size, index) => (
+                  <Button
+                    key={index}
+                    variant="link"
+                    onClick={() => handleBrushSizeChange(size)}
+                    className="color-selector"
+                  >
+                    <svg width="20" height="20">
+                      <circle
+                        cx="10"
+                        cy="10"
+                        r={size / 2.2}
+                        stroke="black"
+                        strokeWidth="2"
+                        fill={brushSize === size ? "black" : "none"}
+                      />
+                    </svg>
+                  </Button>
+                ))}
+              </ButtonGroup>
+            </ButtonToolbar>
+          </div>
+        </ButtonGroup>
 
         <canvas
-            ref={canvasRef}
-            onMouseDown={(event) => startDrawing(event)}
-            onMouseUp={() => stopDrawing()}
-            onMouseMove={(event) => draw(event)}
-            onMouseLeave={() => stopDrawing()}
-            width={800}
-            height={600}
-            style={{ border: "1px solid #000" }}
+          ref={canvasRef}
+          onMouseDown={(event) => startDrawing(event)}
+          onMouseUp={() => stopDrawing()}
+          onMouseMove={(event) => draw(event)}
+          onMouseLeave={() => stopDrawing()}
+          width={742}
+          height={659}
+          style={{ border: "1px solid #000", borderRadius: "1px" }}
         ></canvas>
-    </>
 
+        <ButtonGroup vertical className="button-choice-group">
+          <Button className={`color-selector ${straightLineMode ? "selected" : ""}`} onClick={toggleStraightLineMode}>
+            <i className="fa fa-slash"></i>
+          </Button>
+
+          <Button className={`color-selector ${rectangleMode ? "selected" : ""}`} onClick={toggleRectangleMode}>
+            <i class="fa-solid fa-square-full"></i>
+          </Button>
+
+          <Button className={`color-selector ${triangleMode ? "selected" : ""}`} onClick={toggleTriangleMode}>
+            <i class="fa-solid fa-play"></i>
+          </Button>
+
+          <Button className="color-selector" onClick={handleResetCanvas}>
+            <i className="fa fa-trash"></i>
+          </Button>
+
+          <Button className="color-selector" onClick={handleUndo}>
+            <i className="fa fa-undo"></i>
+          </Button>
+
+          <Button className={`color-selector ${eraserMode ? "selected" : ""}`} onClick={toggleEraserMode}>
+            <i className="fa fa-eraser"></i> 
+          </Button>
+        </ButtonGroup>
+      </div>
+    </>
   );
 }
 

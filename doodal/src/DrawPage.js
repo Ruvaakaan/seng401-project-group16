@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Canvas from "./Canvas";
 import ColorPicker from "./ColorPicker";
-import { Button } from "react-bootstrap";
+import { Button, Row, Col } from "react-bootstrap"; // Import Row and Col from react-bootstrap
 import { useLocation } from "react-router-dom";
 import Brush from "./Brush";
-import Toolbar from "./Toolbar"
+import Toolbar from "./Toolbar";
 
 function DrawPage() {
   const [lineColor, setLineColor] = useState("black");
@@ -37,32 +37,20 @@ function DrawPage() {
     setBrushColorPickerEnabled(!brushColorPickerEnabled);
   };
 
-
-
-    return (
-      <>
-          <Toolbar
-              backgroundColorPickerEnabled={backgroundColorPickerEnabled}
-              brushColorPickerEnabled={brushColorPickerEnabled}
-              handleBackgroundChange={handleBackgroundChange}
-              handleColorChange={handleColorChange}
-              handleBrushSizeChange={handleBrushSizeChange}
-              lineColor={lineColor}
-              brushSize={brushSize}
-              backgroundColor={backgroundColor}
-          />
-
-
-        <Canvas
-            lineColor={lineColor}
-            brushSize={brushSize}
-            backgroundColor={backgroundColor}
-            comp_id={comp_id}
-        />
-
-      <h1 className="prompt-display prompt-title">
-        {prompt}
-      </h1>
+  return (
+    <>
+      <h1 className="prompt-display prompt-title">{prompt}</h1>
+      <Canvas
+        backgroundColorPickerEnabled={backgroundColorPickerEnabled}
+        brushColorPickerEnabled={brushColorPickerEnabled}
+        handleBackgroundChange={handleBackgroundChange}
+        handleColorChange={handleColorChange}
+        handleBrushSizeChange={handleBrushSizeChange}
+        lineColor={lineColor}
+        brushSize={brushSize}
+        backgroundColor={backgroundColor}
+        comp_id={comp_id}
+      />
     </>
   );
 }
