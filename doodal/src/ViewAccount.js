@@ -4,7 +4,6 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import "./Account.css";
-import { getUserImages } from "./getUserImages.js";
 import { Navigate } from 'react-router-dom';
 import Popup from "./PopUp.js";
 import makeApiCall from "./makeApiCall.js";
@@ -81,8 +80,25 @@ function ViewAccount() {
 
   const fetchUserImages = async () => {
     try {
-      const images = await getUserImages();
-      setPosts(images);
+      const response = await makeApiCall(
+        `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/get_users_drawings`,
+        "POST",
+        {username: username}
+      );
+      let image_list = [];
+
+      for (let i = 0; i < response.items.length; i++) {
+        let itemToAdd = {};
+        itemToAdd.competition_id = response.items[i].competition_id.S;
+        itemToAdd.date_created = response.items[i].date_created.S;
+        itemToAdd.drawing_id = response.items[i].drawing_id.S;
+        itemToAdd.likes = response.items[i].likes.N;
+        itemToAdd.s3_url = response.items[i].s3_url.S;
+        itemToAdd.username = response.items[i].username.S;
+        itemToAdd.liked_by_user = response.items[i].liked_by_user;
+        image_list.push(itemToAdd);
+      }
+      setPosts(image_list);
     } catch (error) {
       console.error("Error fetching user images:", error);
     }
@@ -127,7 +143,7 @@ function ViewAccount() {
       </div>
 
       <div className="image-gallery">
-        <h2>Your Gallery</h2>
+        <h2>{user.username}'s Gallery</h2>
         <Row xs={3} className="g-4">
           {posts.map((item, idx) => (
             <Col key={idx}>
