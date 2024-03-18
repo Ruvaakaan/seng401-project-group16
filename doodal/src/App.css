@@ -335,6 +335,11 @@ body {
 .profile-link {
   text-decoration: none;
   color: inherit;
+  flex:1;
+}
+
+.navbar-profile-dropdown {
+  display: flex !important;
 }
 
 .dropdown-menu{
