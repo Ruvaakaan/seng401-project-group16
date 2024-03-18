@@ -12,22 +12,26 @@ import { getUserImages } from "./getUserImages.js";
 import makeApiCall from "./makeApiCall";
 import Popup from "./PopUp.js";
 import { delPost } from "./DeletePost.js";
+import { useProfilePicture } from "./ProfilePictureContext";
+import { timeConverter } from "./TimeConverter.js";
+import Cookies from "js-cookie";
 
 function Account() {
   // Receive authenticationToken as a prop
   //User state
   const [user, setUser] = useState({});
   const [posts, setPosts] = useState([]);
+  const [show, setShow] = useState(false);
   const [isBioOpen, setIsBioOpen] = useState(false);
   const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImageUserName, setSelectedImageUserName] = useState(null);
-  const [selectedImageCreationDate, setSelectedImageCreationDate] =
-    useState(null);
+  const [selectedImageCreationDate, setSelectedImageCreationDate] = useState(null);
   const [selectedImageDrawingID, setSelectedImageDrawingID] = useState(null);
   const [selectedUserLiked, setSelectedUserLiked] = useState(null);
   const [selectedCompetitionID, setSelectedCompetitionID] = useState(null);
+  const [totalLikes, setTotalLikes] = useState(0);
 
   const handlePopup = (
     image,
@@ -51,17 +55,7 @@ function Account() {
     setShowPopUp(false);
   };
 
-  //Calculate the level based on experience points
-  function calculateLevel(exp) {
-    let level = 1;
-    let expNeeded = 100;
-
-    while (exp >= expNeeded) {
-      level++;
-      expNeeded += level * 100;
-    }
-    return level;
-  }
+  const { updateProfilePictureUrl } = useProfilePicture();
 
   //Function to update user bio
   function updateBio(newBio) {
@@ -78,19 +72,12 @@ function Account() {
   };
 
   // Function to handle profile picture change
-  const handleProfilePictureChange = (file) => {
-    // console.log("File received:", file);
-    if (!file) {
-      console.error("No file received.");
-      return;
-    }
-    const imageUrl = URL.createObjectURL(file);
-    // console.log("Temporary image URL:", imageUrl);
+  const handleProfilePictureChange = (imageUrl) => {
     if (!imageUrl) {
       console.error("Failed to create temporary image URL.");
       return;
     }
-    // console.log("Selected file:", file);
+    updateProfilePictureUrl(imageUrl);
     setUser((prevUser) => {
       // console.log("Previous user state:", prevUser);
 
@@ -103,9 +90,9 @@ function Account() {
       console.log("Updated user state:", updatedUser);
       return updatedUser;
     });
-
     setIsProfilePopupOpen(false);
   };
+
 
   const fetchUserData = async () => {
     try {
@@ -121,22 +108,14 @@ function Account() {
           username: response.username.S,
           email: response.email.S,
           bio: response.bio.S, // You may want to set this to a default value or leave it empty initially
-          picture:
-            "https://i.etsystatic.com/16421349/r/il/c49bf5/2978449787/il_fullxfull.2978449787_hgl5.jpg",
-          exp: parseInt(response.experience.N), // Convert experience to a number
+          picture: response.profile_photo_url.S,
+          likes: 0, // Convert experience to a number
         });
         // Do something with userData, such as updating state
-      } else {
+        updateProfilePictureUrl(response.profile_photo_url.S);
+      }
+       else {
         console.error("Failed to fetch user data");
-        setUser({
-          id: "example_id",
-          picture:
-            "https://i.etsystatic.com/16421349/r/il/c49bf5/2978449787/il_fullxfull.2978449787_hgl5.jpg",
-          username: "example_user",
-          email: "example@example.com",
-          bio: "Bio here",
-          exp: 0,
-        });
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -145,7 +124,13 @@ function Account() {
 
   const fetchUserImages = async () => {
     try {
-      const images = await getUserImages();
+      let user = JSON.parse(Cookies.get("userInfo"))["username"]["S"]
+      const images = await getUserImages(user);
+      var total = 0
+      for (let i=0;i<images.length;i++){
+        total += Number(images[i]["likes"])
+      }
+      setTotalLikes(total);
       setPosts(images);
     } catch (error) {
       console.error("Error fetching user images:", error);
@@ -157,8 +142,6 @@ function Account() {
     fetchUserImages();
     setShow(false);
   };
-
-  const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
 
@@ -179,10 +162,7 @@ function Account() {
       <div className="user-info">
         <div className="profile-picture-container">
           <img
-            src={
-              user.picture ||
-              "https://i.etsystatic.com/16421349/r/il/c49bf5/2978449787/il_fullxfull.2978449787_hgl5.jpg"
-            }
+            src={user.picture}
             alt="Profile Picture"
             className="profile-picture"
             onClick={handleEditProfile}
@@ -192,24 +172,8 @@ function Account() {
           </span>
         </div>
         <h2>Hello {user.username}!</h2>
-        <div className="exp-bar">
-          <h2>Level {calculateLevel(user.exp)}</h2>
-          <div className="exp-progress">
-            <div
-              className="exp-fill"
-              style={{
-                width: `${
-                  ((user.exp % (calculateLevel(user.exp) * 100)) /
-                    (calculateLevel(user.exp) * 100)) *
-                  100
-                }%`,
-              }}
-            ></div>
-          </div>
-          <p>
-            {user.exp % (calculateLevel(user.exp) * 100)} /{" "}
-            {calculateLevel(user.exp) * 100} EXP
-          </p>
+        <div className="likes">
+          <h2>Total <i className="fa-solid fa-heart fa-2xs"></i>: {totalLikes}</h2>
         </div>
         <h2>
           Bio
@@ -240,9 +204,10 @@ function Account() {
                     )
                   }
                 />
-                <Card.Body id="card">
+                <Card.Body id="account-card">
+                  <p className="account-post-date">Posted {timeConverter(item.date_created)}</p>
                   <i
-                    className="fa-solid fa-trash comment-action-icon"
+                    className="fa-solid fa-trash account-action-icon"
                     onClick={() =>
                       handleShow(
                         item.s3_url,

@@ -1,12 +1,83 @@
-.like-container {
+.gallery-banner {
   display: flex;
   flex-direction: column;
+  padding: 10px 5px;
+  background-color: #8d949e;
+  color: white;
+}
+
+.gallery-title h1 {
+  margin: 0;
+  font-size: 1.2em;
+  padding-bottom: 10px;
+  /* border-bottom: 1px solid white; */
+}
+
+.filter-options {
+  font-size: small;
+  text-transform: uppercase;
+}
+
+.filter-list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+.filter-item {
+  cursor: pointer;
+  margin-right: 20px;
+  padding: 10px 10px;
+  border-radius: 10px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.filter-item:hover {
+  background-color: #712cf9;
+  color: white;
+}
+
+.dark-mode .filter-item:hover {
+  background-color: #712cf9;
+  color: white;
+}
+
+.gal {
+  padding: 20px 35px;
+}
+
+.card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+  object-fit: cover;
+}
+
+.user_info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user_info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.like-container {
+  display: flex;
+  align-items: center;
 }
 
 .like {
-  margin-bottom: -10px; /* Adjust as needed */
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
 
 .like-counter {
-  margin-top: -17px; /* Adjust as needed */
+  font-size: 16px;
+  margin-right: 10px;
 }

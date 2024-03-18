@@ -41,7 +41,7 @@
     background-color: #47b78a; 
 }
 
-.exp-bar {
+.likes {
     margin-bottom: 20px;
     background-color: #eeeeee; 
     padding: 20px;
@@ -49,22 +49,60 @@
     text-align: center;
 }
 
-.exp-progress {
-    background-color: #ccc;
-    height: 20px;
+.dark-mode .likes {
+    margin-bottom: 20px;
+    background-color: #333; 
+    padding: 20px;
     border-radius: 5px;
-    overflow: hidden;
+    text-align: center;
 }
 
-.exp-fill {
-    background-color: #4caf50; 
-    height: 100%;
-    transition: width 0.3s ease; 
+#account-card{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #eeeeee;
+    padding: 0;
 }
 
-.exp-bar h2 {
+.dark-mode #account-card{
+    background-color: #333;
+    color:white;
+}
+
+.account-post-date{
+    margin: 0.69em;
+    text-align: center;
+    flex-grow: 1;
+    font-size: 1.2em;
+}
+
+.account-trash{
+}
+
+.account-action-icon{
+    margin-right: 0.69em;
+    color:#333;
+  }
+
+.account-action-icon:hover{
+    color:#9F70FD;
+    cursor: pointer;
+}
+
+.dark-mode .account-action-icon{
+    color:white;
+}
+
+.dark-mode .account-action-icon:hover{
+    color:#9F70FD;
+    cursor: pointer;
+}
+
+.likes h2 {
     color: #222831; 
 }
+
 .image-gallery {
     flex: 3; /* Allow the image-gallery to grow */
     margin-left: 20px;

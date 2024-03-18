@@ -4,8 +4,9 @@ import { Toast, Image, Form, Button } from "react-bootstrap";
 import Cookies from "js-cookie";
 import { addComments } from "./AddComments";
 import { likeUnlike } from "./LikeAndUnlike.js";
-import { getComments } from "./GetComments";
+import { getComments } from "./GetComments.js";
 import { delComments } from "./DeleteComment.js";
+import { timeConverter } from "./TimeConverter.js";
 
 const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
   const [postComments, setPostComments] = useState([]);
@@ -17,18 +18,12 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
     : null;
 
   const handleCommentChange = (event) => {
-    if (!Cookies.get("userInfo")){
+    if (!Cookies.get("userInfo")) {
       setNewComment("You were logged out. Please log in and try again.");
-    }
-    else{
+    } else {
       setNewComment(event.target.value);
     }
   };
-
-  useEffect(()=>
-  {
-    console.log(newComment)
-  }, [newComment])
 
   const handleLike = async () => {
     await likeUnlike(drawingID);
@@ -71,24 +66,6 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
     setPostComments(newArray);
   };
 
-  const timeConverter = (val) => {
-    const currentDateSeconds = Math.floor(new Date().getTime() / 1000);
-    const timeDifferenceSeconds = currentDateSeconds - val;
-
-    if (timeDifferenceSeconds < 60) {
-      return `${Math.floor(timeDifferenceSeconds)} seconds ago`;
-    } else if (timeDifferenceSeconds < 60 * 60) {
-      const minutes = Math.floor(timeDifferenceSeconds / 60);
-      return `${minutes} minutes ago`;
-    } else if (timeDifferenceSeconds < 60 * 60 * 24) {
-      const hours = Math.floor(timeDifferenceSeconds / (60 * 60));
-      return `${hours} hours ago`;
-    } else {
-      const days = Math.floor(timeDifferenceSeconds / (60 * 60 * 24));
-      return `${days} days ago`;
-    }
-  };
-
   useEffect(() => {
     setTimeDifference(timeConverter(dateCreated));
   }, [dateCreated]);
@@ -100,16 +77,20 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
   return (
     <div className="comments-sidebar">
       <div className="top-section">
-        <div className="profile-photo">
-          <Image
-            src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"
-            roundedCircle
-            className="profile-photo"
-          />
-        </div>
-        <div className="post-info">
-          <span className="username">By: {username}</span>
-          <span className="posted-time">Posted: {timeDifference}</span>
+        <div className="user-post-info">
+          <div>
+            <Image
+              src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"
+              roundedCircle
+              className="profile-photo"
+            />
+          </div>
+          <div className="post-info">
+            <span className="username" style={{ textTransform: "capitalize" }}>
+              By: {username}
+            </span>
+            <span className="posted-time">Posted: {timeDifference}</span>
+          </div>
         </div>
         {liked ? (
           <button className="like" onClick={() => handleLike(drawingID)}>
@@ -122,27 +103,32 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
         )}
       </div>
 
-      <h3>Comments: </h3>
+      <p className="comments-title">Comments: </p>
       <Form className="post-comment-form" onSubmit={(e) => e.preventDefault()}>
-        <Form.Group controlId="newComment">
+        <Form.Group controlId="newComment" className="enter-comment-box">
           <Form.Control
             type="text"
-            placeholder={Cookies.get("userInfo") ? "Type your comment here" : "You must be logged in to comment"}
+            placeholder={
+              Cookies.get("userInfo")
+                ? "Type your comment here"
+                : "You must be logged in to comment"
+            }
             value={newComment}
             onChange={handleCommentChange}
+            disabled={!Cookies.get("userInfo")}
             onKeyDown={(e) => {
               if (e.key === "Enter" && Cookies.get("userInfo")) {
                 e.preventDefault();
                 handlePostComment();
               }
-            }}disabled={!Cookies.get("userInfo")}
+            }}
           />
         </Form.Group>
-
         {!Cookies.get("userInfo") ? (
           <></>
         ) : (
           <Button
+            className="post-comment-button"
             variant="outline-dark"
             onClick={handlePostComment}
             disabled={!newComment.trim() || !Cookies.get("userInfo")}
@@ -161,7 +147,12 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
                 roundedCircle
                 className="profile-photo"
               />
-              <strong className="me-auto">{postComments[index]["user"]}</strong>
+              <strong
+                className="me-auto comment-user"
+                style={{ textTransform: "capitalize" }}
+              >
+                {postComments[index]["user"]}
+              </strong>
               <small>{timeConverter(postComments[index]["date"])}</small>
 
               {postComments[index]["user"] === loggedUser ? (

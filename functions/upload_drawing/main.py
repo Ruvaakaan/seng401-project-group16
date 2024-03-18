@@ -6,8 +6,26 @@ import datetime
 
 s3 = boto3.client("s3")
 dynamodb = boto3.resource("dynamodb")
+dynamodb1 = boto3.client("dynamodb")
 table = dynamodb.Table("doodal-drawings")
 
+def verify_one_entry(c, u):
+  try:
+    statement = "SELECT * FROM \"doodal-drawings\" WHERE competition_id = ? AND username = ?"
+    params = [{"S": str(c)}, {"S": str(u)}]
+    response = dynamodb1.execute_statement(
+        Statement=statement,
+        Parameters=params
+    )
+    items = response["Items"]
+    if len(items) == 0: # no entry found, let user enter
+      return True
+    else:
+      return False
+  except Exception as e:
+    print(e)
+    return False
+    
 def upload_drawing(event, context):
   try:
     print(event)
@@ -19,6 +37,19 @@ def upload_drawing(event, context):
     username = event['requestContext']['authorizer']['claims']['username']
     print(username)
     image_data = base64.b64decode(body["image_data"])
+    
+    res = verify_one_entry(competition_id, username)
+    
+    if not res:
+      return {
+        "statusCode": 202,
+        "headers": {"Content-Type": "application/json",
+          "Access-Control-Allow-Headers" : "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"
+          },
+        "body": "User already entered in this competition"
+      }
   
     drawing_id = str(uuid.uuid4())
     date_created = str(datetime.datetime.now().timestamp())

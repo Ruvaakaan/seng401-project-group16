@@ -420,7 +420,8 @@ resource "aws_iam_policy" "upload_profile_photo_policy" {
         "dynamodb:UpdateItem",
         "dynamodb:DeleteItem",
         "dynamodb:PartiQLSelect",
-        "s3:PutObject"
+        "s3:PutObject",
+        "s3:DeleteObject"
       ],
       "Resource": [
         "arn:aws:logs:*:*:*",
@@ -546,6 +547,43 @@ resource "aws_iam_policy" "delete_drawing_policy" {
 }
 EOF
 }
+
+resource "aws_iam_policy" "get_user_info_by_username_policy" {
+  name        = "lambda-logging-${local.get_user_info_by_username_funct}"
+  description = "IAM policy for logging from a lambda"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "ssm:GetParameters",
+        "ssm:GetParameter",
+        "ssm:PutParameter",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:PartiQLSelect"
+      ],
+      "Resource": [
+        "arn:aws:logs:*:*:*",
+        "${aws_dynamodb_table.doodal-users.arn}"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
 # ...
 
 # policy attachments
@@ -623,5 +661,10 @@ resource "aws_iam_role_policy_attachment" "get_comments_logs" {
 resource "aws_iam_role_policy_attachment" "delete_drawing_logs" {
   role       = aws_iam_role.delete_drawing_iam.name
   policy_arn = aws_iam_policy.delete_drawing_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "get_user_info_by_username_logs" {
+  role       = aws_iam_role.get_user_info_by_username_iam.name
+  policy_arn = aws_iam_policy.get_user_info_by_username_policy.arn
 }
 # ...
