@@ -47,7 +47,7 @@ function GalleryPage() {
 
   const fetchData = useCallback(async () => {
     const prompt = location.state?.prompt;
-    comp_id = version
+    comp_id = version;
     if (!prompt) {
       setTitle("Gallery");
       // setUserEnter(false);
@@ -222,15 +222,36 @@ function GalleryPage() {
           <Row xs={6} className="g-4">
             {images.map((val, idx) => (
               <Col key={idx}>
-
-                <Card >
-                <Card.Header style={{ textTransform: 'capitalize' }}>{val["username"]}</Card.Header>
-                  <Card.Img variant="top" src={val["s3_url"]}  className="gallery-img" onClick={() => handleImageClick(val["s3_url"], val["username"], val["date_created"], val["drawing_id"], val["profile_photo"])}/>
+                <Card>
+                  <Card.Header className="username-gallery-nav" style={{ textTransform: "capitalize" }} onClick={() => nav(`/viewaccount/${val["username"]}`)}>
+                    {val["username"]}
+                  </Card.Header>
+                  <Card.Img
+                    variant="top"
+                    src={val["s3_url"]}
+                    className="gallery-img"
+                    onClick={() =>
+                      handleImageClick(
+                        val["s3_url"],
+                        val["username"],
+                        val["date_created"],
+                        val["drawing_id"],
+                        val["profile_photo"]
+                      )
+                    }
+                  />
                   <Card.Footer id="card">
                     <div className="user_info">
-                      <img src={val["profile_photo"] ? val["profile_photo"] : "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"} width={60}/>
-                     
-
+                      <img
+                        className="user-gallery-pfp"
+                        src={
+                          val["profile_photo"]
+                            ? val["profile_photo"]
+                            : "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"
+                        }
+                        width={60}
+                        onClick={() => nav(`/viewaccount/${val["username"]}`)}
+                      />
                     </div>
                     Posted {timeConverter(val["date_created"])}
                     <div className="like-container">
