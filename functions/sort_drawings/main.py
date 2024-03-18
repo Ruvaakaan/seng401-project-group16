@@ -5,6 +5,22 @@ import random
 dynamodb_resource = boto3.client("dynamodb")
 table_name = "doodal-drawings"
 
+def get_users_pfp(username):
+    try:
+        print(f"username: {username}")
+        statement = "SELECT * FROM \"doodal-users\" WHERE username = ?"
+        params = [{"S": str(username)}]
+        response = dynamodb_resource.execute_statement(
+            Statement=statement,
+            Parameters=params
+        )
+        print(f"response from query: {response}")
+        item = response["Items"]
+        return item[0]["profile_photo"]["S"]
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return False
+
 def get_users_liked(username, drawing_ids):
     users_liked_drawings = {}
     for drawing_id in drawing_ids:
@@ -103,6 +119,7 @@ def sort_drawings_handler(event, context):
             likes = int(item.get('likes', {}).get('N', 0))
             s3_url = item.get('s3_url', {}).get('S', '')
             username = item.get('username', {}).get('S', '')
+            profile_photo = get_users_pfp(username)
 
             item_dict = {
                 'drawing_id': drawing_id,
@@ -110,7 +127,8 @@ def sort_drawings_handler(event, context):
                 'date_created': date_created,
                 'likes': likes,
                 's3_url': s3_url,
-                'username': username
+                'username': username,
+                'profile_photo': profile_photo
             }
 
             data.append(item_dict)
