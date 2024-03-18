@@ -47,6 +47,12 @@ function ViewAccount() {
     setShowPopUp(false);
   };
 
+  useEffect(()=>{
+    setShowPopUp(false)
+    fetchUserData();
+    fetchUserImages();
+  }, [username])
+
 
   const fetchUserData = async () => {
     try {
@@ -188,6 +194,7 @@ function ViewAccount() {
           dateCreated={selectedImageCreationDate}
           drawingID={selectedImageDrawingID}
           liked={selectedUserLiked}
+          posterPfp={user.picture}
         />
       )}
     </div>
