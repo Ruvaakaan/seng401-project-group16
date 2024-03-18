@@ -6,6 +6,7 @@ import { addComments } from "./AddComments";
 import { likeUnlike } from "./LikeAndUnlike.js";
 import { getComments } from "./GetComments.js";
 import { delComments } from "./DeleteComment.js";
+import { timeConverter } from "./TimeConverter.js";
 
 const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
   const [postComments, setPostComments] = useState([]);
@@ -65,26 +66,6 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
     setPostComments(newArray);
   };
 
-  const timeConverter = (val) => {
-    const currentDateSeconds = Math.floor(new Date().getTime() / 1000);
-    const timeDifferenceSeconds = Math.floor(currentDateSeconds - val);
-
-    if (timeDifferenceSeconds < 60) {
-      return timeDifferenceSeconds === 1
-        ? "1 second ago"
-        : `${timeDifferenceSeconds} seconds ago`;
-    } else if (timeDifferenceSeconds < 60 * 60) {
-      const minutes = Math.floor(timeDifferenceSeconds / 60);
-      return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
-    } else if (timeDifferenceSeconds < 60 * 60 * 24) {
-      const hours = Math.floor(timeDifferenceSeconds / (60 * 60));
-      return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
-    } else {
-      const days = Math.floor(timeDifferenceSeconds / (60 * 60 * 24));
-      return days === 1 ? "1 day ago" : `${days} days ago`;
-    }
-  };
-
   useEffect(() => {
     setTimeDifference(timeConverter(dateCreated));
   }, [dateCreated]);
@@ -105,7 +86,9 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
             />
           </div>
           <div className="post-info">
-            <span className="username" style={{ textTransform: 'capitalize' }}>By: {username}</span>
+            <span className="username" style={{ textTransform: "capitalize" }}>
+              By: {username}
+            </span>
             <span className="posted-time">Posted: {timeDifference}</span>
           </div>
         </div>
@@ -164,7 +147,12 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
                 roundedCircle
                 className="profile-photo"
               />
-              <strong className="me-auto comment-user" style={{ textTransform: 'capitalize' }}>{postComments[index]["user"]}</strong>
+              <strong
+                className="me-auto comment-user"
+                style={{ textTransform: "capitalize" }}
+              >
+                {postComments[index]["user"]}
+              </strong>
               <small>{timeConverter(postComments[index]["date"])}</small>
 
               {postComments[index]["user"] === loggedUser ? (
