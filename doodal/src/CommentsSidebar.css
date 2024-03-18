@@ -75,7 +75,7 @@
   color:#333;
 }
 
-.comment-action-icon:hover{
+.comment-action-icon:hover, .profile-photo:hover, .username:hover, .comment-user:hover{
   color:#9F70FD;
   cursor: pointer;
 }

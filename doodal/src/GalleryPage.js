@@ -21,6 +21,7 @@ function GalleryPage() {
   const [selectedImageCreationDate, setSelectedImageCreationDate] =
     useState(null);
   const [selectedImageDrawingID, setSelectedImageDrawingID] = useState(null);
+  const [selectedUserPfp, setSelectedUserPfp] = useState(null);
   const [sortType, setSortType] = useState("likes-descend");
 
   const nav = useNavigate();
@@ -30,11 +31,12 @@ function GalleryPage() {
   var comp_id = location.state?.comp_id; // get competition id as prop
   const oldPrompt = location.state?.old_prompt; // get competition id as prop
 
-  const handleImageClick = (image, username, dateCreated, drawingID) => {
+  const handleImageClick = (image, username, dateCreated, drawingID, pfp) => {
     setSelectedImage(image);
     setSelectedImageUserName(username);
     setSelectedImageCreationDate(dateCreated);
     setSelectedImageDrawingID(drawingID);
+    setSelectedUserPfp(pfp);
     setShowPopUp(true);
   };
 
@@ -223,10 +225,10 @@ function GalleryPage() {
 
                 <Card >
                 <Card.Header style={{ textTransform: 'capitalize' }}>{val["username"]}</Card.Header>
-                  <Card.Img variant="top" src={val["s3_url"]}  className="gallery-img" onClick={() => handleImageClick(val["s3_url"], val["username"], val["date_created"], val["drawing_id"])}/>
+                  <Card.Img variant="top" src={val["s3_url"]}  className="gallery-img" onClick={() => handleImageClick(val["s3_url"], val["username"], val["date_created"], val["drawing_id"], val["profile_photo"])}/>
                   <Card.Footer id="card">
                     <div className="user_info">
-                      <img src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG" width={60}/>
+                      <img src={val["profile_photo"] ? val["profile_photo"] : "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"} width={60}/>
                      
 
                     </div>
@@ -266,6 +268,7 @@ function GalleryPage() {
           dateCreated={selectedImageCreationDate}
           drawingID={selectedImageDrawingID}
           liked={user_likes.includes(selectedImageDrawingID)}
+          posterPfp={selectedUserPfp}
         />
       )}
     </>
