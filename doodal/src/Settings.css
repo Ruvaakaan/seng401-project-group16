@@ -1,3 +1,4 @@
+/* Light mode */
 .settings-overlay {
     position: fixed;
     top: 0;
@@ -12,8 +13,10 @@
 
 .settings-content {
     background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
+    padding: 2vw; 
+    border-radius: 10px;
+    width: 20vw;
+    max-width: 100%;
 }
 
 .settings-content input,
@@ -27,14 +30,14 @@
 }
 
 .settings-content button {
-    background-color: #4ecca3; 
+    background-color: #712CF9; 
     color: #fff; 
     border: none;
     cursor: pointer;
 }
 
 .settings-content button:hover {
-    background-color: #47b78a; 
+    background-color: #6C22A6; 
 }
 
 /* Dark Mode Styles */
@@ -47,13 +50,14 @@
     color: #fff; /* Light text color */
 }
 
-.dark-mode .settings-content input,
-.dark-mode .settings-content button {
+.dark-mode .settings-content input{
     border-color: #666; /* Dark border color */
     background-color: #444; /* Dark background color for input and button */
     color: #fff; /* Light text color */
 }
-
+.dark-mode .settings-content button{
+    background-color: #712CF9;
+}
 .dark-mode .settings-content button:hover {
-    background-color: #666; /* Dark hover color for button */
+    background-color: #9F70FD; /* Dark hover color for button */
 }

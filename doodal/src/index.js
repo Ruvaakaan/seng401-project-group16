@@ -25,7 +25,13 @@ const router = createBrowserRouter([
       { path: "/profile", element: <Account/> },
       { path: "/gallery", element: <Gallery/> },
       { path: "/gallery/:version", element: <Gallery/> },
-      { path: "/viewaccount", element: <ViewAccount/> }
+      { 
+        path: "/viewaccount", 
+        element: <ViewAccount/>,
+        children: [
+          { path: ":username", element: <ViewAccount /> }
+        ]
+      }
     ],
   },
 ]);

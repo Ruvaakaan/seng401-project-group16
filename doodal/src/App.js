@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "./NavBar";
 import "./App.css";
+import { ProfilePictureProvider } from "./ProfilePictureContext";
 import { DarkModeProvider } from "./DarkModeContext";
 import { Outlet, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -81,6 +82,7 @@ function App() {
   const [text, setText] = useState("");
   return (
     <DarkModeProvider>
+    <ProfilePictureProvider>
       <div className="App">
         <NavBar loggedIn={loggedIn} />
         <div>
@@ -89,9 +91,8 @@ function App() {
             <Modal.Body>{text}</Modal.Body>
           </Modal>
         </div>
-      </div>
+      </ProfilePictureProvider>
     </DarkModeProvider>
   );
 }
-
 export default App;
