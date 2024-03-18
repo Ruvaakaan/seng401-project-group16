@@ -6,6 +6,7 @@ import { Button } from "react-bootstrap";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { sortImages } from "./sortDrawings.js";
 import { likeUnlike } from "./LikeAndUnlike.js";
+import Cookies from "js-cookie";
 import "./Gallery.css";
 import Popup from "./PopUp.js";
 
@@ -17,16 +18,16 @@ function GalleryPage() {
   const [showPopUp, setShowPopUp] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImageUserName, setSelectedImageUserName] = useState(null);
-  const [selectedImageCreationDate, setSelectedImageCreationDate] = useState(null);
+  const [selectedImageCreationDate, setSelectedImageCreationDate] =
+    useState(null);
   const [selectedImageDrawingID, setSelectedImageDrawingID] = useState(null);
   const [sortType, setSortType] = useState("likes-descend");
 
   const nav = useNavigate();
-  const {version} = useParams();
-
+  const { version } = useParams();
   const location = useLocation();
   const prompt = location.state?.prompt; // get prompt as prop
-  const comp_id = location.state?.comp_id; // get competition id as prop
+  var comp_id = location.state?.comp_id; // get competition id as prop
   const oldPrompt = location.state?.old_prompt; // get competition id as prop
 
   const handleImageClick = (image, username, dateCreated, drawingID) => {
@@ -40,16 +41,17 @@ function GalleryPage() {
   const handleClosePopUp = () => {
     callSorter(sortType); // this pretty much refreshes the gallery in case the user likes within the popup. updates the icon and like count (will not work with random filter)
     setShowPopUp(false);
-  }
+  };
 
   const fetchData = useCallback(async () => {
     const prompt = location.state?.prompt;
-    if (!prompt){
-      setTitle("Gallery")
-      setUserEnter(false)
+    comp_id = version
+    if (!prompt) {
+      setTitle("Gallery");
+      // setUserEnter(false);
+    } else {
+      setTitle(prompt);
     }
-    else{
-      setTitle(prompt)}
     let data = await callSorter(sortType);
     if (!data) {
       return;
@@ -105,11 +107,19 @@ function GalleryPage() {
     if (!body) {
       return;
     }
-    let arr = []
-    for (let i=0;i<body.length;i++){
-      if (body[i]["liked_by_user"] == true){
+    let arr = [];
+    for (let i = 0; i < body.length; i++) {
+      if (body[i]["liked_by_user"] == true) {
         arr.push(body[i]["drawing_id"]);
       }
+      try {
+        if (
+          body[i]["username"] ==
+          JSON.parse(Cookies.get("userInfo"))["username"]["S"]
+        ) {
+          setUserEnter(false);
+        }
+      } catch {}
     }
 
     setUserLikes(arr);
@@ -190,11 +200,26 @@ function GalleryPage() {
           <Row xs={6} className="g-4">
             {images.map((val, idx) => (
               <Col key={idx}>
-                <Card >
-                  <Card.Img variant="top" src={val["s3_url"]}  className="gallery-img" onClick={() => handleImageClick(val["s3_url"], val["username"], val["date_created"], val["drawing_id"])}/>
+                <Card>
+                  <Card.Img
+                    variant="top"
+                    src={val["s3_url"]}
+                    className="gallery-img"
+                    onClick={() =>
+                      handleImageClick(
+                        val["s3_url"],
+                        val["username"],
+                        val["date_created"],
+                        val["drawing_id"]
+                      )
+                    }
+                  />
                   <Card.Body id="card">
                     <div className="user_info">
-                      <img src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG" width={60}/>
+                      <img
+                        src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"
+                        width={60}
+                      />
                       <p className="name">{val["username"]}</p>
                     </div>
                     <div className="like-container">
@@ -233,7 +258,7 @@ function GalleryPage() {
           drawingID={selectedImageDrawingID}
           liked={user_likes.includes(selectedImageDrawingID)}
         />
-      )} 
+      )}
     </>
   );
 }
