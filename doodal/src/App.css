@@ -445,3 +445,7 @@ body {
   font-size: 2em !important;
   font-weight: bold;
 }
+
+.card-img-top:hover{
+  cursor: pointer;
+}

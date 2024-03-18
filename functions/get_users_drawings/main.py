@@ -27,7 +27,8 @@ def get_users_liked(username, drawing_ids):
 
 def get_users_drawings(event, context):
   print(event)
-  username = event['headers']["username"]
+  body = json.loads(event["body"])
+  username = body["username"]
   print(username)
   
   try:
