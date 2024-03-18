@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import Canvas from "./Canvas";
-import ColorPicker from "./ColorPicker";
-import { Button, Row, Col } from "react-bootstrap"; // Import Row and Col from react-bootstrap
 import { useLocation } from "react-router-dom";
-import Brush from "./Brush";
-import Toolbar from "./Toolbar";
+
+
 
 function DrawPage() {
   const [lineColor, setLineColor] = useState("black");

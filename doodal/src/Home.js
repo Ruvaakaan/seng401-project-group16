@@ -23,7 +23,7 @@ function Home() {
 
   const convertTime = (dateCreated) => {
     const currentDateSeconds = Math.floor(new Date().getTime() / 1000);
-    const timeDifferenceSeconds = currentDateSeconds - dateCreated;
+    const timeDifferenceSeconds = Math.floor(currentDateSeconds - dateCreated);
 
     if (timeDifferenceSeconds < 60) {
       return timeDifferenceSeconds === 1
@@ -185,7 +185,7 @@ function Home() {
                     <p
                       style={{
                         fontWeight: "bold",
-                        fontSize: "1.3em",
+                        fontSize: "1.35em",
                         margin: 0,
                       }}
                     >
@@ -288,7 +288,7 @@ function Home() {
                       <p
                         style={{
                           fontWeight: "bold",
-                          fontSize: "2em",
+                          fontSize: "1.35em",
                           margin: 0,
                         }}
                       >

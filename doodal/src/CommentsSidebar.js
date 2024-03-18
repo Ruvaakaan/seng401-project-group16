@@ -4,7 +4,7 @@ import { Toast, Image, Form, Button } from "react-bootstrap";
 import Cookies from "js-cookie";
 import { addComments } from "./AddComments";
 import { likeUnlike } from "./LikeAndUnlike.js";
-import { getComments } from "./GetComments";
+import { getComments } from "./getComments.js";
 import { delComments } from "./DeleteComment.js";
 
 const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
@@ -67,19 +67,21 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
 
   const timeConverter = (val) => {
     const currentDateSeconds = Math.floor(new Date().getTime() / 1000);
-    const timeDifferenceSeconds = currentDateSeconds - val;
+    const timeDifferenceSeconds = Math.floor(currentDateSeconds - val);
 
     if (timeDifferenceSeconds < 60) {
-      return `${Math.floor(timeDifferenceSeconds)} seconds ago`;
+      return timeDifferenceSeconds === 1
+        ? "1 second ago"
+        : `${timeDifferenceSeconds} seconds ago`;
     } else if (timeDifferenceSeconds < 60 * 60) {
       const minutes = Math.floor(timeDifferenceSeconds / 60);
-      return `${minutes} minutes ago`;
+      return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
     } else if (timeDifferenceSeconds < 60 * 60 * 24) {
       const hours = Math.floor(timeDifferenceSeconds / (60 * 60));
-      return `${hours} hours ago`;
+      return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
     } else {
       const days = Math.floor(timeDifferenceSeconds / (60 * 60 * 24));
-      return `${days} days ago`;
+      return days === 1 ? "1 day ago" : `${days} days ago`;
     }
   };
 
@@ -103,7 +105,7 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
             />
           </div>
           <div className="post-info">
-            <span className="username">By: {username}</span>
+            <span className="username" style={{ textTransform: 'capitalize' }}>By: {username}</span>
             <span className="posted-time">Posted: {timeDifference}</span>
           </div>
         </div>
@@ -162,7 +164,7 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
                 roundedCircle
                 className="profile-photo"
               />
-              <strong className="me-auto comment-user">{postComments[index]["user"]}</strong>
+              <strong className="me-auto comment-user" style={{ textTransform: 'capitalize' }}>{postComments[index]["user"]}</strong>
               <small>{timeConverter(postComments[index]["date"])}</small>
 
               {postComments[index]["user"] === loggedUser ? (

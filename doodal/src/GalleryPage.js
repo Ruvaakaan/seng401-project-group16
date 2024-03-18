@@ -124,6 +124,26 @@ function GalleryPage() {
   //   console.log(user_likes);
   // }, [user_likes]);
 
+  const timeConverter = (val) => {
+    const currentDateSeconds = Math.floor(new Date().getTime() / 1000);
+    const timeDifferenceSeconds = Math.floor(currentDateSeconds - val);
+
+    if (timeDifferenceSeconds < 60) {
+      return timeDifferenceSeconds === 1
+        ? "1 second ago"
+        : `${timeDifferenceSeconds} seconds ago`;
+    } else if (timeDifferenceSeconds < 60 * 60) {
+      const minutes = Math.floor(timeDifferenceSeconds / 60);
+      return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
+    } else if (timeDifferenceSeconds < 60 * 60 * 24) {
+      const hours = Math.floor(timeDifferenceSeconds / (60 * 60));
+      return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
+    } else {
+      const days = Math.floor(timeDifferenceSeconds / (60 * 60 * 24));
+      return days === 1 ? "1 day ago" : `${days} days ago`;
+    }
+  };
+
   return (
     <>
       <div className="gallery-banner">
@@ -191,12 +211,14 @@ function GalleryPage() {
             {images.map((val, idx) => (
               <Col key={idx}>
                 <Card >
+                <Card.Header style={{ textTransform: 'capitalize' }}>{val["username"]}</Card.Header>
                   <Card.Img variant="top" src={val["s3_url"]}  className="gallery-img" onClick={() => handleImageClick(val["s3_url"], val["username"], val["date_created"], val["drawing_id"])}/>
-                  <Card.Body id="card">
+                  <Card.Footer id="card">
                     <div className="user_info">
                       <img src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG" width={60}/>
-                      <p className="name">{val["username"]}</p>
+                     
                     </div>
+                    Posted {timeConverter(val["date_created"])}
                     <div className="like-container">
                       {user_likes.includes(val["drawing_id"]) ? (
                         <button
@@ -215,7 +237,7 @@ function GalleryPage() {
                       )}
                       <div className="like-counter">{val["likes"]}</div>
                     </div>
-                  </Card.Body>
+                  </Card.Footer>
                 </Card>
               </Col>
             ))}
