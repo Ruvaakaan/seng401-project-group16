@@ -5,9 +5,9 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import "./Account.css";
 import { getUserImages } from "./getUserImages.js";
-import makeApiCall from "./makeApiCall";
 import { Navigate } from 'react-router-dom';
 import Popup from "./PopUp.js";
+import makeApiCall from "./makeApiCall.js";
 
 function ViewAccount() {
   // Receive authenticationToken as a prop
@@ -48,34 +48,25 @@ function ViewAccount() {
     setShowPopUp(false);
   };
 
-  //Calculate the level based on experience points
-  function calculateLevel(exp) {
-    let level = 1;
-    let expNeeded = 100;
-
-    while (exp >= expNeeded) {
-      level++;
-      expNeeded += level * 100;
-    }
-    return level;
-  }
 
   const fetchUserData = async () => {
     try {
       const response = await makeApiCall(
-        `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/getdata`,
-        "GET",
-        {}
+        `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/get_user_info_by_username`,
+        "POST",
+        {username: username}
       );
       // console.log("response:", response);
       if (response) {
+        const responseBody = JSON.parse(response.body);
+        console.log(responseBody)
         setUser({
           // id: response.user_id.S,
-          username: response.username.S,
-          email: response.email.S,
-          bio: response.bio.S, // You may want to set this to a default value or leave it empty initially
-          picture: response.profile_photo_url.S,
-          exp: parseInt(response.experience.N), // Convert experience to a number
+          username: responseBody.username.S,
+          email: responseBody.email.S,
+          bio: responseBody.bio.S, // You may want to set this to a default value or leave it empty initially
+          picture: responseBody.profile_photo_url.S,
+          likes: 0
         });
         // Do something with userData, such as updating state
       } else {
