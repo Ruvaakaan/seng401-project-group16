@@ -242,7 +242,7 @@ function Home() {
         <Modal.Header closeButton>
           <Modal.Title>How Doodal Works</Modal.Title>
         </Modal.Header>
-        <Card.Img variant="top" src="info-img.png" />
+        <img src="info-img.png" />
         <Modal.Body className="info-text">
           <p>
             On the homepage there are multiple ongoing competitions for a given

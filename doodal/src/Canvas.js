@@ -233,7 +233,7 @@ function Canvas({
     saveCanvasState();
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     try {
       const canvas = canvasRef.current;
       const img = canvas.toDataURL("image/jpeg");
@@ -245,7 +245,8 @@ function Canvas({
 
       const jsonString = JSON.stringify(jsonData);
       const link = `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/upload_drawing`;
-      makeApiCall(link, "POST", jsonString);
+      await makeApiCall(link, "POST", jsonString);
+      window.location.href = `/gallery/${comp_id}`
     } catch (error) {
       console.error("Error uploading drawing:", error);
     }
