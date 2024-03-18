@@ -173,7 +173,7 @@ function Account() {
         </div>
         <h2>Hello {user.username}!</h2>
         <div className="likes">
-          <h2>Total <i className="fa-solid fa-heart fa-2xs"></i>: {totalLikes}</h2>
+          <h2>Total Likes: {totalLikes} <i className="fa-solid fa-heart fa-2xs"></i></h2>
         </div>
         <h2>
           Bio
@@ -262,6 +262,7 @@ function Account() {
           dateCreated={selectedImageCreationDate}
           drawingID={selectedImageDrawingID}
           liked={selectedUserLiked}
+          posterPfp={JSON.parse(Cookies.get("userInfo"))["profile_photo_url"]["S"]}
         />
       )}
     </div>
