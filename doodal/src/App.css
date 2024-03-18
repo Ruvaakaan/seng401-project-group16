@@ -72,6 +72,19 @@ body {
   transform: translate(-50%, -50%);
 }
 
+.info-button{
+  margin-left:1%;
+}
+
+.info-button:hover{
+  color: #712CF9;
+  cursor: pointer;
+}
+
+.info-text{
+  margin: 1% 10%;
+}
+
 .prompt-button{
   display:flex;
   justify-content: center;
