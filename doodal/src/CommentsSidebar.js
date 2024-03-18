@@ -12,10 +12,16 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
   const [newComment, setNewComment] = useState("");
   const [timeDifference, setTimeDifference] = useState("");
   const [liked, setLiked] = useState(likes);
-  const loggedUser = JSON.parse(Cookies.get("userInfo"))["username"]["S"];
+  const loggedUser = Cookies.get("userInfo")
+    ? JSON.parse(Cookies.get("userInfo"))["username"]["S"]
+    : null;
 
   const handleCommentChange = (event) => {
-    setNewComment(event.target.value);
+    if (!Cookies.get("userInfo")) {
+      setNewComment("You were logged out. Please log in and try again.");
+    } else {
+      setNewComment(event.target.value);
+    }
   };
 
   const handleLike = async () => {
@@ -88,16 +94,18 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
   return (
     <div className="comments-sidebar">
       <div className="top-section">
-        <div className="profile-photo">
-          <Image
-            src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"
-            roundedCircle
-            className="profile-photo"
-          />
-        </div>
-        <div className="post-info">
-          <span className="username">By: {username}</span>
-          <span className="posted-time">Posted: {timeDifference}</span>
+        <div className="user-post-info">
+          <div>
+            <Image
+              src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"
+              roundedCircle
+              className="profile-photo"
+            />
+          </div>
+          <div className="post-info">
+            <span className="username">By: {username}</span>
+            <span className="posted-time">Posted: {timeDifference}</span>
+          </div>
         </div>
         {liked ? (
           <button className="like" onClick={() => handleLike(drawingID)}>
@@ -110,29 +118,39 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
         )}
       </div>
 
-      <h3>Comments: </h3>
+      <p className="comments-title">Comments: </p>
       <Form className="post-comment-form" onSubmit={(e) => e.preventDefault()}>
-        <Form.Group controlId="newComment">
+        <Form.Group controlId="newComment" className="enter-comment-box">
           <Form.Control
             type="text"
-            placeholder="Press enter to post comment"
+            placeholder={
+              Cookies.get("userInfo")
+                ? "Type your comment here"
+                : "You must be logged in to comment"
+            }
             value={newComment}
             onChange={handleCommentChange}
+            disabled={!Cookies.get("userInfo")}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === "Enter" && Cookies.get("userInfo")) {
                 e.preventDefault();
                 handlePostComment();
               }
             }}
           />
         </Form.Group>
-        <Button
-          variant="outline-dark"
-          onClick={handlePostComment}
-          disabled={!newComment.trim() || !Cookies.get("userInfo")}
-        >
-          Post
-        </Button>
+        {!Cookies.get("userInfo") ? (
+          <></>
+        ) : (
+          <Button
+            className="post-comment-button"
+            variant="outline-dark"
+            onClick={handlePostComment}
+            disabled={!newComment.trim() || !Cookies.get("userInfo")}
+          >
+            Post
+          </Button>
+        )}
       </Form>
 
       <div className="comments-section">
@@ -144,7 +162,7 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
                 roundedCircle
                 className="profile-photo"
               />
-              <strong className="me-auto">{postComments[index]["user"]}</strong>
+              <strong className="me-auto comment-user">{postComments[index]["user"]}</strong>
               <small>{timeConverter(postComments[index]["date"])}</small>
 
               {postComments[index]["user"] === loggedUser ? (

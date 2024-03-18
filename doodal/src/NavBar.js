@@ -25,11 +25,9 @@ function NavBar({ loggedIn }) {
   const handleLogOut = () => {
     Cookies.remove("authentication");
     Cookies.remove("userInfo");
-    window.location.reload();
-  
+    window.location.href = "/home";
   };
   
-
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   return (
@@ -87,7 +85,7 @@ function NavBar({ loggedIn }) {
                     />
                   }
                 >
-                  <NavDropdown.Item>
+                  <NavDropdown.Item className="navbar-profile-dropdown">
                     <Link to="/profile" className="profile-link">
                       <i
                         className="fa-solid fa-user drop-icons"
