@@ -67,7 +67,7 @@ function handleUnauthorizedError(unfinishedCall) {
   const fullRedirectUrl = `https://doodal.auth.us-west-2.amazoncognito.com/login?client_id=6c1og3jvcp62aqmkhjcgkjkvgq&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=${redirectUri}`;
 
 
-    window.location.href = fullRedirectUrl;
+    // window.location.href = fullRedirectUrl;
 }
 
 export default makeApiCall;

@@ -118,6 +118,14 @@ data "archive_file" "delete_drawing_archive" {
   source_dir  = "../functions/delete_drawing"
   output_path = local.delete_drawing_artifact
 }
+
+data "archive_file" "get_user_info_by_username_archive" {
+  type = "zip"
+  # this file (main.py) needs to exist in the same folder as this 
+  # Terraform configuration file
+  source_dir  = "../functions/get_user_info_by_username"
+  output_path = local.get_user_info_by_username_artifact
+}
 # ...
 
 # create lambda functions
@@ -295,6 +303,18 @@ resource "aws_lambda_function" "delete_drawing_lambda" {
   handler          = local.delete_drawing_handler
   filename         = local.delete_drawing_artifact
   source_code_hash = data.archive_file.delete_drawing_archive.output_base64sha256
+  timeout          = 20
+
+  # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
+  runtime = "python3.9"
+}
+
+resource "aws_lambda_function" "get_user_info_by_username_lambda" {
+  role             = aws_iam_role.get_user_info_by_username_iam.arn
+  function_name    = local.get_user_info_by_username_funct
+  handler          = local.get_user_info_by_username_handler
+  filename         = local.get_user_info_by_username_artifact
+  source_code_hash = data.archive_file.get_user_info_by_username_archive.output_base64sha256
   timeout          = 20
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
@@ -488,6 +508,19 @@ resource "aws_lambda_function_url" "get_comments_url" {
 
 resource "aws_lambda_function_url" "delete_drawing_url" {
   function_name      = aws_lambda_function.delete_drawing_lambda.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["POST"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+resource "aws_lambda_function_url" "get_user_info_by_username_url" {
+  function_name      = aws_lambda_function.get_user_info_by_username_lambda.function_name
   authorization_type = "NONE"
 
   cors {
