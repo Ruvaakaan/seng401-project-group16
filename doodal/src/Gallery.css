@@ -82,6 +82,10 @@
   margin-right: 10px;
 }
 
+.user-gallery-pfp{
+  border: 1px solid #712cf9;
+}
+
 .username-gallery-nav:hover, .user-gallery-pfp:hover{
   color:#9F70FD;
   cursor: pointer;
