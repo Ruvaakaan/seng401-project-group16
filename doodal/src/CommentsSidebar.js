@@ -12,11 +12,23 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
   const [newComment, setNewComment] = useState("");
   const [timeDifference, setTimeDifference] = useState("");
   const [liked, setLiked] = useState(likes);
-  const loggedUser = JSON.parse(Cookies.get("userInfo"))["username"]["S"];
+  const loggedUser = Cookies.get("userInfo")
+    ? JSON.parse(Cookies.get("userInfo"))["username"]["S"]
+    : null;
 
   const handleCommentChange = (event) => {
-    setNewComment(event.target.value);
+    if (!Cookies.get("userInfo")){
+      setNewComment("You were logged out. Please log in and try again.");
+    }
+    else{
+      setNewComment(event.target.value);
+    }
   };
+
+  useEffect(()=>
+  {
+    console.log(newComment)
+  }, [newComment])
 
   const handleLike = async () => {
     await likeUnlike(drawingID);
@@ -115,24 +127,29 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
         <Form.Group controlId="newComment">
           <Form.Control
             type="text"
-            placeholder="Press enter to post comment"
+            placeholder={Cookies.get("userInfo") ? "Type your comment here" : "You must be logged in to comment"}
             value={newComment}
             onChange={handleCommentChange}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === "Enter" && Cookies.get("userInfo")) {
                 e.preventDefault();
                 handlePostComment();
               }
-            }}
+            }}disabled={!Cookies.get("userInfo")}
           />
         </Form.Group>
-        <Button
-          variant="outline-dark"
-          onClick={handlePostComment}
-          disabled={!newComment.trim() || !Cookies.get("userInfo")}
-        >
-          Post
-        </Button>
+
+        {!Cookies.get("userInfo") ? (
+          <></>
+        ) : (
+          <Button
+            variant="outline-dark"
+            onClick={handlePostComment}
+            disabled={!newComment.trim() || !Cookies.get("userInfo")}
+          >
+            Post
+          </Button>
+        )}
       </Form>
 
       <div className="comments-section">

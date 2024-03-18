@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import NavBar from "./NavBar";
 import "./App.css";
 import { DarkModeProvider } from "./DarkModeContext";
-import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import makeApiCall from "./makeApiCall";
+import Modal from "react-bootstrap/Modal";
 
 // Using context provider to declare authentication token globally
 
@@ -12,7 +13,6 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [pfp, setPfp] = useState(false);
   const navigate = useNavigate();
-
   //useEffect for getting initial credentials if needed
   useEffect(() => {
     const fetchData = async () => {
@@ -42,17 +42,24 @@ function App() {
         const authenticationCookie = Cookies.get("authentication");
         if (authenticationCookie) {
           setLoggedIn(true);
-          const unfinishedApiCall = localStorage.getItem("unfinishedapicall");
-          try {
-            if (unfinishedApiCall) {
-              const { url, method, request } = JSON.parse(unfinishedApiCall);
-              makeApiCall(url, method, request);
-            }
-            localStorage.removeItem("unfinishedapicall");
-          } catch (error) {
-            console.log(error);
-          }
         }
+      }
+      const unfinishedApiCall = localStorage.getItem("unfinishedapicall");
+      try {
+        if (unfinishedApiCall) {
+          const { url, method, request } = JSON.parse(unfinishedApiCall);
+          const match = url.match(/\/([^/]+)$/);
+          if (match) {
+            if (match[1] === "upload_drawing"){
+              setText("Your drawing was posted!");
+              handleShow();
+            }
+          }
+          makeApiCall(url, method, request);
+        }
+        localStorage.removeItem("unfinishedapicall");
+      } catch (error) {
+        console.log(error);
       }
       try {
         const userInfo = Cookies.get("userInfo");
@@ -68,13 +75,19 @@ function App() {
 
     fetchData();
   }, []);
-
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const [text, setText] = useState("");
   return (
     <DarkModeProvider>
       <div className="App">
         <NavBar loggedIn={loggedIn} />
         <div>
           <Outlet />
+          <Modal show={show} onHide={handleClose}>
+            <Modal.Body>{text}</Modal.Body>
+          </Modal>
         </div>
       </div>
     </DarkModeProvider>
