@@ -84,7 +84,7 @@ function NavBar({ loggedIn }) {
                     />
                   }
                 >
-                  <NavDropdown.Item>
+                  <NavDropdown.Item className="navbar-profile-dropdown">
                     <Link to="/profile" className="profile-link">
                       <i
                         className="fa-solid fa-user drop-icons"

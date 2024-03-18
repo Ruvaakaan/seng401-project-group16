@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDarkMode } from "./DarkModeContext";
 import { sortImages } from "./sortDrawings.js";
-import { Row, Col, Card } from "react-bootstrap";
+import { Row, Col, Card, Modal } from "react-bootstrap";
 
 function Home() {
   const { isDarkMode } = useDarkMode();
@@ -15,11 +15,11 @@ function Home() {
   const [images, setImages] = useState([]); // array of images
   const [oldImages, setOldImages] = useState([]);
 
-  // const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
-  // const toggleModal = () => {
-  //   setShowModal(!showModal);
-  // };
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
 
   const convertTime = (dateCreated) => {
     const currentDateSeconds = Math.floor(new Date().getTime() / 1000);
@@ -138,6 +138,10 @@ function Home() {
       <h1 className="memo-banner">
         Welcome to DOODAL! Participate in daily art challenges and share your
         art with others!
+        <i
+          className="fa-solid fa-circle-info info-button"
+          onClick={() => setShowModal(true)}
+        ></i>
       </h1>
       <div className="prompt-display">
         <div
@@ -228,17 +232,35 @@ function Home() {
         )}
       </Swiper>
 
-      {/* <Modal show={showModal} onHide={toggleModal}>
+      <Modal
+        show={showModal}
+        onHide={toggleModal}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
         <Modal.Header closeButton>
-          <Modal.Title>Competition Information</Modal.Title>
+          <Modal.Title>How Doodal Works</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Competition</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={toggleModal}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal> */}
+        <Card.Img variant="top" src="info-img.png" />
+        <Modal.Body className="info-text">
+          <p>
+            On the homepage there are multiple ongoing competitions for a given
+            prompt.
+          </p>
+          <p>
+            Each competition has a level of difficulty associated with them as
+            well as a time limit to enter. The most liked drawing from each
+            compettion is displayed here on the homepage!
+          </p>
+          <p>
+            Click on the image to view the gallery for the competition and
+            participate!
+          </p>
+          <p>Past competitions can also be viewed below!</p>
+        </Modal.Body>
+        <Modal.Footer></Modal.Footer>
+      </Modal>
 
       <div className="prompt-display">
         <div className="prompt-button">
@@ -260,7 +282,6 @@ function Home() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      
                     }}
                   >
                     {oldPrompts[idx] && (
@@ -277,7 +298,7 @@ function Home() {
                   </Card.Header>
                   <Card.Img
                     variant="top"
-                    src={val["s3_url"]}
+                    src={val["s3_url"] ? val["s3_url"] : "empty_comp.png"}
                     style={{
                       cursor: "pointer",
                     }}
@@ -292,8 +313,7 @@ function Home() {
                     }
                   />
 
-                  <Card.Footer className="card-footer" >
-                    
+                  <Card.Footer className="card-footer">
                     {oldPrompts[idx] && (
                       <p
                         style={{
