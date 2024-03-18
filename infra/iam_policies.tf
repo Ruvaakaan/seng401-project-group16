@@ -420,7 +420,8 @@ resource "aws_iam_policy" "upload_profile_photo_policy" {
         "dynamodb:UpdateItem",
         "dynamodb:DeleteItem",
         "dynamodb:PartiQLSelect",
-        "s3:PutObject"
+        "s3:PutObject",
+        "s3:DeleteObject"
       ],
       "Resource": [
         "arn:aws:logs:*:*:*",
