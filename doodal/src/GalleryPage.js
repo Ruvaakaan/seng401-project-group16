@@ -22,6 +22,7 @@ function GalleryPage() {
     useState(null);
   const [selectedImageDrawingID, setSelectedImageDrawingID] = useState(null);
   const [selectedUserPfp, setSelectedUserPfp] = useState(null);
+  const [selectedPostLikes, setSelectedPostLikes] = useState(0);
   const [sortType, setSortType] = useState("likes-descend");
 
   const nav = useNavigate();
@@ -31,12 +32,13 @@ function GalleryPage() {
   var comp_id = location.state?.comp_id; // get competition id as prop
   const oldPrompt = location.state?.old_prompt; // get competition id as prop
 
-  const handleImageClick = (image, username, dateCreated, drawingID, pfp) => {
+  const handleImageClick = (image, username, dateCreated, drawingID, pfp, likes) => {
     setSelectedImage(image);
     setSelectedImageUserName(username);
     setSelectedImageCreationDate(dateCreated);
     setSelectedImageDrawingID(drawingID);
     setSelectedUserPfp(pfp);
+    setSelectedPostLikes(likes)
     setShowPopUp(true);
   };
 
@@ -236,7 +238,8 @@ function GalleryPage() {
                         val["username"],
                         val["date_created"],
                         val["drawing_id"],
-                        val["profile_photo"]
+                        val["profile_photo"],
+                        val["likes"]
                       )
                     }
                   />
@@ -270,7 +273,7 @@ function GalleryPage() {
                           <i className="fa-regular fa-heart fa-2xs"></i>
                         </button>
                       )}
-                      <div className="like-counter">{val["likes"]}</div>
+                      {/* <div className="like-counter">{val["likes"]}</div> */}
                     </div>
                   </Card.Footer>
                 </Card>
@@ -290,6 +293,7 @@ function GalleryPage() {
           drawingID={selectedImageDrawingID}
           liked={user_likes.includes(selectedImageDrawingID)}
           posterPfp={selectedUserPfp}
+          likes={selectedPostLikes}
         />
       )}
     </>

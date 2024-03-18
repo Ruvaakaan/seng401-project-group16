@@ -23,6 +23,7 @@ function ViewAccount() {
     useState(null);
   const [selectedImageDrawingID, setSelectedImageDrawingID] = useState(null);
   const [selectedUserLiked, setSelectedUserLiked] = useState(null);
+  const [selectedPostLikes, setSelectedPostLikes] = useState(0);
   const [selectedCompetitionID, setSelectedCompetitionID] = useState(null);
 
   const handlePopup = (
@@ -31,7 +32,8 @@ function ViewAccount() {
     dateCreated,
     drawingID,
     userLiked,
-    compID
+    compID,
+    likes
   ) => {
     setSelectedImage(image);
     setSelectedImageUserName(username);
@@ -39,6 +41,8 @@ function ViewAccount() {
     setSelectedImageDrawingID(drawingID);
     setSelectedUserLiked(userLiked);
     setSelectedCompetitionID(compID);
+    setSelectedPostLikes(likes)
+
     setShowPopUp(true);
   };
 
@@ -164,7 +168,8 @@ function ViewAccount() {
                       item.date_created,
                       item.drawing_id,
                       item.liked_by_user,
-                      item.competition_id
+                      item.competition_id,
+                      item.likes
                     )
                   }
                 />
@@ -195,6 +200,7 @@ function ViewAccount() {
           drawingID={selectedImageDrawingID}
           liked={selectedUserLiked}
           posterPfp={user.picture}
+          likes={selectedPostLikes}
         />
       )}
     </div>

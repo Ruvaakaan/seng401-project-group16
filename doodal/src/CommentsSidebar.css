@@ -32,6 +32,15 @@
   font-size: 0.69em;
 }
 
+.popup-likes{
+  display:flex;
+  align-items: center;
+}
+
+.popup-likes-num{
+  font-size: 1.2em;
+}
+
 .comment-user{
   margin-left: 2%;
 }
