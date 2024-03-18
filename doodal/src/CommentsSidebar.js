@@ -4,7 +4,7 @@ import { Toast, Image, Form, Button } from "react-bootstrap";
 import Cookies from "js-cookie";
 import { addComments } from "./AddComments";
 import { likeUnlike } from "./LikeAndUnlike.js";
-import { getComments } from "./getComments.js";
+import { getComments } from "./GetComments.js";
 import { delComments } from "./DeleteComment.js";
 
 const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
