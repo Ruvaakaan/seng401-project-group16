@@ -13,6 +13,8 @@ import makeApiCall from "./makeApiCall";
 import Popup from "./PopUp.js";
 import { delPost } from "./DeletePost.js";
 import { useProfilePicture } from "./ProfilePictureContext";
+import { timeConverter } from "./TimeConverter.js";
+import Cookies from "js-cookie";
 
 function Account() {
   // Receive authenticationToken as a prop
@@ -29,6 +31,7 @@ function Account() {
   const [selectedImageDrawingID, setSelectedImageDrawingID] = useState(null);
   const [selectedUserLiked, setSelectedUserLiked] = useState(null);
   const [selectedCompetitionID, setSelectedCompetitionID] = useState(null);
+  const [totalLikes, setTotalLikes] = useState(0);
 
   const handlePopup = (
     image,
@@ -121,7 +124,13 @@ function Account() {
 
   const fetchUserImages = async () => {
     try {
-      const images = await getUserImages();
+      let user = JSON.parse(Cookies.get("userInfo"))["username"]["S"]
+      const images = await getUserImages(user);
+      var total = 0
+      for (let i=0;i<images.length;i++){
+        total += Number(images[i]["likes"])
+      }
+      setTotalLikes(total);
       setPosts(images);
     } catch (error) {
       console.error("Error fetching user images:", error);
@@ -164,7 +173,7 @@ function Account() {
         </div>
         <h2>Hello {user.username}!</h2>
         <div className="likes">
-          <h2>Total Likes: {user.likes} </h2>
+          <h2>Total <i className="fa-solid fa-heart fa-2xs"></i>: {totalLikes}</h2>
         </div>
         <h2>
           Bio
@@ -195,9 +204,10 @@ function Account() {
                     )
                   }
                 />
-                <Card.Body id="card">
+                <Card.Body id="account-card">
+                  <p className="account-post-date">Posted {timeConverter(item.date_created)}</p>
                   <i
-                    className="fa-solid fa-trash comment-action-icon"
+                    className="fa-solid fa-trash account-action-icon"
                     onClick={() =>
                       handleShow(
                         item.s3_url,

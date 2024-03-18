@@ -49,9 +49,60 @@
     text-align: center;
 }
 
+.dark-mode .likes {
+    margin-bottom: 20px;
+    background-color: #333; 
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#account-card{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #eeeeee;
+    padding: 0;
+}
+
+.dark-mode #account-card{
+    background-color: #333;
+    color:white;
+}
+
+.account-post-date{
+    margin: 0.69em;
+    text-align: center;
+    flex-grow: 1;
+    font-size: 1.2em;
+}
+
+.account-trash{
+}
+
+.account-action-icon{
+    margin-right: 0.69em;
+    color:#333;
+  }
+
+.account-action-icon:hover{
+    color:#9F70FD;
+    cursor: pointer;
+}
+
+.dark-mode .account-action-icon{
+    color:white;
+}
+
+.dark-mode .account-action-icon:hover{
+    color:#9F70FD;
+    cursor: pointer;
+}
+
 .likes h2 {
     color: #222831; 
 }
+
 .image-gallery {
     flex: 3; /* Allow the image-gallery to grow */
     margin-left: 20px;
