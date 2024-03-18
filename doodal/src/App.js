@@ -91,6 +91,7 @@ function App() {
             <Modal.Body>{text}</Modal.Body>
           </Modal>
         </div>
+        </div>
       </ProfilePictureProvider>
     </DarkModeProvider>
   );
