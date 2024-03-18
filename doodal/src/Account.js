@@ -14,6 +14,7 @@ import Popup from "./PopUp.js";
 import { delPost } from "./DeletePost.js";
 import { useProfilePicture } from "./ProfilePictureContext";
 import { timeConverter } from "./TimeConverter.js";
+import Cookies from "js-cookie";
 
 function Account() {
   // Receive authenticationToken as a prop
@@ -123,7 +124,8 @@ function Account() {
 
   const fetchUserImages = async () => {
     try {
-      const images = await getUserImages();
+      let user = JSON.parse(Cookies.get("userInfo"))["username"]["S"]
+      const images = await getUserImages(user);
       var total = 0
       for (let i=0;i<images.length;i++){
         total += Number(images[i]["likes"])
