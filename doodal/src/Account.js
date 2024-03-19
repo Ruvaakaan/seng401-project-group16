@@ -171,26 +171,28 @@ function Account() {
             <i className="fas fa-edit"></i>Edit
           </span>
         </div>
-        <h2>Hello {user.username}!</h2>
+        <div className="account-info">
+        <h2 className="username">{user.username}</h2>
         <div className="likes">
-          <h2>Total Likes: {totalLikes} <i className="fa-solid fa-heart fa-2xs"></i></h2>
+          <h2>@{user.username} ‧ Total Likes: {totalLikes} <i className="fa-solid fa-heart fa-2xs"></i></h2>
         </div>
-        <h2>
-          Bio
-          <span className="edit-icon" onClick={() => setIsBioOpen(true)}>
-            &#xf044;
-          </span>
-        </h2>
+        <div className ="bio">
         <p>{user.bio}</p>
+        <div className="bio-button">
+        <button onClick={() => setIsBioOpen(true)}>Update Bio</button>
+        </div>
+        </div>
+        </div>
       </div>
 
       <div className="image-gallery">
-        <h2>Your Gallery</h2>
+        <h2>Previous Submissions</h2>
         <Row xs={3} className="g-4">
           {posts.map((item, idx) => (
             <Col key={idx}>
-              <Card>
+              <Card >
                 <Card.Img
+                  className="photo-card"
                   variant="top"
                   src={item["s3_url"]}
                   onClick={() =>
