@@ -14,7 +14,7 @@
 .profile-photo {
   width: 50px;
   height: 50px; 
-  border: 1px solid #333;
+  border: 1px solid #712cf9;
 }
 
 .post-info {
@@ -30,6 +30,15 @@
 
 .posted-time{
   font-size: 0.69em;
+}
+
+.popup-likes{
+  display:flex;
+  align-items: center;
+}
+
+.popup-likes-num{
+  font-size: 1.2em;
 }
 
 .comment-user{

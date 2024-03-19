@@ -31,6 +31,7 @@ function Account() {
   const [selectedImageDrawingID, setSelectedImageDrawingID] = useState(null);
   const [selectedUserLiked, setSelectedUserLiked] = useState(null);
   const [selectedCompetitionID, setSelectedCompetitionID] = useState(null);
+  const [selectedPostLikes, setSelectedPostLikes] = useState(0);
   const [totalLikes, setTotalLikes] = useState(0);
 
   const handlePopup = (
@@ -39,7 +40,8 @@ function Account() {
     dateCreated,
     drawingID,
     userLiked,
-    compID
+    compID,
+    likes
   ) => {
     setSelectedImage(image);
     setSelectedImageUserName(username);
@@ -47,6 +49,7 @@ function Account() {
     setSelectedImageDrawingID(drawingID);
     setSelectedUserLiked(userLiked);
     setSelectedCompetitionID(compID);
+    setSelectedPostLikes(likes)
     setShowPopUp(true);
   };
 
@@ -202,7 +205,8 @@ function Account() {
                       item.date_created,
                       item.drawing_id,
                       item.liked_by_user,
-                      item.competition_id
+                      item.competition_id,
+                      item.likes
                     )
                   }
                 />
@@ -265,6 +269,7 @@ function Account() {
           drawingID={selectedImageDrawingID}
           liked={selectedUserLiked}
           posterPfp={JSON.parse(Cookies.get("userInfo"))["profile_photo_url"]["S"]}
+          likes={selectedPostLikes}
         />
       )}
     </div>
