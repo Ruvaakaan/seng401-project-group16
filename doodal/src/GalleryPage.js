@@ -69,11 +69,11 @@ function GalleryPage() {
 
   useEffect(() => {
     // when loaded, check if we are in a competiion or main gallery, do stuff based on where
-    if (prompt) {
-      setTitle(prompt);
-      setUserEnter(true);
-    }
     callSorter(sortType);
+    if (prompt && !oldPrompt) {
+      setTitle(prompt);
+      // setUserEnter(true);
+    }
   }, []);
 
   function like_change(val) {
@@ -112,6 +112,7 @@ function GalleryPage() {
       return;
     }
     let arr = [];
+    let flag = true
     for (let i = 0; i < body.length; i++) {
       if (body[i]["liked_by_user"] == true) {
         arr.push(body[i]["drawing_id"]);
@@ -121,11 +122,12 @@ function GalleryPage() {
           body[i]["username"] ==
           JSON.parse(Cookies.get("userInfo"))["username"]["S"]
         ) {
-          setUserEnter(false);
+          flag = false;
         }
       } catch {}
     }
-
+    
+    setUserEnter(flag);
     setUserLikes(arr);
     setImages(body);
   };
