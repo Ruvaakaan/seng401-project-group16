@@ -1,6 +1,7 @@
 describe("Drawing and fetching functionalities", () => {
     it("allows drawing, submitting, fetching, and profile verification", () => {
         // 1. Navigate to the login page and login
+        cy.viewport(1500, 1000)
         cy.visit("http://localhost:3000");
         cy.contains("Login").click();
         cy.loginByCognito(Cypress.env("username1"), Cypress.env("password1"));
@@ -11,10 +12,7 @@ describe("Drawing and fetching functionalities", () => {
         cy.contains("Profile").click();
         cy.url().should("eq", "http://localhost:3000/profile");
 
-        cy.get(".image-gallery img").its("length").as("imageCount");
-        cy.get("@imageCount").then((value) => {
-            cy.log(`Value of alias imageCount:`, value);
-        });
+        cy.get(".image-gallery img").should("not.exist");
 
         cy.contains("Home").click();
 
@@ -25,21 +23,20 @@ describe("Drawing and fetching functionalities", () => {
             });
         cy.url().should("contain", "/gallery");
 
-        //Commented out as functionality for this isn't built in yet
-        // cy.contains(Cypress.env("username1")).should("not.exist");
+        cy.contains(Cypress.env("username1")).should("not.exist");
 
         //3. Click on the draw button to enter the competition
         cy.get(".entry-button").click();
 
         //4. Draw an image on the drawing page
 
-        
+
         function drawCurrentTimeTally() {
             const now = new Date();
             const hours = now.getHours();
             const minutes = now.getMinutes().toString().padStart(2, "0"); // Pad minutes with leading zero
-            let initialY = 300;
-            const initialX = 300;
+            let initialY = 500;
+            const initialX = 700;
 
             for (let i = 0; i < hours; i++) {
                 let xCoord = initialX + i * 15;
@@ -91,28 +88,10 @@ describe("Drawing and fetching functionalities", () => {
         //5.  Submit the drawing (replace with appropriate selector or action)
         cy.contains("Upload").click();
 
-        // Assert redirection to gallery (replace '/gallery' with actual URL)
-
-        //temporary fix based on the current implementation to fully test functinality at the moment
-        //!REMOVE WHEN COMPLETED
-        //!REMOVE WHEN COMPLETED
-        //!REMOVE WHEN COMPLETED
-        //!REMOVE WHEN COMPLETED
-
-        cy.contains("Home").click();
-
-        cy.get(".swiper-wrapper .swiper-slide-active") // Target the first (active) tile
-            .within(() => {
-                cy.get(".card-img-flush").click(); // Click the image within the first tile
-            });
-
-        //!REMOVE WHEN COMPLETED
-        //!REMOVE WHEN COMPLETED
-        //!REMOVE WHEN COMPLETED
         //6. Checking redirect from submission button and that new photo does exist
         cy.url().should("contain", "/gallery");
-        // cy.contains("Draw").should("not.exist");
-        cy.contains("Most Liked").click();
+        cy.contains("Draw").should("not.exist");
+        cy.contains("Newest").click();
 
         cy.contains(Cypress.env("username1"));
 
@@ -122,20 +101,14 @@ describe("Drawing and fetching functionalities", () => {
         cy.contains("Profile").click();
         cy.url().should("eq", "http://localhost:3000/profile");
 
-        cy.get(".image-gallery img").its("length").as("newImageCount");
-  
-        cy.get("@imageCount").then((value) => {
-          cy.log(`Value of alias imageCount:`, value);
-      });
+        cy.get(".image-gallery img");
 
-        cy.get("@imageCount").then((imageCount) => {
-            cy.wait(500)
-            cy.log(imageCount)
-            cy.get("@newImageCount").then((newImageCount) => {
-              cy.log(newImageCount)
-                cy.wait(500)
-                expect(newImageCount).to.equal(imageCount);
-            });
-        });
+        //cleaning up
+        cy.get(".card-body i").click();
+        cy.contains('Delete!').click()
+
+        cy.wait(1000);
+        cy.get(".image-gallery img").should("not.exist");
+
     });
 });
