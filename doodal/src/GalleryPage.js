@@ -52,7 +52,7 @@ function GalleryPage() {
     comp_id = version;
     if (!prompt) {
       setTitle("Gallery");
-      // setUserEnter(false);
+      setUserEnter(false);
     } else {
       setTitle(prompt);
     }
