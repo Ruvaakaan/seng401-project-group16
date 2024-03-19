@@ -46,7 +46,7 @@
 }
 
 .comments-section {
-  height: 498px; 
+  height: 432px; 
   /* height is hardcoded so its bad */
   overflow-y: auto;
   margin-right:5%;
