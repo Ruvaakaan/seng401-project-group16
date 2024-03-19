@@ -14,7 +14,9 @@
 }
 
 .comments {
+  /* border: 1px solid black;  */
+  /* border-radius: 5px; */
   width: 39%;
   float: right;
-  flex-direction: column;
+  flex-direction: column; /* Assuming this is within a flex container */
 }

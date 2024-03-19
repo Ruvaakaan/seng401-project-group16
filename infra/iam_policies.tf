@@ -502,7 +502,8 @@ resource "aws_iam_policy" "get_comments_policy" {
       ],
       "Resource": [
         "arn:aws:logs:*:*:*",
-        "${aws_dynamodb_table.doodal-comments.arn}"
+        "${aws_dynamodb_table.doodal-comments.arn}",
+        "${aws_dynamodb_table.doodal-users.arn}"
       ],
       "Effect": "Allow"
     }

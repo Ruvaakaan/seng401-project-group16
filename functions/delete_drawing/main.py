@@ -13,8 +13,8 @@ def verify_user(requested,draw_id):
       Parameters=params
     )
     items = response["Items"]
-    print(items)
-    print(items[0]["username"]["S"])
+    # print(items)
+    # print(items[0]["username"]["S"])
     if items[0]["username"]["S"] == requested:
       return True
     else:
@@ -25,7 +25,7 @@ def verify_user(requested,draw_id):
 
 def delete_drawing(event, context):
   try:
-    print(event)
+    # print(event)
     body = json.loads(event["body"])
     username = event['headers']["username"]
     drawing_id = body["drawing_id"]
@@ -51,7 +51,7 @@ def delete_drawing(event, context):
     )
 
     for item in scan_response['Items']:
-      print(item)
+      # print(item)
       delete_response = dynamodb.delete_item(
           TableName="doodal-comments",
           Key={
