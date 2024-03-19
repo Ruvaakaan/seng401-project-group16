@@ -264,6 +264,7 @@ function Account() {
           dateCreated={selectedImageCreationDate}
           drawingID={selectedImageDrawingID}
           liked={selectedUserLiked}
+          posterPfp={JSON.parse(Cookies.get("userInfo"))["profile_photo_url"]["S"]}
         />
       )}
     </div>

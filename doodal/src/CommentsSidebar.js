@@ -6,9 +6,10 @@ import { addComments } from "./AddComments";
 import { likeUnlike } from "./LikeAndUnlike.js";
 import { getComments } from "./GetComments.js";
 import { delComments } from "./DeleteComment.js";
+import { useNavigate } from "react-router-dom";
 import { timeConverter } from "./TimeConverter.js";
 
-const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
+const CommentsSidebar = ({ drawingID, username, likes, dateCreated, posterPfp }) => {
   const [postComments, setPostComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [timeDifference, setTimeDifference] = useState("");
@@ -16,6 +17,7 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
   const loggedUser = Cookies.get("userInfo")
     ? JSON.parse(Cookies.get("userInfo"))["username"]["S"]
     : null;
+  const nav = useNavigate();
 
   const handleCommentChange = (event) => {
     if (!Cookies.get("userInfo")) {
@@ -53,6 +55,7 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
       commentToAdd["text"] = body[i]["comment_text"]["S"];
       commentToAdd["user"] = body[i]["username"]["S"];
       commentToAdd["date"] = body[i]["date_created"]["S"];
+      commentToAdd["pfp"] = body[i]["profile_photo"];
       toAdd.push(commentToAdd);
     }
     toAdd.reverse();
@@ -80,14 +83,19 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
         <div className="user-post-info">
           <div>
             <Image
-              src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"
+              src={posterPfp ? posterPfp : "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"}
               roundedCircle
               className="profile-photo"
+              onClick={() => nav(`/viewaccount/${username}`)}
             />
           </div>
           <div className="post-info">
-            <span className="username" style={{ textTransform: "capitalize" }}>
-              By: {username}
+            <span
+              className="username"
+              onClick={() => nav(`/viewaccount/${username}`)}
+              style={{ textTransform: "capitalize" }}
+            >
+              {username}
             </span>
             <span className="posted-time">Posted: {timeDifference}</span>
           </div>
@@ -109,29 +117,29 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
           <Form.Control
             type="text"
             placeholder={
-              Cookies.get("userInfo")
+              loggedUser
                 ? "Type your comment here"
                 : "You must be logged in to comment"
             }
             value={newComment}
             onChange={handleCommentChange}
-            disabled={!Cookies.get("userInfo")}
+            disabled={!loggedUser}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && Cookies.get("userInfo")) {
+              if (e.key === "Enter" && loggedUser) {
                 e.preventDefault();
                 handlePostComment();
               }
             }}
           />
         </Form.Group>
-        {!Cookies.get("userInfo") ? (
+        {!loggedUser? (
           <></>
         ) : (
           <Button
             className="post-comment-button"
             variant="outline-dark"
             onClick={handlePostComment}
-            disabled={!newComment.trim() || !Cookies.get("userInfo")}
+            disabled={!newComment.trim() || !loggedUser}
           >
             Post
           </Button>
@@ -143,30 +151,36 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated }) => {
           <Toast key={index} className="custom-toast">
             <Toast.Header closeButton={false} className="custom-toast-header">
               <Image
-                src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"
+                src={comment["pfp"] ? comment["pfp"] : "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"}
                 roundedCircle
                 className="profile-photo"
+                onClick={() =>
+                  nav(`/viewaccount/${comment["user"]}`)
+                }
               />
               <strong
                 className="me-auto comment-user"
                 style={{ textTransform: "capitalize" }}
+                onClick={() =>
+                  nav(`/viewaccount/${comment["user"]}`)
+                }
               >
-                {postComments[index]["user"]}
+                {comment["user"]}
               </strong>
-              <small>{timeConverter(postComments[index]["date"])}</small>
+              <small>{timeConverter(comment["date"])}</small>
 
-              {postComments[index]["user"] === loggedUser ? (
+              {comment["user"] === loggedUser ? (
                 <i
                   className="fa-solid fa-trash comment-action-icon"
                   onClick={() =>
-                    handleDeleteComment(postComments[index]["date"], index)
+                    handleDeleteComment(comment["date"], index)
                   }
                 ></i>
               ) : (
                 <i className="fa-solid fa-flag comment-action-icon"></i>
               )}
             </Toast.Header>
-            <Toast.Body>{postComments[index]["text"]}</Toast.Body>
+            <Toast.Body>{comment["text"]}</Toast.Body>
           </Toast>
         ))}
       </div>

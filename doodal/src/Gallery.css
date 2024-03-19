@@ -81,3 +81,8 @@
   font-size: 16px;
   margin-right: 10px;
 }
+
+.username-gallery-nav:hover, .user-gallery-pfp:hover{
+  color:#9F70FD;
+  cursor: pointer;
+}
