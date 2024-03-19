@@ -48,7 +48,8 @@ function GalleryPage() {
   };
 
   const fetchData = useCallback(async () => {
-    const prompt = location.state?.prompt;
+    const urlParams = new URLSearchParams(window.location.search);
+    const prompt = urlParams.get('prompt');
     comp_id = version;
     if (!prompt) {
       setTitle("Gallery");
