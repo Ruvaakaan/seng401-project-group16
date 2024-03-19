@@ -68,7 +68,7 @@ function ViewAccount() {
       // console.log("response:", response);
       if (response) {
         const responseBody = JSON.parse(response.body);
-        console.log(responseBody)
+        // console.log(responseBody)
         setUser({
           // id: response.user_id.S,
           username: responseBody.username.S,
