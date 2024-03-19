@@ -11,6 +11,14 @@ from delete_comment.main import delete_comment
 from get_comments.main import get_comments
 from delete_drawing.main import delete_drawing
 from upload_drawing.main import upload_drawing
+from update_bio.main import update_bio
+from upload_profile_photo.main import upload_profile_photo
+from get_profile_photo.main import get_profile_photo
+from sort_drawings.main import sort_drawings_handler
+from like_unlike.main import like_unlike
+from get_user_info_by_username.main import get_user_info_by_username
+from get_user_info.main import get_user_info
+from get_users_drawings.main import get_users_drawings
 
 class lambda_mocking_tests(unittest.TestCase):
 
@@ -91,13 +99,13 @@ class lambda_mocking_tests(unittest.TestCase):
             TableName='doodal-users',
             KeySchema=[
                 {
-                    'AttributeName': 'user_id',
+                    'AttributeName': 'username',
                     'KeyType': 'HASH'
                 }
             ],
             AttributeDefinitions=[
                 {
-                    'AttributeName': 'user_id',
+                    'AttributeName': 'username',
                     'AttributeType': 'S'
                 }
             ],
@@ -133,7 +141,6 @@ class lambda_mocking_tests(unittest.TestCase):
         
         # Ensure experience, bio, date_created, and profile_photo_url are set correctly
         self.assertEqual(user['experience']['N'], '0')
-        self.assertEqual(user['bio']['S'], 'Create a bio!')
         self.assertIsNotNone(user['date_created']['S'])
         self.assertEqual(user['profile_photo_url']['S'], '')
 
@@ -221,13 +228,13 @@ class lambda_mocking_tests(unittest.TestCase):
             TableName='doodal-users',
             KeySchema=[
                 {
-                    'AttributeName': 'user_id',
+                    'AttributeName': 'username',
                     'KeyType': 'HASH'
                 }
             ],
             AttributeDefinitions=[
                 {
-                    'AttributeName': 'user_id',
+                    'AttributeName': 'username',
                     'AttributeType': 'S'
                 }
             ],
@@ -348,80 +355,6 @@ class lambda_mocking_tests(unittest.TestCase):
             self.assertEqual(body[i]['drawing_id']["S"], events[i]["body"]['drawing_id'])
             self.assertEqual(body[i]['comment_text']["S"], events[i]["body"]['comment_text'])
             self.assertEqual(body[i]['username']["S"], events[i]['headers']['username'])
-
-    # @mock_aws
-    # def test_delete_drawing(self):
-    #     # Mocking AWS services
-    #     s3 = boto3.client("s3", region_name="us-west-2")
-    #     dynamodb = boto3.client("dynamodb", region_name="us-west-2")
-        
-    #     dynamodb.create_table(
-    #         TableName='doodal-users',
-    #         KeySchema=[
-    #             {'AttributeName': 'user_id', 'KeyType': 'HASH'}
-    #         ],
-    #         AttributeDefinitions=[
-    #             {'AttributeName': 'user_id', 'AttributeType': 'S'}
-    #         ],
-    #         ProvisionedThroughput={
-    #             'ReadCapacityUnits': 5,
-    #             'WriteCapacityUnits': 5
-    #         }
-    #     )
-
-    #     # Prepare event data
-    #     event = {
-    #             "request": {
-    #                 "userAttributes": {
-    #                     "sub": "test-uuid1",
-    #                     "email": "test1@example.com"
-    #                 }
-    #             },
-    #             "userName": "test_username_1"
-    #         }
-        
-    #     response = create_user(event, None)
-    #     response = dynamodb.scan(TableName='doodal-users')
-    #     self.assertEqual(response['Count'], 1)
-
-    #     dynamodb.create_table(
-    #         TableName="doodal-drawings",
-    #         KeySchema=[
-    #             {"AttributeName": "drawing_id", "KeyType": "HASH"}
-    #         ],
-    #         AttributeDefinitions=[
-    #             {"AttributeName": "drawing_id", "AttributeType": "S"}
-    #         ],
-    #         ProvisionedThroughput={"ReadCapacityUnits": 5, "WriteCapacityUnits": 5}
-    #     )
-
-    #     dynamodb.create_table(
-    #         TableName="doodal-comments",
-    #         KeySchema=[
-    #             {"AttributeName": "drawing_id", "KeyType": "HASH"},
-    #             {"AttributeName": "date_created", "KeyType": "RANGE"}
-    #         ],
-    #         AttributeDefinitions=[
-    #             {"AttributeName": "drawing_id", "AttributeType": "S"},
-    #             {"AttributeName": "date_created", "AttributeType": "S"}
-    #         ],
-    #         ProvisionedThroughput={"ReadCapacityUnits": 5, "WriteCapacityUnits": 5}
-    #     )
-
-    #     # Prepare event data
-    #     event = {
-    #         "body": json.dumps({
-    #             "drawing_id": "test_drawing_id",
-    #             "competition_id": "test_competition_id"
-    #         }),
-    #         "headers": {"username": "test_username_1"}
-    #     }
-
-    #     # Execute lambda function
-    #     response = delete_drawing(event, None)
-
-    #     # Assert response
-    #     self.assertEqual(response["statusCode"], 200)
  
     @mock_aws
     def test_upload_drawing(self):
@@ -434,10 +367,10 @@ class lambda_mocking_tests(unittest.TestCase):
         dynamodb.create_table(
             TableName='doodal-users',
             KeySchema=[
-                {'AttributeName': 'user_id', 'KeyType': 'HASH'}
+                {'AttributeName': 'username', 'KeyType': 'HASH'}
             ],
             AttributeDefinitions=[
-                {'AttributeName': 'user_id', 'AttributeType': 'S'}
+                {'AttributeName': 'username', 'AttributeType': 'S'}
             ],
             ProvisionedThroughput={
                 'ReadCapacityUnits': 5,
@@ -500,17 +433,337 @@ class lambda_mocking_tests(unittest.TestCase):
         event = {
             "body": json.dumps({
                 "competition_id": "test_competition_id",
-                "image-data": encoded_string
+                "image_data": encoded_string
             }),
             "headers": {"username": "test_username_1"}
         }
 
         # Execute lambda function
         response = upload_drawing(event, None)
-        print(response)
+        # print(response)
+        drawing_id = json.loads(response["body"])["drawing_id"]
         self.assertEqual(response["statusCode"], 200)
+        s3_objects = s3.list_objects(Bucket='doodals-bucket-seng401')
+        # print(s3_objects)
+        self.assertEqual(len(s3_objects.get('Contents', [])), 1)  # Assuming only one object is uploaded
+    
+        response = dynamodb.scan(TableName='doodal-drawings')
+        # print(response)
+        self.assertEqual(response['Count'], 1)
+        
+        item = response["Items"][0]
+        self.assertEqual(item["drawing_id"]["S"], drawing_id)
+        self.assertEqual(item["competition_id"]["S"], "test_competition_id")
+        self.assertEqual(item["username"]["S"], "test_username_1")
+
+    @mock_aws
+    def test_delete_drawing(self):
+        # Mocking AWS services
+        s3 = boto3.client("s3", region_name="us-west-2")
+        dynamodb = boto3.client("dynamodb", region_name="us-west-2")
+        
+        s3.create_bucket(Bucket='doodals-bucket-seng401', CreateBucketConfiguration={'LocationConstraint': 'us-west-2'})
+        
+        dynamodb.create_table(
+            TableName='doodal-users',
+            KeySchema=[
+                {'AttributeName': 'username', 'KeyType': 'HASH'}
+            ],
+            AttributeDefinitions=[
+                {'AttributeName': 'username', 'AttributeType': 'S'}
+            ],
+            ProvisionedThroughput={
+                'ReadCapacityUnits': 5,
+                'WriteCapacityUnits': 5
+            }
+        )
+
+        # Prepare event data
+        event = {
+                "request": {
+                    "userAttributes": {
+                        "sub": "test-uuid1",
+                        "email": "test1@example.com"
+                    }
+                },
+                "userName": "test_username_1"
+            }
+        
+        response = create_user(event, None)
+        response = dynamodb.scan(TableName='doodal-users')
+        self.assertEqual(response['Count'], 1)
+
+        dynamodb.create_table(
+            TableName="doodal-drawings",
+            KeySchema=[
+                {"AttributeName": "drawing_id", "KeyType": "HASH"}
+            ],
+            AttributeDefinitions=[
+                {"AttributeName": "drawing_id", "AttributeType": "S"}
+            ],
+            ProvisionedThroughput={"ReadCapacityUnits": 5, "WriteCapacityUnits": 5}
+        )
+
+        dynamodb.create_table(
+            TableName="doodal-comments",
+            KeySchema=[
+                {"AttributeName": "drawing_id", "KeyType": "HASH"},
+                {"AttributeName": "date_created", "KeyType": "RANGE"}
+            ],
+            AttributeDefinitions=[
+                {"AttributeName": "drawing_id", "AttributeType": "S"},
+                {"AttributeName": "date_created", "AttributeType": "S"}
+            ],
+            ProvisionedThroughput={"ReadCapacityUnits": 5, "WriteCapacityUnits": 5}
+        )
+        
+        file_path = "seng401-project-group16\mock-image.jpg"
         
 
+        with open(file_path, 'rb') as file:
+            binary_data = file.read()
+
+        # Encode binary data using Base64
+        encoded_data = base64.b64encode(binary_data)
+
+        # Convert encoded data to a string
+        encoded_string = encoded_data.decode("utf-8")
+
+        # Prepare event data
+        event = {
+            "body": json.dumps({
+                "competition_id": "test_competition_id",
+                "image_data": encoded_string
+            }),
+            "headers": {"username": "test_username_1"}
+        }
+
+        # Execute lambda function
+        response = upload_drawing(event, None)
+        drawing_id = json.loads(response["body"])["drawing_id"]
+        self.assertEqual(response["statusCode"], 200)
+
+        # Prepare event data
+        event = {
+            "body": json.dumps({
+                "drawing_id": drawing_id,
+                "competition_id": "test_competition_id"
+            }),
+            "headers": {"username": "test_username_1"}
+        }
+
+        # Execute lambda function
+        response = delete_drawing(event, None)
+
+        # Assert response
+        self.assertEqual(response["statusCode"], 200)
+        
+        s3_objects = s3.list_objects(Bucket='doodals-bucket-seng401')
+        self.assertEqual(len(s3_objects.get('Contents', [])), 0)  
+    
+        response = dynamodb.scan(TableName='doodal-drawings')
+        # print(response)
+        self.assertEqual(response['Count'], 0)
+    
+    @mock_aws
+    def test_update_bio(self):
+        # Mocking AWS services
+        
+        dynamodb = boto3.client("dynamodb", region_name="us-west-2")
+        
+        
+        dynamodb.create_table(
+            TableName='doodal-users',
+            KeySchema=[
+                {'AttributeName': 'username', 'KeyType': 'HASH'}
+            ],
+            AttributeDefinitions=[
+                {'AttributeName': 'username', 'AttributeType': 'S'}
+            ],
+            ProvisionedThroughput={
+                'ReadCapacityUnits': 5,
+                'WriteCapacityUnits': 5
+            }
+        )
+
+        # Prepare event data
+        event = {
+                "request": {
+                    "userAttributes": {
+                        "sub": "test-uuid1",
+                        "email": "test1@example.com"
+                    }
+                },
+                "userName": "test_username_1"
+            }
+        
+        response = create_user(event, None)
+        response = dynamodb.scan(TableName='doodal-users')
+        self.assertEqual(response['Count'], 1)
+        
+        event = {
+                "body": json.dumps({"bio": "test_bio"}),
+                "headers": {"username": "test_username_1"}
+            }
+        
+        response = update_bio(event, None)
+        
+        # print(response)
+        
+        self.assertEqual(response["statusCode"], 200)
+        self.assertEqual(response["body"]["S"], "test_bio")
+        
+    @mock_aws
+    def test_upload_profile_photo(self):
+        s3 = boto3.client("s3", region_name="us-west-2")
+        dynamodb = boto3.client("dynamodb", region_name="us-west-2")
+        
+        s3.create_bucket(Bucket='doodals-bucket-seng401', CreateBucketConfiguration={'LocationConstraint': 'us-west-2'})
+
+        # Create a table
+        dynamodb.create_table(
+            TableName='doodal-users',
+            KeySchema=[{'AttributeName': 'username', 'KeyType': 'HASH'}],
+            AttributeDefinitions=[{'AttributeName': 'username', 'AttributeType': 'S'}],
+            ProvisionedThroughput={'ReadCapacityUnits': 5, 'WriteCapacityUnits': 5}
+        )
+
+        file_path = "seng401-project-group16\mock-image.jpg"
+        
+        with open(file_path, 'rb') as file:
+            binary_data = file.read()
+
+        # Encode binary data using Base64
+        encoded_data = base64.b64encode(binary_data)
+
+        # Convert encoded data to a string
+        encoded_string = encoded_data.decode("utf-8")
+
+        # Prepare event data
+        event = {
+            "body": json.dumps({
+                "image_data": encoded_string
+            }),
+            "headers": {"username": "test_username_1"}
+        }
+
+        # Call the Lambda function
+        response = upload_profile_photo(event, None)
+
+        self.assertEqual(response["statusCode"], 200)
+        
+        s3_objects = s3.list_objects(Bucket='doodals-bucket-seng401')
+        self.assertEqual(len(s3_objects.get('Contents', [])), 1)  
+    
+        # Check if the profile photo URL is updated in DynamoDB
+        updated_item = dynamodb.get_item(
+            TableName='doodal-users',
+            Key={'username': {'S': 'test_username_1'}}
+        )['Item']
+ 
+        self.assertNotEqual("", updated_item["profile_photo_url"]["S"])
+        
+    # NEEDS TO BE COMPLETED
+    @mock_aws
+    def test_sort_drawings(self):
+        pass
+    
+    # NEEDS TO BE COMPLETED
+    @mock_aws
+    def test_like_unlike(self):
+        pass
+    
+    @mock_aws
+    def test_get_user_info_by_username(self):
+        dynamodb = boto3.client('dynamodb', region_name='us-west-2')
+
+        # Create a table
+        dynamodb.create_table(
+            TableName='doodal-users',
+            KeySchema=[{'AttributeName': 'username', 'KeyType': 'HASH'}],
+            AttributeDefinitions=[{'AttributeName': 'username', 'AttributeType': 'S'}],
+            ProvisionedThroughput={'ReadCapacityUnits': 5, 'WriteCapacityUnits': 5}
+        )
+
+        event = {
+                "request": {
+                    "userAttributes": {
+                        "sub": "test-uuid1",
+                        "email": "test1@example.com"
+                    }
+                },
+                "userName": "test_username_1"
+            }
+        
+        response = create_user(event, None)
+        response = dynamodb.scan(TableName='doodal-users')
+        bio = response["Items"][0]["bio"]["S"]
+        date_created = response["Items"][0]["date_created"]["S"]
+        self.assertEqual(response['Count'], 1)
+
+        # Prepare test event
+        event = {"username": "test_username_1"}
+
+        # Call the Lambda function
+        response = get_user_info_by_username(event, None)
+        body = json.loads(response["body"])
+        # Check if the response status code is 200
+        self.assertEqual(response["statusCode"], 200)
+        
+        # Check if the response body contains the correct user info
+        expected_body = {"user_id": {"S": "test-uuid1"}, "username": {"S": "test_username_1"}, "email": {"S": "test1@example.com"}, "experience": {"N": "0"}, "bio": {"S": str(bio)}, "date_created": {"S": str(date_created)}, "profile_photo_url": {"S": ""}}
+        self.assertEqual(body, expected_body)
+    
+    @mock_aws
+    def test_get_user_info(self):
+        dynamodb = boto3.client('dynamodb', region_name='us-west-2')
+
+        # Create a table
+        dynamodb.create_table(
+            TableName='doodal-users',
+            KeySchema=[{'AttributeName': 'username', 'KeyType': 'HASH'}],
+            AttributeDefinitions=[{'AttributeName': 'username', 'AttributeType': 'S'}],
+            ProvisionedThroughput={'ReadCapacityUnits': 5, 'WriteCapacityUnits': 5}
+        )
+
+        # Insert a sample user into the table
+        event = {
+                "request": {
+                    "userAttributes": {
+                        "sub": "test-uuid1",
+                        "email": "test1@example.com"
+                    }
+                },
+                "userName": "ruvaakaan"
+            }
+        
+        response = create_user(event, None)
+        response = dynamodb.scan(TableName='doodal-users')
+        bio = response["Items"][0]["bio"]["S"]
+        date_created = response["Items"][0]["date_created"]["S"]
+        self.assertEqual(response['Count'], 1)
+
+        # Prepare test event with JWT token
+        event = {"headers": {"Authorization": "eyJraWQiOiJUNW1vN1ZUS21XTlRGcVY2WmF5ZVdXYnE4QXBaWEtUQnBFa2VYK0MwZk1rPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJmNmViNzQzYy02OTFmLTQxMTUtYWQ0My04ZWFiZWMxMjM4ZjgiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtd2VzdC0yLmFtYXpvbmF3cy5jb21cL3VzLXdlc3QtMl9kOUFhWjg0aHoiLCJ2ZXJzaW9uIjoyLCJjbGllbnRfaWQiOiI2YzFvZzNqdmNwNjJhcW1raGpjZ2tqa3ZncSIsImV2ZW50X2lkIjoiZGY5NWY0NzgtYjMxZC00MjYyLThiZGEtMmE4OTUyNWE2ZjdiIiwidG9rZW5fdXNlIjoiYWNjZXNzIiwic2NvcGUiOiJhd3MuY29nbml0by5zaWduaW4udXNlci5hZG1pbiBwaG9uZSBvcGVuaWQgcHJvZmlsZSBlbWFpbCIsImF1dGhfdGltZSI6MTcxMDgxNTUxMywiZXhwIjoxNzEwODE5MTEzLCJpYXQiOjE3MTA4MTU1MTMsImp0aSI6IjdhN2EyZDgzLTQyMmMtNDEzOC1iYTk3LTU2NTQxZjE4YjY3NiIsInVzZXJuYW1lIjoicnV2YWFrYWFuIn0.GxzdDn-mO8O8P1eOzHg_vEHZoWKfWC42ulBHjLZHeaov1d76pJXOFM4TqEoWprlIcuJ6jYMB9TYPSaHgAoB6vWJCt9S03CoWLbESGTObQvgUYzHeCTUx6yP6FXIbNcowLp-Hfxt1DNPq6gWYVmxvOWObyPdi3TPjMeLF1AIg9iSTPiOBYU64Y_1foaGzFFn-MZGBNL9tMD7x1pA9szaAy0QvChafY69wlo2K5hZjoXFbgtdieMclMQj4GYmjrBXf9L6oPDBskXt72sEByDP59a6LkTbOuhTWG2sq316P7auBPPk7EWufKm0b2Lzie-vDSGnPn1AxDCxMO9SZxThLBg"}}
+
+        # Call the Lambda function
+        response = get_user_info(event, None)
+        print(response)
+        # Check if the response status code is 200
+        self.assertEqual(response["statusCode"], 200)
+        
+        body = json.loads(response["body"])
+
+        # Check if the response body contains the correct user info
+        expected_body = {"user_id": {"S": "test-uuid1"}, "username": {"S": "ruvaakaan"}, "email": {"S": "test1@example.com"}, "experience": {"N": "0"}, "bio": {"S": str(bio)}, "date_created": {"S": str(date_created)}, "profile_photo_url": {"S": ""}}
+        self.assertEqual(body, expected_body)
+    
+    # NEEDS TO BE COMPLETED
+    @mock_aws
+    def test_get_users_drawings(self):
+        pass
+    
+       
     
 if __name__ == '__main__':
     unittest.main()

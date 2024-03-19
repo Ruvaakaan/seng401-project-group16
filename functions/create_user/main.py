@@ -1,6 +1,7 @@
 import boto3
 import json
 import datetime
+import random
 
 dynamodb_resource = boto3.resource("dynamodb")
 table = dynamodb_resource.Table("doodal-users")
@@ -11,7 +12,21 @@ def create_user(event, context):
     username = event["userName"]
     email = event["request"]["userAttributes"]["email"]
     xp = 0
-    bio = "Create a bio!"
+    sentences = [
+      "My soul yearns for the art of drawing!",
+      "Drawing beckons to me, a thirst unquenchable!",
+      "Within me burns an insatiable thirst for drawing!",
+      "Drawing calls to me, igniting a deep thirst within!",
+      "The passion for drawing courses through me like an unyielding thirst!",
+      "In the depths of my being, I crave the act of drawing!",
+      "To draw is to satisfy a thirst that resides deep within my essence!",
+      "The urge to draw consumes me, a thirst that can never be slaked!",
+      "My spirit longs for the creative release found in drawing!",
+      "Drawing is my sustenance, my eternal thirst quencher!",
+      "Drawing's alright."
+    ]
+    bio = random.choice(sentences)
+
     date_created = str(datetime.datetime.now().timestamp())
     
     table.put_item(Item={
