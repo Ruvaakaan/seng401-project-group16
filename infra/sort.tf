@@ -72,7 +72,8 @@ resource "aws_iam_policy" "sort_drawings_policy" {
             "Resource": [
                 "arn:aws:logs:*:*:*",
                 "${aws_dynamodb_table.doodal-drawings.arn}",
-                "${aws_dynamodb_table.doodal-likes.arn}"
+                "${aws_dynamodb_table.doodal-likes.arn}",
+                "${aws_dynamodb_table.doodal-users.arn}"
             ]
         }
     ]

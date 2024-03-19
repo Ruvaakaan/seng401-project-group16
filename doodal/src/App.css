@@ -66,7 +66,7 @@ body {
 
 .memo-banner {
   position: absolute;
-  top: 25%;
+  top: 23%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -448,4 +448,45 @@ body {
 
 .card-img-top:hover{
   cursor: pointer;
+}
+
+
+@media (min-width: 1500px) and (max-width: 2000px){
+  .memo-banner {
+    position: absolute; 
+    top: 19%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.2em;
+    min-width: 1250px;
+  }
+}
+
+@media (min-width: 1000px) and (max-width: 1500px){
+  .memo-banner {
+    position: absolute; 
+    top: 16%;
+    left: 50%;
+    transform: translate(-50%, -50%);  
+    font-size: 1.9em;
+    min-width: 750px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .memo-banner {
+    position: absolute;
+    top: 12%;
+    left: 500px;
+    transform: translateX(-50%);
+    font-size: 1.5em;
+    min-width: 500px;
+  }
+  .prompt-title{
+    font-size: 1.5em;
+  }
+  body {
+    overflow-x: auto;
+    min-width: 1000px;
+  }
 }

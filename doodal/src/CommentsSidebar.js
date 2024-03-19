@@ -9,11 +9,19 @@ import { delComments } from "./DeleteComment.js";
 import { useNavigate } from "react-router-dom";
 import { timeConverter } from "./TimeConverter.js";
 
-const CommentsSidebar = ({ drawingID, username, likes, dateCreated, posterPfp }) => {
+const CommentsSidebar = ({
+  drawingID,
+  username,
+  likedPost,
+  dateCreated,
+  posterPfp,
+  likes,
+}) => {
   const [postComments, setPostComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [timeDifference, setTimeDifference] = useState("");
-  const [liked, setLiked] = useState(likes);
+  const [liked, setLiked] = useState(likedPost);
+  const [postLikes, setPostLikes] = useState(Number(likes));
   const loggedUser = Cookies.get("userInfo")
     ? JSON.parse(Cookies.get("userInfo"))["username"]["S"]
     : null;
@@ -29,6 +37,12 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated, posterPfp })
 
   const handleLike = async () => {
     await likeUnlike(drawingID);
+    if (!liked){
+      setPostLikes(Number(postLikes+1));
+    }
+    else{
+      setPostLikes(Number(postLikes-1));
+    }
     setLiked(!liked);
   };
 
@@ -83,7 +97,11 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated, posterPfp })
         <div className="user-post-info">
           <div>
             <Image
-              src={posterPfp ? posterPfp : "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"}
+              src={
+                posterPfp
+                  ? posterPfp
+                  : "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"
+              }
               roundedCircle
               className="profile-photo"
               onClick={() => nav(`/viewaccount/${username}`)}
@@ -100,15 +118,18 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated, posterPfp })
             <span className="posted-time">Posted: {timeDifference}</span>
           </div>
         </div>
-        {liked ? (
-          <button className="like" onClick={() => handleLike(drawingID)}>
-            <i className="fa-solid fa-heart fa-2xs"></i>
-          </button>
-        ) : (
-          <button className="like" onClick={() => handleLike(drawingID)}>
-            <i className="fa-regular fa-heart fa-2xs"></i>
-          </button>
-        )}
+        <div className="popup-likes">
+          <div className="popup-likes-num">{postLikes}</div>
+          {liked ? (
+            <button className="like" onClick={() => handleLike(drawingID)}>
+              <i className="fa-solid fa-heart fa-2xs"></i>
+            </button>
+          ) : (
+            <button className="like" onClick={() => handleLike(drawingID)}>
+              <i className="fa-regular fa-heart fa-2xs"></i>
+            </button>
+          )}
+        </div>
       </div>
 
       <p className="comments-title">Comments: </p>
@@ -132,7 +153,7 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated, posterPfp })
             }}
           />
         </Form.Group>
-        {!loggedUser? (
+        {!loggedUser ? (
           <></>
         ) : (
           <Button
@@ -151,19 +172,19 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated, posterPfp })
           <Toast key={index} className="custom-toast">
             <Toast.Header closeButton={false} className="custom-toast-header">
               <Image
-                src={comment["pfp"] ? comment["pfp"] : "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"}
+                src={
+                  comment["pfp"]
+                    ? comment["pfp"]
+                    : "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"
+                }
                 roundedCircle
                 className="profile-photo"
-                onClick={() =>
-                  nav(`/viewaccount/${comment["user"]}`)
-                }
+                onClick={() => nav(`/viewaccount/${comment["user"]}`)}
               />
               <strong
                 className="me-auto comment-user"
                 style={{ textTransform: "capitalize" }}
-                onClick={() =>
-                  nav(`/viewaccount/${comment["user"]}`)
-                }
+                onClick={() => nav(`/viewaccount/${comment["user"]}`)}
               >
                 {comment["user"]}
               </strong>
@@ -172,9 +193,7 @@ const CommentsSidebar = ({ drawingID, username, likes, dateCreated, posterPfp })
               {comment["user"] === loggedUser ? (
                 <i
                   className="fa-solid fa-trash comment-action-icon"
-                  onClick={() =>
-                    handleDeleteComment(comment["date"], index)
-                  }
+                  onClick={() => handleDeleteComment(comment["date"], index)}
                 ></i>
               ) : (
                 <i className="fa-solid fa-flag comment-action-icon"></i>

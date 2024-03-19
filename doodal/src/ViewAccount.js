@@ -7,6 +7,7 @@ import "./Account.css";
 import { Navigate } from 'react-router-dom';
 import Popup from "./PopUp.js";
 import makeApiCall from "./makeApiCall.js";
+import { timeConverter } from "./TimeConverter.js";
 
 function ViewAccount() {
   // Receive authenticationToken as a prop
@@ -19,11 +20,12 @@ function ViewAccount() {
   const [showPopUp, setShowPopUp] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImageUserName, setSelectedImageUserName] = useState(null);
-  const [selectedImageCreationDate, setSelectedImageCreationDate] =
-    useState(null);
+  const [selectedImageCreationDate, setSelectedImageCreationDate] = useState(null);
   const [selectedImageDrawingID, setSelectedImageDrawingID] = useState(null);
   const [selectedUserLiked, setSelectedUserLiked] = useState(null);
+  const [selectedPostLikes, setSelectedPostLikes] = useState(0);
   const [selectedCompetitionID, setSelectedCompetitionID] = useState(null);
+  const [totalLikes, setTotalLikes] = useState(0);
 
   const handlePopup = (
     image,
@@ -31,7 +33,8 @@ function ViewAccount() {
     dateCreated,
     drawingID,
     userLiked,
-    compID
+    compID,
+    likes
   ) => {
     setSelectedImage(image);
     setSelectedImageUserName(username);
@@ -39,6 +42,8 @@ function ViewAccount() {
     setSelectedImageDrawingID(drawingID);
     setSelectedUserLiked(userLiked);
     setSelectedCompetitionID(compID);
+    setSelectedPostLikes(likes)
+
     setShowPopUp(true);
   };
 
@@ -64,7 +69,7 @@ function ViewAccount() {
       // console.log("response:", response);
       if (response) {
         const responseBody = JSON.parse(response.body);
-        console.log(responseBody)
+        // console.log(responseBody)
         setUser({
           // id: response.user_id.S,
           username: responseBody.username.S,
@@ -104,6 +109,11 @@ function ViewAccount() {
         itemToAdd.liked_by_user = response.items[i].liked_by_user;
         image_list.push(itemToAdd);
       }
+      var total = 0
+      for (let i=0; i < image_list.length; i++){
+        total += Number(image_list[i]["likes"])
+      }
+      setTotalLikes(total);
       setPosts(image_list);
     } catch (error) {
       console.error("Error fetching user images:", error);
@@ -130,31 +140,31 @@ function ViewAccount() {
     <div className="account-container">
       <div className="user-info">
         <div className="profile-picture-container">
-            <img
-                src={user.picture || "https://i.etsystatic.com/16421349/r/il/c49bf5/2978449787/il_fullxfull.2978449787_hgl5.jpg"}
-                alt="Profile Picture"
-                className="profile-picture"
-            />
+          <img
+            src={user.picture}
+            alt="Profile Picture"
+            className="profile-picture"
+          />
         </div>
-        <h2>
-          {user.username}'s Profile
-        </h2>
+        <div className="account-info">
+        <h2 className="username">{user.username}</h2>
         <div className="likes">
-          <h2>Total Likes: {user.likes} </h2>
+          <h2>@{user.username} ‧ Total Likes: {totalLikes} <i className="fa-solid fa-heart fa-2xs"></i></h2>
         </div>
-        <h2>
-          Bio
-        </h2>
+        <div className ="bio">
         <p>{user.bio}</p>
+        </div>
+        </div>
       </div>
 
       <div className="image-gallery">
-        <h2>{user.username}'s Gallery</h2>
+        <h2>{username}'s Submissions</h2>
         <Row xs={3} className="g-4">
           {posts.map((item, idx) => (
             <Col key={idx}>
-              <Card>
+              <Card >
                 <Card.Img
+                  className="photo-card"
                   variant="top"
                   src={item["s3_url"]}
                   onClick={() =>
@@ -164,11 +174,13 @@ function ViewAccount() {
                       item.date_created,
                       item.drawing_id,
                       item.liked_by_user,
-                      item.competition_id
+                      item.competition_id,
+                      item.likes
                     )
                   }
                 />
-                <Card.Body id="card">
+                <Card.Body id="account-card">
+                  <p className="account-post-date">Posted {timeConverter(item.date_created)}</p>
                   <i
                     onClick={() =>
                       handleShow(
@@ -195,6 +207,7 @@ function ViewAccount() {
           drawingID={selectedImageDrawingID}
           liked={selectedUserLiked}
           posterPfp={user.picture}
+          likes={selectedPostLikes}
         />
       )}
     </div>

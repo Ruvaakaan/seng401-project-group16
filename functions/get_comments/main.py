@@ -5,14 +5,14 @@ dynamodb = boto3.client("dynamodb")
 
 def get_users_pfp(username):
     try:
-        print(f"username: {username}")
+        # print(f"username: {username}")
         statement = "SELECT * FROM \"doodal-users\" WHERE username = ?"
         params = [{"S": str(username)}]
         response = dynamodb.execute_statement(
             Statement=statement,
             Parameters=params
         )
-        print(f"response from query: {response}")
+        # print(f"response from query: {response}")
         item = response["Items"]
         return item[0]["profile_photo_url"]["S"]
     except Exception as e:
@@ -21,7 +21,7 @@ def get_users_pfp(username):
 
 def get_comments(event, context):
   try:
-    print(event)
+    # print(event)
     body = json.loads(event["body"])
     drawing_id = body["drawing_id"]
 
@@ -32,7 +32,7 @@ def get_comments(event, context):
       Statement=statement,
       Parameters=params
     )
-    print("response:", response)
+    # print("response:", response)
 
     for item in response["Items"]:
       item["profile_photo"] = get_users_pfp(item["username"]["S"])

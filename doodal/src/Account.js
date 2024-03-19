@@ -31,6 +31,7 @@ function Account() {
   const [selectedImageDrawingID, setSelectedImageDrawingID] = useState(null);
   const [selectedUserLiked, setSelectedUserLiked] = useState(null);
   const [selectedCompetitionID, setSelectedCompetitionID] = useState(null);
+  const [selectedPostLikes, setSelectedPostLikes] = useState(0);
   const [totalLikes, setTotalLikes] = useState(0);
 
   const handlePopup = (
@@ -39,7 +40,8 @@ function Account() {
     dateCreated,
     drawingID,
     userLiked,
-    compID
+    compID,
+    likes
   ) => {
     setSelectedImage(image);
     setSelectedImageUserName(username);
@@ -47,6 +49,7 @@ function Account() {
     setSelectedImageDrawingID(drawingID);
     setSelectedUserLiked(userLiked);
     setSelectedCompetitionID(compID);
+    setSelectedPostLikes(likes)
     setShowPopUp(true);
   };
 
@@ -171,26 +174,28 @@ function Account() {
             <i className="fas fa-edit"></i>Edit
           </span>
         </div>
-        <h2>Hello {user.username}!</h2>
+        <div className="account-info">
+        <h2 className="username">{user.username}</h2>
         <div className="likes">
-          <h2>Total Likes: {totalLikes} <i className="fa-solid fa-heart fa-2xs"></i></h2>
+          <h2>@{user.username} ‧ Total Likes: {totalLikes} <i className="fa-solid fa-heart fa-2xs"></i></h2>
         </div>
-        <h2>
-          Bio
-          <span className="edit-icon" onClick={() => setIsBioOpen(true)}>
-            &#xf044;
-          </span>
-        </h2>
+        <div className ="bio">
         <p>{user.bio}</p>
+        <div className="bio-button">
+        <button onClick={() => setIsBioOpen(true)}>Update Bio</button>
+        </div>
+        </div>
+        </div>
       </div>
 
       <div className="image-gallery">
-        <h2>Your Gallery</h2>
+        <h2>Previous Submissions</h2>
         <Row xs={3} className="g-4">
           {posts.map((item, idx) => (
             <Col key={idx}>
-              <Card>
+              <Card >
                 <Card.Img
+                  className="photo-card"
                   variant="top"
                   src={item["s3_url"]}
                   onClick={() =>
@@ -200,7 +205,8 @@ function Account() {
                       item.date_created,
                       item.drawing_id,
                       item.liked_by_user,
-                      item.competition_id
+                      item.competition_id,
+                      item.likes
                     )
                   }
                 />
@@ -263,6 +269,7 @@ function Account() {
           drawingID={selectedImageDrawingID}
           liked={selectedUserLiked}
           posterPfp={JSON.parse(Cookies.get("userInfo"))["profile_photo_url"]["S"]}
+          likes={selectedPostLikes}
         />
       )}
     </div>

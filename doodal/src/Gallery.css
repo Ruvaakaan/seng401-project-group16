@@ -69,6 +69,7 @@
 .like-container {
   display: flex;
   align-items: center;
+  margin-right: 5%;
 }
 
 .like {
@@ -80,6 +81,10 @@
 .like-counter {
   font-size: 16px;
   margin-right: 10px;
+}
+
+.user-gallery-pfp{
+  border: 1px solid #712cf9;
 }
 
 .username-gallery-nav:hover, .user-gallery-pfp:hover{
