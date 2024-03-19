@@ -35,7 +35,7 @@ const loginToCognito = (username, password) => {
         password: password,
     };
 
-    cy.origin(cognitoBaseUrl, { args: userCredentials }, ({username, password}) => {
+    cy.origin(cognitoBaseUrl, { args: userCredentials }, ({ username, password }) => {
         cy.contains("Sign in with your username and password");
         cy.get('input[name="username"]:visible').type(username);
         cy.get('input[name="password"]:visible').type(password, {

@@ -5,14 +5,12 @@ describe("template spec", () => {
         cy.loginByCognito(Cypress.env("username1"), Cypress.env("password1"));
         cy.url().should("eq", "http://localhost:3000/");
 
+        cy.wait(3000)
         cy.get(".old-prompts").within(() => {
-            cy.get("img").click()
+            cy.get("img").first().click()
         });
 
         cy.url().should("contain", "/gallery")
-
-        //incomplete, must check for other images on the screen
-
         
       });
 });

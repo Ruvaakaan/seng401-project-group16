@@ -10,19 +10,19 @@ describe('Testing Changing Bio', () => {
     cy.contains("Profile").click();
     cy.url().should("eq", "http://localhost:3000/profile");
 
-    cy.get('.edit-icon').click();
+    cy.contains('Update Bio').click();
 
     const now = new Date();
     const currentTime = `${now.getHours()}:${now.getMinutes().toString().padStart(2, "0")}`;
     const newBio = `Brand New Bio - ${currentTime}`;
 
     cy.get('input[type="text"]').type(newBio);
-    cy.get('button').contains('Update').click();
+    cy.get('.settings-content button').click();
 
-    cy.contains(newBio)
+    cy.contains(newBio);
 
-    cy.reload()
+    cy.reload();
 
-    cy.contains(newBio)
+    cy.contains(newBio);
   })
 })
