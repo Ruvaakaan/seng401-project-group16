@@ -8,7 +8,7 @@ dynamodb = boto3.client("dynamodb")
 
 def get_user_info(event, context):
     try:
-        print("event:", event)
+        # print("event:", event)
         
         # Decode the JWT token from the event
         token = event["headers"].get("Authorization")
@@ -17,14 +17,14 @@ def get_user_info(event, context):
                 "statusCode": 400,
                 "body": "JWT token is missing in the request"
             }
-        print(token)
+        # print(token)
         decoded_token = jwt.decode(token, options={"verify_signature": False})
         
         print("Decoded token:", decoded_token)
         
         # Extract user ID from the decoded token
         username = decoded_token.get("username")
-        print(username)
+        # print(username)
         if not username:
             return {
                 "statusCode": 400,
@@ -40,7 +40,7 @@ def get_user_info(event, context):
             Statement=statement,
             Parameters=params
         )
-        print("response:", response)
+        # print("response:", response)
         
         items = response.get("Items", [])
         if not items:

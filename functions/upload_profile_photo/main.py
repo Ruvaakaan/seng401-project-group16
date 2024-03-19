@@ -41,8 +41,8 @@ def upload_profile_photo(event, context):
       ExpressionAttributeValues={":val": {"S":str(profile_photo_url)}},
       ReturnValues="UPDATED_NEW"
     )
-    updated_bio = response['Attributes']['profile_photo_url']
-    print(updated_bio)
+    new_url = response['Attributes']['profile_photo_url']
+    # print(updated_bio)
     
     s3.put_object(Bucket="doodals-bucket-seng401", Key=filepath, Body=image_data)
     

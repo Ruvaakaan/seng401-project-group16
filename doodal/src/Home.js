@@ -70,7 +70,7 @@ function Home() {
     let new_prompts = body["new_prompts"];
     let old_prompts = body["old_prompts"];
 
-    var len = new_prompts.length < 5 ? new_prompts.length : 5; // len decides how many prompts to pull, if we have less than 5 prompts, we get all, otherwise 5 at most
+    var len = new_prompts.length < 10 ? new_prompts.length : 10; // len decides how many prompts to pull, if we have less than 5 prompts, we get all, otherwise 5 at most
     var newCompetitions = [];
 
     for (let i = 0; i < len; i++) {

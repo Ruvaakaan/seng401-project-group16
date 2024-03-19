@@ -60,14 +60,16 @@ def upload_drawing(event, context):
 
     s3.put_object(Bucket="doodals-bucket-seng401", Key=filepath, Body=image_data)
 
-    table.put_item(Item={
+    item={
       "drawing_id": drawing_id,
       "competition_id": competition_id,
       "username": username,
       "likes": likes,
       "date_created": date_created,
       "s3_url": f"https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/{competition_id}/{drawing_id}.jpg"
-    })
+    }
+
+    table.put_item(Item=item)
     return {
       "statusCode": 200,
       "headers": {"Content-Type": "application/json",
@@ -75,7 +77,7 @@ def upload_drawing(event, context):
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"
       },
-      "body": f"Image {drawing_id} uploaded to S3 bucket."
+      "body": json.dumps(item)
     }
   except Exception as e:
     return {
