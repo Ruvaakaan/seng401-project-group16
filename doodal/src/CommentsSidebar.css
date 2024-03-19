@@ -46,7 +46,7 @@
 }
 
 .comments-section {
-  height: 433px; 
+  height: 498px; 
   /* height is hardcoded so its bad */
   overflow-y: auto;
   margin-right:5%;
@@ -93,6 +93,7 @@
 }
 
 .post-comment-button{
+  margin-left: 10px;
   flex-grow:1;
 }
 

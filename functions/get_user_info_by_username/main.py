@@ -6,10 +6,8 @@ dynamodb = boto3.client("dynamodb")
 def get_user_info_by_username(event, context):
     try:
         print("event:", event)
-        body = json.loads(event["body"])
-        
         # Extract username from the event
-        username = body.get("username")
+        username = event.get("username")
         if not username:
             return {
                 "statusCode": 400,
