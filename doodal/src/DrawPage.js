@@ -48,6 +48,7 @@ function DrawPage() {
         brushSize={brushSize}
         backgroundColor={backgroundColor}
         comp_id={comp_id}
+        prompt={prompt}
       />
     </>
   );
