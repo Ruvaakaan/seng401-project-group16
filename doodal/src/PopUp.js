@@ -11,8 +11,8 @@ const Popup = ({
   dateCreated,
   drawingID,
   liked,
+  posterPfp,
 }) => {
-
   return (
     <Modal
       show={show}
@@ -39,6 +39,7 @@ const Popup = ({
               username={username}
               likes={liked}
               dateCreated={dateCreated}
+              posterPfp={posterPfp}
             />
           </div>
         </div>
