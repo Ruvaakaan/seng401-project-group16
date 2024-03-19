@@ -24,26 +24,26 @@ describe("Testing Commenting", () => {
         // Find the comment input and type the current time
         cy.get('.post-comment-form input[id="newComment"]').type(currentTime);
 
-        
-        cy.get(".post-comment-form button").click(); 
+
+        cy.get(".post-comment-form button").click();
 
         // Close the modal (assuming a close button exists)
-        cy.get(".btn-close").click(); 
+        cy.get(".btn-close").click();
 
         // Refresh the page
         cy.reload();
 
-        
+
         cy.get(".gal .row .col .card .card-img-top.gallery-img")
             .first()
             .click();
 
-        
+
         cy.get(".comments-section .toast-body")
             .contains(currentTime)
             .should("exist");
 
-            cy.get(".btn-close").click(); 
+        cy.get(".btn-close").click();
 
 
         cy.get(".custom-dropdown").click();

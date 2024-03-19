@@ -23,6 +23,7 @@ describe('Testing Commenting Functionality', () => {
     cy.get('@likeCounter').invoke('text').then(($initialCount) => {
       const initialCount = parseInt($initialCount);
 
+      
       // Click the like button
       cy.get('@likeButton').click();
       cy.reload()
