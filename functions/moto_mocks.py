@@ -141,7 +141,7 @@ class lambda_mocking_tests(unittest.TestCase):
         # Ensure experience, bio, date_created, and profile_photo_url are set correctly
         self.assertEqual(user['experience']['N'], '0')
         self.assertIsNotNone(user['date_created']['S'])
-        self.assertEqual(user['profile_photo_url']['S'], '')
+        self.assertEqual(user['profile_photo_url']['S'], "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG")
 
     @mock_aws
     def test_delete_comment(self):
@@ -715,7 +715,7 @@ class lambda_mocking_tests(unittest.TestCase):
         self.assertEqual(response["statusCode"], 200)
         
         # Check if the response body contains the correct user info
-        expected_body = {"user_id": {"S": "test-uuid1"}, "username": {"S": "test_username_1"}, "email": {"S": "test1@example.com"}, "experience": {"N": "0"}, "bio": {"S": str(bio)}, "date_created": {"S": str(date_created)}, "profile_photo_url": {"S": ""}}
+        expected_body = {"user_id": {"S": "test-uuid1"}, "username": {"S": "test_username_1"}, "email": {"S": "test1@example.com"}, "experience": {"N": "0"}, "bio": {"S": str(bio)}, "date_created": {"S": str(date_created)}, "profile_photo_url": {"S": "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"}}
         self.assertEqual(body, expected_body)
     
     @mock_aws
@@ -759,7 +759,7 @@ class lambda_mocking_tests(unittest.TestCase):
         body = json.loads(response["body"])
 
         # Check if the response body contains the correct user info
-        expected_body = {"user_id": {"S": "test-uuid1"}, "username": {"S": "ruvaakaan"}, "email": {"S": "test1@example.com"}, "experience": {"N": "0"}, "bio": {"S": str(bio)}, "date_created": {"S": str(date_created)}, "profile_photo_url": {"S": ""}}
+        expected_body = {"user_id": {"S": "test-uuid1"}, "username": {"S": "ruvaakaan"}, "email": {"S": "test1@example.com"}, "experience": {"N": "0"}, "bio": {"S": str(bio)}, "date_created": {"S": str(date_created)}, "profile_photo_url": {"S": "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"}}
         self.assertEqual(body, expected_body)
     
     
