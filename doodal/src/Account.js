@@ -187,6 +187,7 @@ function Account() {
         </div>
         </div>
       </div>
+      
 
       <div className="image-gallery">
         <h2>Previous Submissions</h2>

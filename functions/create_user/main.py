@@ -36,7 +36,7 @@ def create_user(event, context):
       "experience": xp,
       "bio": bio,
       "date_created": date_created,
-      "profile_photo_url": ""
+      "profile_photo_url": "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"
     })
     return event
   except Exception as e:
