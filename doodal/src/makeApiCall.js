@@ -63,10 +63,9 @@ function handleUnauthorizedError(unfinishedCall) {
   // Save the unfinished API call request to a cookie for later retrieval
   localStorage.setItem("unfinishedapicall", JSON.stringify(unfinishedCall));
 
-  const redirectUri = encodeURIComponent(window.location.href);
+  const redirectUri = encodeURIComponent("https://seng401-project-group16.vercel.app/");
   const fullRedirectUrl = `https://doodal.auth.us-west-2.amazoncognito.com/login?client_id=6c1og3jvcp62aqmkhjcgkjkvgq&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=${redirectUri}`;
-  console.log(fullRedirectUrl)
-  // window.location.href = fullRedirectUrl;
+  window.location.href = fullRedirectUrl;
 }
 
 export default makeApiCall;

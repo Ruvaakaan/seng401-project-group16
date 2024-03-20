@@ -28,7 +28,7 @@ function NavBar({ loggedIn }) {
     window.location.href = "/home";
   };
 
-  const redirectTo = `https://doodal.auth.us-west-2.amazoncognito.com/login?client_id=6c1og3jvcp62aqmkhjcgkjkvgq&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=${encodeURIComponent(window.location.href)}`;
+  const redirectTo = `https://doodal.auth.us-west-2.amazoncognito.com/login?client_id=6c1og3jvcp62aqmkhjcgkjkvgq&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=${encodeURIComponent("https://seng401-project-group16.vercel.app/")}`;
   
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
