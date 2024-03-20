@@ -1,49 +1,37 @@
-import React from 'react';
-import App from './App';
-import Home from './Home';
-import Draw from './DrawPage';
-import Account from './Account';
-import Gallery from './GalleryPage';
-import ViewAccount from './ViewAccount';
-import reportWebVitals from './reportWebVitals';
-import ReactDOM from "react-dom/client";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import './index.css';
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import App from "./App";
+import Home from "./Home";
+import Draw from "./DrawPage";
+import Account from "./Account";
+import Gallery from "./GalleryPage";
+import ViewAccount from "./ViewAccount";
+import NotFound from "./NotFound";
+import reportWebVitals from "./reportWebVitals";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "./index.css";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    children: [
-      { path: "/", element: <Home /> },
-      { path: "/home", element: <Home /> },
-      { path: "/draw", element: <Draw /> },
-      { path: "/profile", element: <Account/> },
-      { path: "/gallery", element: <Gallery/> },
-      { path: "/gallery/:version", element: <Gallery/> },
-      { 
-        path: "/viewaccount", 
-        element: <ViewAccount/>,
-        children: [
-          { path: ":username", element: <ViewAccount /> }
-        ]
-      }
-    ],
-  },
-]);
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-    <RouterProvider router={router}>
-      <App />
-    </RouterProvider>
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <Router>
+    <Routes>
+      <Route path="/" element={<App />}>
+        <Route index element={<Home />} />
+        <Route path="home" element={<Home />} />
+        <Route path="draw" element={<Draw />} />
+        <Route path="profile" element={<Account />} />
+        <Route path="gallery" element={<Gallery />} />
+        <Route path="gallery/:version" element={<Gallery />} />
+        <Route path="viewaccount" element={<ViewAccount />}>
+          <Route path=":username" element={<ViewAccount />} />
+        </Route>
+      </Route>
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  </Router>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
