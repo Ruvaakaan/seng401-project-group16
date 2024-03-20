@@ -5,17 +5,17 @@ async function makeApiCall(url, method, request) {
   const authenticationToken = Cookies.get("authentication");
 
 
-    let headers = {};
-    if (authenticationToken) {
-        headers["Authorization"] = authenticationToken;
-    }
+  let headers = {};
+  if (authenticationToken) {
+    headers["Authorization"] = authenticationToken;
+  }
 
-    try {
-        let response;
-        if (method === "GET") {
-            response = await axios.get(url, { headers });
-        } else if (method === "POST") {
-            //only post methods require knowing the user that is posting
+  try {
+    let response;
+    if (method === "GET") {
+      response = await axios.get(url, { headers });
+    } else if (method === "POST") {
+      //only post methods require knowing the user that is posting
 
       //retrieve userinfo cookie to get userid
       const userInfo = Cookies.get("userInfo");
@@ -58,8 +58,12 @@ async function makeApiCall(url, method, request) {
 }
 
 function handleUnauthorizedError(unfinishedCall) {
-  console.log("handleUnauthorizedError ~ unfinishedCall:", unfinishedCall);
-
+  //checks if an unfinishedapicall exists already to prevent chaining of requests
+  if (localStorage.getItem("unfinishedapicall") !== null) {
+    localStorage.removeItem("unfinishedapicall");
+    return;
+  }
+  
   // Save the unfinished API call request to a cookie for later retrieval
   localStorage.setItem("unfinishedapicall", JSON.stringify(unfinishedCall));
 
@@ -67,7 +71,7 @@ function handleUnauthorizedError(unfinishedCall) {
   const fullRedirectUrl = `https://doodal.auth.us-west-2.amazoncognito.com/login?client_id=6c1og3jvcp62aqmkhjcgkjkvgq&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=${redirectUri}`;
 
 
-  // window.location.href = fullRedirectUrl;
+  window.location.href = fullRedirectUrl;
 }
 
 export default makeApiCall;
