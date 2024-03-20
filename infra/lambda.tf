@@ -330,9 +330,9 @@ resource "aws_lambda_function_url" "create_user_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -343,9 +343,9 @@ resource "aws_lambda_function_url" "get_user_info_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["GET"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -356,9 +356,9 @@ resource "aws_lambda_function_url" "update_prompts_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -369,9 +369,9 @@ resource "aws_lambda_function_url" "upload_drawing_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -382,9 +382,9 @@ resource "aws_lambda_function_url" "like_unlike_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -395,9 +395,9 @@ resource "aws_lambda_function_url" "create_prompt_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -408,9 +408,9 @@ resource "aws_lambda_function_url" "add_comment_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -421,9 +421,9 @@ resource "aws_lambda_function_url" "delete_comment_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -434,9 +434,9 @@ resource "aws_lambda_function_url" "update_bio_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -447,9 +447,9 @@ resource "aws_lambda_function_url" "get_prompts_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -460,9 +460,9 @@ resource "aws_lambda_function_url" "get_users_drawings_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -473,9 +473,9 @@ resource "aws_lambda_function_url" "upload_profile_photo_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -486,9 +486,9 @@ resource "aws_lambda_function_url" "get_profile_photo_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["GET"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -499,9 +499,9 @@ resource "aws_lambda_function_url" "get_comments_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["GET"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -512,9 +512,9 @@ resource "aws_lambda_function_url" "delete_drawing_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -525,9 +525,9 @@ resource "aws_lambda_function_url" "get_user_info_by_username_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }

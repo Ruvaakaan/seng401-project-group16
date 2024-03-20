@@ -13,7 +13,6 @@ from delete_drawing.main import delete_drawing
 from upload_drawing.main import upload_drawing
 from update_bio.main import update_bio
 from upload_profile_photo.main import upload_profile_photo
-from get_profile_photo.main import get_profile_photo
 from sort_drawings.main import sort_drawings_handler
 from like_unlike.main import like_unlike
 from get_user_info_by_username.main import get_user_info_by_username
@@ -142,7 +141,7 @@ class lambda_mocking_tests(unittest.TestCase):
         # Ensure experience, bio, date_created, and profile_photo_url are set correctly
         self.assertEqual(user['experience']['N'], '0')
         self.assertIsNotNone(user['date_created']['S'])
-        self.assertEqual(user['profile_photo_url']['S'], '')
+        self.assertEqual(user['profile_photo_url']['S'], "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG")
 
     @mock_aws
     def test_delete_comment(self):
@@ -673,6 +672,11 @@ class lambda_mocking_tests(unittest.TestCase):
     def test_like_unlike(self):
         pass
     
+    # NEEDS TO BE COMPLETED
+    @mock_aws
+    def test_get_users_drawings(self):
+        pass
+    
     @mock_aws
     def test_get_user_info_by_username(self):
         dynamodb = boto3.client('dynamodb', region_name='us-west-2')
@@ -711,7 +715,7 @@ class lambda_mocking_tests(unittest.TestCase):
         self.assertEqual(response["statusCode"], 200)
         
         # Check if the response body contains the correct user info
-        expected_body = {"user_id": {"S": "test-uuid1"}, "username": {"S": "test_username_1"}, "email": {"S": "test1@example.com"}, "experience": {"N": "0"}, "bio": {"S": str(bio)}, "date_created": {"S": str(date_created)}, "profile_photo_url": {"S": ""}}
+        expected_body = {"user_id": {"S": "test-uuid1"}, "username": {"S": "test_username_1"}, "email": {"S": "test1@example.com"}, "experience": {"N": "0"}, "bio": {"S": str(bio)}, "date_created": {"S": str(date_created)}, "profile_photo_url": {"S": "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"}}
         self.assertEqual(body, expected_body)
     
     @mock_aws
@@ -755,15 +759,9 @@ class lambda_mocking_tests(unittest.TestCase):
         body = json.loads(response["body"])
 
         # Check if the response body contains the correct user info
-        expected_body = {"user_id": {"S": "test-uuid1"}, "username": {"S": "ruvaakaan"}, "email": {"S": "test1@example.com"}, "experience": {"N": "0"}, "bio": {"S": str(bio)}, "date_created": {"S": str(date_created)}, "profile_photo_url": {"S": ""}}
+        expected_body = {"user_id": {"S": "test-uuid1"}, "username": {"S": "ruvaakaan"}, "email": {"S": "test1@example.com"}, "experience": {"N": "0"}, "bio": {"S": str(bio)}, "date_created": {"S": str(date_created)}, "profile_photo_url": {"S": "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"}}
         self.assertEqual(body, expected_body)
     
-    # NEEDS TO BE COMPLETED
-    @mock_aws
-    def test_get_users_drawings(self):
-        pass
-    
-       
     
 if __name__ == '__main__':
     unittest.main()
