@@ -27,6 +27,8 @@ function NavBar({ loggedIn }) {
     Cookies.remove("userInfo");
     window.location.href = "/home";
   };
+
+  const redirectTo = `https://doodal.auth.us-west-2.amazoncognito.com/login?client_id=6c1og3jvcp62aqmkhjcgkjkvgq&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=${encodeURIComponent(window.location.href)}`;
   
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
@@ -114,7 +116,7 @@ function NavBar({ loggedIn }) {
               <Nav>
                 {/* <Nav.Link> */}
                   <Link
-                    to="https://doodal.auth.us-west-2.amazoncognito.com/login?client_id=6c1og3jvcp62aqmkhjcgkjkvgq&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F"
+                    to={redirectTo}
                     className="nav-link-custom-extra"
                   >
                     Login
