@@ -14,7 +14,7 @@ function GalleryPage() {
   const [user_likes, setUserLikes] = useState([]); // array of all posts liked by user
   const [images, setImages] = useState([]); // array of images
   const [userEnter, setUserEnter] = useState(false); // determines if in the main gallery or in a competition page
-  const [title, setTitle] = useState("Gallery"); // title of page
+  const [title, setTitle] = useState(null); // title of page
   const [showPopUp, setShowPopUp] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImageUserName, setSelectedImageUserName] = useState(null);
@@ -52,7 +52,6 @@ function GalleryPage() {
     const prompt = urlParams.get('prompt');
     comp_id = version;
     if (!prompt) {
-      const oldPrompt = false;
       setTitle("Gallery");
       setUserEnter(false);
     } else {
@@ -128,8 +127,9 @@ function GalleryPage() {
         }
       } catch {}
     }
-    
-    setUserEnter(flag);
+    if(prompt){
+      setUserEnter(flag);
+    }
     setUserLikes(arr);
     setImages(body);
   };

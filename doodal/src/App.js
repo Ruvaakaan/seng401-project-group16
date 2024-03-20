@@ -33,7 +33,6 @@ function App() {
             "GET",
             ""
           );
-          console.log(user);
           Cookies.set("userInfo", JSON.stringify(user));
         } catch (error) {
           console.error("Error fetching user data:", error);
