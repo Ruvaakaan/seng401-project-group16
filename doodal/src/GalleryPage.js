@@ -52,6 +52,7 @@ function GalleryPage() {
     const prompt = urlParams.get('prompt');
     comp_id = version;
     if (!prompt) {
+      const oldPrompt = false;
       setTitle("Gallery");
       setUserEnter(false);
     } else {
