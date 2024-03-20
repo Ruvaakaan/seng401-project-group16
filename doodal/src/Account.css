@@ -1,82 +1,62 @@
+
 .account-container {
     display: flex;
-    padding: 20px;
+    flex-direction: column;
 }
-
 .user-info {
     flex: 1; 
     height: 100%; 
-    padding: 20px;
-    background-color: #eeeeee; 
-    border-radius: 5px;
+    padding: 2vw;
+    background-color: #dddddd; 
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center; 
-    text-align: center; 
     word-wrap: break-word; 
+    flex-direction: row;
+    border-bottom: 0.1vw solid rgb(119, 115, 115);
+}
+.account-info {
+    flex-direction: column;
+    text-align: left;
+    padding-left: 1vw;
 }
 
-.profile-picture {
-    width: 100px; 
-    height: 100px; 
-    border-radius: 50%;
-    margin-bottom: 20px;
-}
 
 .user-info h2 {
+    font-size: 3em;
     color: #222831; 
 }
 
-.user-info button {
-    background-color: #4ecca3; 
-    color: #fff; 
-    padding: 10px 20px;
+
+.username {
+    font-weight: 900;
+}
+
+.likes {
+    font-size: 0.5em;
+}
+.bio {
+    font-size: 1em;
+
+}
+
+.bio-button button {
+    padding: 0.25vw 0.5vw;
+    background-color: #712CF9;
+    color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
+  }
 
-.user-info button:hover {
-    background-color: #47b78a; 
-}
-
-.exp-bar {
-    margin-bottom: 20px;
-    background-color: #eeeeee; 
-    padding: 20px;
-    border-radius: 5px;
-    text-align: center;
-}
-
-.exp-progress {
-    background-color: #ccc;
-    height: 20px;
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-.exp-fill {
-    background-color: #4caf50; 
-    height: 100%;
-    transition: width 0.3s ease; 
-}
-
-.exp-bar h2 {
-    color: #222831; 
-}
-.image-gallery {
-    flex: 3; /* Allow the image-gallery to grow */
-    margin-left: 20px;
-    padding: 20px;
-    background-color: #eeeeee; 
-    border-radius: 5px;
-    overflow: auto; /* Add scroll if content overflows */
+.bio-button button:hover {
+background-color: #6C22A6; 
 }
 
 .edit-icon {
     font-family: 'Font Awesome 5 Free'; 
-    font-size: 14px;
+    font-size: 0.5em;
     cursor: pointer;
     margin-left: 5px; 
 }
@@ -86,39 +66,96 @@
 }
 .profile-picture-container {
   position: relative;
-  display: inline-block; /* Ensure the container takes the size of its contents */
-
 }
 
+.image-gallery {
+    flex: 3; /* Allow the image-gallery to grow */
+    padding: 1vw;
+    background-color: #eeeeee; 
+    border-radius: 5px;
+    overflow: auto; /* Add scroll if content overflows */
+}
+
+.image-gallery h2{
+    font-size: 3em;
+    font-weight: bolder;
+    margin-bottom: 5vh;
+}
+
+.photo-card {
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.1); /* Adjust shadow properties as needed */
+    border-top-right-radius: 5px;
+  }
 .profile-picture {
-  display: block;
-  border-radius: 50%; /* Ensure the image is circular */
+    width: 13vw;
+    height: 13vw;
+    display: block;
+    border-radius: 50%; /* Ensure the image is circular */
+    border: 0.15vw solid black;
+  }
+  
+  .edit-profile {
+    display: none; /* Initially hide the edit text and symbol */
+    position: absolute;
+    top: 0vw;
+    width: 13vw; 
+    height: 13vw; 
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 50%; /* Make the overlay circular */
+  }
+  
+  .profile-picture-container:hover .edit-profile {
+    display: flex; /* Show the edit text and symbol when hovering over the profile picture container */
+    justify-content: center;
+    align-items: center;
+    font-size: 2vw;
+  }
+  
+/* ACCOUNT */
+.account-trash{
 }
 
-.edit-profile {
-  display: none; /* Initially hide the edit text and symbol */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100px; 
-  height: 100px; 
-  transform: translate(-50%, -60%);
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  padding: 5px;
-  border-radius: 50%; /* Make the overlay circular */
+.account-action-icon{
+    margin-right: 0.69em;
+    color:#333;
+  }
+
+.account-action-icon:hover{
+    color:#9F70FD;
+    cursor: pointer;
 }
 
-.profile-picture-container:hover .edit-profile {
-  display: flex; /* Show the edit text and symbol when hovering over the profile picture container */
-  justify-content: center;
-  align-items: center;
-  font-size: 25px;
+.account-post-date{
+    margin: 0.69em;
+    text-align: center;
+    flex-grow: 1;
+    font-size: 1.2em;
 }
 
-/* Adjust the size and color of the edit symbol */
-.edit-profile i {
-  margin-right: 5px;
+#account-card{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #eeeeee;
+    padding: 0;
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.1); /* Adjust shadow properties as needed */
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.dark-mode .account-action-icon{
+    color:white;
+}
+
+.dark-mode .account-action-icon:hover{
+    color:#9F70FD;
+    cursor: pointer;
+}
+
+.dark-mode #account-card{
+    background-color: #333;
+    color:white;
 }
 
 .dark-mode .account-container {
@@ -131,12 +168,122 @@
     color: white;
 }
 
-.dark-mode .exp-bar,
 .dark-mode .image-gallery {
     background-color: #333;
     color: white;
 }
-
 .dark-mode h2 {
     color: white;
 }
+
+.dark-mode .bio-button button {
+    background-color: #712CF9;
+    color: #fff;
+  }
+  
+  .dark-mode .bio-button button:hover {
+    background-color: #9F70FD;
+  }
+
+
+  @media (max-width: 768px) {
+    .user-info {
+      flex-direction: column;
+    }
+    .account-info {
+      padding-left: 0;
+      text-align: left;
+      width: 100%;
+    }
+    .user-info h2 {
+      font-size: 2em;
+    }
+    .image-gallery h2 {
+      font-size: 2.5em;
+      margin-bottom: 3vh;
+    }
+    .profile-picture {
+      width: 25vh;
+      height: 25vh;
+      border-width: 0.1vw;
+    }
+    .edit-profile {
+      width: 25vh;
+      height: 25vh;
+      font-size: 3vh;
+    }
+    .profile-picture-container{
+        padding-bottom: 1vh;
+    }
+  }
+
+  @media (min-width: 1400px) and (max-width: 1750px) {
+    .user-info {
+      padding: 2vw;
+    }
+    .user-info h2 {
+      font-size: 2.5em;
+    }
+    .likes {
+      font-size: 0.5em;
+    }
+    .bio {
+      font-size: 1em;
+    }
+    .profile-picture {
+        width: 14.25vw;
+        height: 14.25vw;
+        border-width: 0.1vw;
+      }
+  }
+
+  @media (min-width: 1100px) and (max-width: 1400px){
+    .profile-picture {
+        width: 16vw;
+        height: 16vw;
+        border-width: 0.1vw;
+      }
+      .user-info h2 {
+        font-size: 2em;
+      }
+      .likes {
+        font-size: 0.6em;
+      }
+      .bio {
+        font-size: 1em;
+      }
+  }
+
+  @media (min-width: 900px) and (max-width: 1100px){
+    .profile-picture {
+        width: 18vw;
+        height: 18vw;
+        border-width: 0.1vw;
+      }
+      .user-info h2 {
+        font-size: 1.75em;
+      }
+      .likes {
+        font-size: 0.7em;
+      }
+      .bio {
+        font-size: 0.9em;
+      }
+  }
+
+  @media (min-width: 768px) and (max-width: 900px){
+    .profile-picture {
+        width: 19vw;
+        height: 19vw;
+        border-width: 0.1vw;
+      }
+      .user-info h2 {
+        font-size: 1.5em;
+      }
+      .likes {
+        font-size: 0.7em;
+      }
+      .bio {
+        font-size: 0.9em;
+      }
+  }

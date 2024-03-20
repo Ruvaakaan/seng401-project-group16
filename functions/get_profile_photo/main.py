@@ -6,7 +6,7 @@ dynamodb = boto3.client("dynamodb")
 
 def get_profile_photo(event, context):
   try:
-    print(event)
+    # print(event)
     body = json.loads(event["body"])
     username = body["username"]
 

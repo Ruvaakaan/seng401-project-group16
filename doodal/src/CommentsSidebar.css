@@ -1,0 +1,127 @@
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+  margin-right:5%;
+  margin-bottom: 1%;
+}
+
+.user-post-info{
+  display: flex;
+  justify-content: center;
+}
+
+.profile-photo {
+  width: 50px;
+  height: 50px; 
+  border: 1px solid #712cf9;
+}
+
+.post-info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px; 
+}
+
+.username{
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.posted-time{
+  font-size: 0.69em;
+}
+
+.popup-likes{
+  display:flex;
+  align-items: center;
+}
+
+.popup-likes-num{
+  font-size: 1.2em;
+}
+
+.comment-user{
+  margin-left: 2%;
+}
+
+.fa-heart {
+  margin-left: auto; 
+}
+
+.custom-toast {
+  margin-top: 5px;
+  width: 99% !important;
+}
+
+.comments-section {
+  height: 432px; 
+  /* height is hardcoded so its bad */
+  overflow-y: auto;
+  margin-right:5%;
+}
+
+.comments-section::-webkit-scrollbar {
+  width: 5px; 
+}
+
+.comments-section::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 5px; 
+}
+
+.comments-section::-webkit-scrollbar-thumb {
+  background: #5f5f5f;
+  border-radius: 5px; 
+}
+
+.comments-section::-webkit-scrollbar-thumb:hover {
+  background: #EFF1F2;
+}
+
+.comment-action-icon{
+  margin-left:2%;
+  color:#333;
+}
+
+.comment-action-icon:hover, .profile-photo:hover, .username:hover, .comment-user:hover{
+  color:#9F70FD;
+  cursor: pointer;
+}
+
+.comments-title{
+  font-size: 1.2em;
+  margin-bottom: 1%;
+}
+
+.post-comment-form{
+  display:flex;
+  align-items: center;
+  margin-right:6%;
+  margin-bottom: 2%;
+}
+
+.post-comment-button{
+  margin-left: 10px;
+  flex-grow:1;
+}
+
+.enter-comment-box{
+  flex-grow:15;
+}
+
+.dark-mode .comment-action-icon:hover{
+  color:#9F70FD;
+  cursor: pointer;
+}
+
+.dark-mode .modal-content, .dark-mode .comments-section,
+.dark-mode .custom-toast, .dark-mode .custom-toast-header,
+.dark-mode #newComment::placeholder, .dark-mode #newComment{  
+  background-color: #333;
+  color: white;
+}
+
+.dark-mode .btn-close, .dark-mode .comment-action-icon{
+  color:white;
+}

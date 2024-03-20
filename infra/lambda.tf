@@ -102,6 +102,30 @@ data "archive_file" "get_profile_photo_archive" {
   source_dir  = "../functions/get_profile_photo"
   output_path = local.get_profile_photo_artifact
 }
+
+data "archive_file" "get_comments_archive" {
+  type = "zip"
+  # this file (main.py) needs to exist in the same folder as this 
+  # Terraform configuration file
+  source_dir  = "../functions/get_comments"
+  output_path = local.get_comments_artifact
+}
+
+data "archive_file" "delete_drawing_archive" {
+  type = "zip"
+  # this file (main.py) needs to exist in the same folder as this 
+  # Terraform configuration file
+  source_dir  = "../functions/delete_drawing"
+  output_path = local.delete_drawing_artifact
+}
+
+data "archive_file" "get_user_info_by_username_archive" {
+  type = "zip"
+  # this file (main.py) needs to exist in the same folder as this 
+  # Terraform configuration file
+  source_dir  = "../functions/get_user_info_by_username"
+  output_path = local.get_user_info_by_username_artifact
+}
 # ...
 
 # create lambda functions
@@ -260,6 +284,42 @@ resource "aws_lambda_function" "get_profile_photo_lambda" {
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
   runtime = "python3.9"
 }
+
+resource "aws_lambda_function" "get_comments_lambda" {
+  role             = aws_iam_role.get_comments_iam.arn
+  function_name    = local.get_comments_funct
+  handler          = local.get_comments_handler
+  filename         = local.get_comments_artifact
+  source_code_hash = data.archive_file.get_comments_archive.output_base64sha256
+  timeout          = 20
+
+  # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
+  runtime = "python3.9"
+}
+
+resource "aws_lambda_function" "delete_drawing_lambda" {
+  role             = aws_iam_role.delete_drawing_iam.arn
+  function_name    = local.delete_drawing_funct
+  handler          = local.delete_drawing_handler
+  filename         = local.delete_drawing_artifact
+  source_code_hash = data.archive_file.delete_drawing_archive.output_base64sha256
+  timeout          = 20
+
+  # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
+  runtime = "python3.9"
+}
+
+resource "aws_lambda_function" "get_user_info_by_username_lambda" {
+  role             = aws_iam_role.get_user_info_by_username_iam.arn
+  function_name    = local.get_user_info_by_username_funct
+  handler          = local.get_user_info_by_username_handler
+  filename         = local.get_user_info_by_username_artifact
+  source_code_hash = data.archive_file.get_user_info_by_username_archive.output_base64sha256
+  timeout          = 20
+
+  # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
+  runtime = "python3.9"
+}
 # ...
 
 # lambda function urls 
@@ -270,9 +330,9 @@ resource "aws_lambda_function_url" "create_user_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -283,9 +343,9 @@ resource "aws_lambda_function_url" "get_user_info_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["GET"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -296,9 +356,9 @@ resource "aws_lambda_function_url" "update_prompts_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -309,9 +369,9 @@ resource "aws_lambda_function_url" "upload_drawing_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -322,9 +382,9 @@ resource "aws_lambda_function_url" "like_unlike_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -335,9 +395,9 @@ resource "aws_lambda_function_url" "create_prompt_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -348,9 +408,9 @@ resource "aws_lambda_function_url" "add_comment_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -361,9 +421,9 @@ resource "aws_lambda_function_url" "delete_comment_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
-    allow_methods     = ["DELETE"]
-    allow_headers     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
+    allow_methods     = ["POST"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -374,9 +434,9 @@ resource "aws_lambda_function_url" "update_bio_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -387,9 +447,9 @@ resource "aws_lambda_function_url" "get_prompts_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -400,9 +460,9 @@ resource "aws_lambda_function_url" "get_users_drawings_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -413,9 +473,9 @@ resource "aws_lambda_function_url" "upload_profile_photo_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["POST"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }
@@ -426,9 +486,48 @@ resource "aws_lambda_function_url" "get_profile_photo_url" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
     allow_methods     = ["GET"]
-    allow_headers     = ["*"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+resource "aws_lambda_function_url" "get_comments_url" {
+  function_name      = aws_lambda_function.get_comments_lambda.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
+    allow_methods     = ["GET"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+resource "aws_lambda_function_url" "delete_drawing_url" {
+  function_name      = aws_lambda_function.delete_drawing_lambda.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
+    allow_methods     = ["POST"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+resource "aws_lambda_function_url" "get_user_info_by_username_url" {
+  function_name      = aws_lambda_function.get_user_info_by_username_lambda.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["http://localhost:3000", "https://seng401-project-group16.vercel.app"]
+    allow_methods     = ["POST"]
+    allow_headers     = ["Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,username"]
     expose_headers    = ["keep-alive", "date"]
   }
 }

@@ -25,7 +25,7 @@ def delete_users_liked_photos(username, drawing_id):
       Statement=statement,
       Parameters=params
     )
-    print(f"delete_users_liked_photos Response: {response}")
+    # print(f"delete_users_liked_photos Response: {response}")
     return response
   except Exception as e:
     print(f"An error occurred: {e}")
@@ -40,7 +40,7 @@ def check_if_user_already_liked(username, drawing_id):
       ":did": {"S": str(drawing_id)}
     }
   )
-  print(f"check_if_user_already_liked Response: {response}")
+  # print(f"check_if_user_already_liked Response: {response}")
   items = response.get("Items", [])
   return items
 
@@ -59,13 +59,13 @@ def add_to_users_liked_photos(username, drawing_id):
 
 def like_unlike(event, context):
   try: 
-    print(event)
+    # print(event)
     body = json.loads(event['body'])
     drawing_id = body['drawing_id']
     username = event['headers']["username"]
 
     items = check_if_user_already_liked(username, drawing_id)
-    print(f"items: {items}")
+    # print(f"items: {items}")
     
     if not items:   
       add_to_users_liked_photos(username, drawing_id)
@@ -80,9 +80,9 @@ def like_unlike(event, context):
       }
     else:    
       updated_likes = update_drawing_likes(drawing_id, -1)  
-      print(f"updated likes after deleting: {updated_likes}")
+      # print(f"updated likes after deleting: {updated_likes}")
       response = delete_users_liked_photos(username, drawing_id)
-      print(f"after delete from like table: {response}")
+      # print(f"after delete from like table: {response}")
       
       return {
         "statusCode": 200,

@@ -1,19 +1,21 @@
-
 .gallery-banner {
   display: flex;
   flex-direction: column;
   padding: 10px 5px;
+  background-color: #8d949e;
+  color: white;
 }
 
 .gallery-title h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: 1.2em;
+  padding-bottom: 10px;
+  /* border-bottom: 1px solid white; */
 }
 
-.filter-options{
+.filter-options {
   font-size: small;
   text-transform: uppercase;
-  /* padding-top: 5px; */
 }
 
 .filter-list {
@@ -26,70 +28,66 @@
   cursor: pointer;
   margin-right: 20px;
   padding: 10px 10px;
-  border-radius: 20px;
+  border-radius: 10px;
   transition: background-color 0.3s, color 0.3s;
 }
 
 .filter-item:hover {
-  background-color: #c086d6; 
-  color: black;
+  background-color: #712cf9;
+  color: white;
+}
+
+.dark-mode .filter-item:hover {
+  background-color: #712cf9;
+  color: white;
 }
 
 .gal {
   padding: 20px 35px;
 }
 
-#card {
-  padding: 0 10px;
-}
-
 .card {
-  margin-bottom: 20px;
-  border: none;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .card-img-top {
-  width: 100%; 
-  height: 200px; 
-  object-fit: cover; 
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
-.card-body {
-  padding: 20px; 
+  object-fit: cover;
 }
 
 .user_info {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .user_info img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin-right: 10px;
-}
-
-.name {
-  font-size: 16px;
-  font-weight: bold;
 }
 
 .like-container {
   display: flex;
   align-items: center;
+  margin-right: 5%;
 }
 
 .like {
   background-color: transparent;
   border: none;
   cursor: pointer;
-  margin-right: 10px;
 }
 
 .like-counter {
   font-size: 16px;
+  margin-right: 10px;
+}
+
+.user-gallery-pfp{
+  border: 1px solid #712cf9;
+}
+
+.username-gallery-nav:hover, .user-gallery-pfp:hover{
+  color:#9F70FD;
+  cursor: pointer;
 }
