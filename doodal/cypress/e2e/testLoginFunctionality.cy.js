@@ -29,7 +29,7 @@ describe("Login and authentication flow", () => {
 
         cy.get(".custom-dropdown").click();
         cy.contains("Logout").click();
-        cy.url().should("eq", "http://localhost:3000/");
+        cy.url().should("eq", "http://localhost:3000/home");
         
         // 5. Chcking that cookies are null afterwards
         cy.getCookie("authentication").then((nullAuthCookie) => {

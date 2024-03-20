@@ -28,8 +28,7 @@ describe("Testing Commenting", () => {
 
     cy.get(".post-comment-form button").click();
 
-    const cognitoBaseUrl =
-      "https://doodal.auth.us-west-2.amazoncognito.com/login";
+    const cognitoBaseUrl = "https://doodal.auth.us-west-2.amazoncognito.com/login";
 
     cy.origin(cognitoBaseUrl, {}, () => {
       cy.wait(200)

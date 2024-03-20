@@ -4,50 +4,65 @@ describe("Gallery Sorting", () => {
 
         cy.url().should("eq", "http://localhost:3000/");
         cy.wait(2000)
-          cy.get(".swiper-wrapper .swiper-slide-active") // Target the first  tile
-            .within(() => {
-              cy.get(".card-img-flush").click(); // Click the image within the first tile
-            });
-    });
 
+        cy.contains("Gallery").click()
+    });
+    
     it("Sorts by Least Liked", () => {
         cy.get('.filter-list li.filter-item:contains("Least Liked")').click();
-        //delay needed while values sorted
-        cy.wait(1000);
-        // Get all like counters in the order displayed
-        cy.get(".gal .row .col .card .like-container .like-counter").then(
-            ($likeCounters) => {
-                cy.log("$likeCounters");
-                cy.log("test");
-
-                for (let i = 1; i < $likeCounters.length; i++) {
-                    const previousCount = parseInt(
-                        $likeCounters.eq(i - 1).text()
-                    );
-                    const currentCount = parseInt($likeCounters.eq(i).text());
-                    cy.wrap(currentCount).should("be.gte", previousCount);
-                }
-            }
-        );
-    });
+        //Delay to account for time taken to sort photos
+        cy.wait(2000)
+        cy.get(".gal .row .col .card").each(($card, index) => {
+          // Click the card to open the popup
+          cy.wrap($card).click();
+      
+          // Extract the like count from the popup
+          cy.get(".popup-likes-num")
+            .invoke("text")
+            .then((likeCountText) => {
+              const currentCount = parseInt(likeCountText);
+      
+              if (index > 0) {
+                // Access the previously extracted count from the 'cy' object
+                cy.get('@previousCount').then((previousCount) => {
+                  cy.wrap(currentCount).should("be.gte", previousCount);
+                });
+              }
+      
+              // Store the current count for comparison with the next card
+              cy.wrap(currentCount).as('previousCount');
+            });
+      
+          // Close the popup
+          cy.get(".btn-close").click();
+        });
+      });
 
     it("Sorts by Most Liked", () => {
         cy.get('.filter-list li.filter-item:contains("Most Liked")').click();
-        //delay needed while values sorted
-        cy.wait(1000);
-        // Get all like counters in the order displayed
-        cy.get(".gal .row .col .card .like-container .like-counter").then(
-            ($likeCounters) => {
-                for (let i = 1; i < $likeCounters.length; i++) {
-                    const previousCount = parseInt(
-                        $likeCounters.eq(i - 1).text()
-                    );
-                    const currentCount = parseInt($likeCounters.eq(i).text());
-                    cy.wrap(currentCount).should("be.lte", previousCount);
-                }
-            }
-        );
-    });
+      
+        cy.get(".gal .row .col .card").each(($card, index) => {
+          // Click the card to open the popup
+          cy.wrap($card).click();
+      
+          // Extract the like count from the popup
+          cy.get(".popup-likes-num")
+            .invoke("text")
+            .then((likeCountText) => {
+              const currentCount = parseInt(likeCountText);
+      
+              if (index > 0) {
+                // Access the previously extracted count from the 'cy' object
+                cy.get('@previousCount').then((previousCount) => {
+                  cy.wrap(currentCount).should("be.lte", previousCount);
+                });
+              }
+              cy.wrap(currentCount).as('previousCount');
+            });
+      
+          cy.get(".btn-close").click();
+        });
+      });
 
     function convertToSeconds(timeString) {
         const timeParts = timeString.split(" ");

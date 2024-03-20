@@ -7,7 +7,7 @@ module.exports = defineConfig({
     },
   },
   env: {
-    username1: 'cypress-testing-1',
+    username1: 'cypress-testing',
     password1: 'Cypress-password-1',
     username2: 'cypress-testing-2',
     password2: 'Cypress-password-2'
