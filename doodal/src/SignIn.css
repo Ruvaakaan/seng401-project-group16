@@ -1,0 +1,114 @@
+/* CSS file for Amazon Cognito Sign In page */
+
+.logo-customizable {
+  max-width: 150px; 
+}
+
+.banner-customizable {
+  padding: 40px 0;  
+  background-color: #712cf9;  
+}
+
+.label-customizable {
+  font-weight: bold; 
+}
+
+.textDescription-customizable {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin: 20px 0; 
+  font-size: 18px;  
+}
+
+.idpDescription-customizable {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin: 20px 0; 
+  font-size: 18px;  
+}
+
+.legalText-customizable {
+  font-size: 12px;  
+}
+
+.submitButton-customizable {
+  font-size: 16px;  
+  font-weight: bold;
+  margin: 20px 0 10px; 
+  height: 50px; 
+  width: 100%;
+  color: #fff;
+  background-color: #712cf9; 
+}
+
+.submitButton-customizable:hover {
+  background-color: #5821c3; 
+}
+
+.errorMessage-customizable {
+  padding: 10px; 
+  font-size: 16px;  
+  background: #f5f5f5;
+  border: 2px solid #d64958; 
+  color: #d64958;
+}
+
+.inputField-customizable {
+  width: 100%;
+  height: 50px;  
+  color: #555;
+  background-color: #fff;
+  border: 2px solid #ccc; 
+}
+
+.inputField-customizable:focus {
+  border-color: #66afe9; 
+  outline: 0;
+}
+
+.idpButton-customizable {
+  height: 50px; 
+  margin-bottom: 20px; 
+  padding: 0 20px; 
+  color: #fff;
+  background-color: #5bc0de;  
+  border-color: #46b8da;
+  border-radius: 5px;  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+
+}
+
+.idpButton-customizable:hover {
+  background-color: #31b0d5; 
+
+}
+
+.socialButton-customizable {
+  border-radius: 2px;
+  height: 40px;
+  margin-bottom: 15px;
+  padding: 1px;
+  text-align: left;
+  width: 100%;
+}
+
+.redirect-customizable {
+  text-align: center;
+  font-size: 14px;  
+}
+
+.passwordCheck-notValid-customizable {
+  color: #df3312;  
+}
+
+.passwordCheck-valid-customizable {
+  color: #19bf00;  
+}
+
+.background-customizable {
+  background-color: #f9f9f9;  
+}
