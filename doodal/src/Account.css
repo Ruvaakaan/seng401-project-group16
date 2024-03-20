@@ -73,7 +73,6 @@ background-color: #6C22A6;
     padding: 1vw;
     background-color: #eeeeee; 
     border-radius: 5px;
-    overflow: auto; /* Add scroll if content overflows */
 }
 
 .image-gallery h2{
