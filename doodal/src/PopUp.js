@@ -12,6 +12,7 @@ const Popup = ({
   drawingID,
   liked,
   posterPfp,
+  likes,
 }) => {
   return (
     <Modal
@@ -37,9 +38,10 @@ const Popup = ({
             <CommentsSidebar
               drawingID={drawingID}
               username={username}
-              likes={liked}
+              likedPost={liked}
               dateCreated={dateCreated}
               posterPfp={posterPfp}
+              likes={likes}
             />
           </div>
         </div>

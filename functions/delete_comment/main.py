@@ -12,8 +12,8 @@ def verify_user(requested,draw_id,dc):
         Parameters=params
     )
     items = response["Items"]
-    print(items)
-    print(items[0]["username"]["S"])
+    # print(items)
+    # print(items[0]["username"]["S"])
     if items[0]["username"]["S"] == requested:
       return True
     else:
@@ -24,7 +24,7 @@ def verify_user(requested,draw_id,dc):
 
 def delete_comment(event, context):
   try:
-    print(event)
+    # print(event)
     body = json.loads(event["body"])
     drawing_id = body["drawing_id"]
     username = event['headers']["username"]
@@ -42,7 +42,8 @@ def delete_comment(event, context):
       },
       "body": "Unauthorized user tried to delete post."
     }
-
+    
+    
     response = dynamodb.delete_item(
       TableName="doodal-comments",
       Key={
@@ -51,7 +52,7 @@ def delete_comment(event, context):
         }
       )
 
-    print(f"Response: {response}")
+    # print(f"Response: {response}")
     return {
       "statusCode": 200,
       "headers": {"Content-Type": "application/json",

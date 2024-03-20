@@ -6,7 +6,7 @@ import uuid
 dynamodb = boto3.client("dynamodb")
 
 def add_comment(event, context):
-  print(event)
+  # print(event)
   body = json.loads(event["body"])
   drawing_id = body["drawing_id"]
   username = event["headers"]["username"]

@@ -28,15 +28,16 @@ def verify_one_entry(c, u):
     
 def upload_drawing(event, context):
   try:
-    print(event)
+    # print(event)
 
     
     body = json.loads(event["body"])
     competition_id = body["competition_id"]
     username = event['headers']["username"]
-    username = event['requestContext']['authorizer']['claims']['username']
-    print(username)
+    # username = event['requestContext']['authorizer']['claims']['username']
+    # print(username)
     image_data = base64.b64decode(body["image_data"])
+
     
     res = verify_one_entry(competition_id, username)
     
@@ -59,15 +60,16 @@ def upload_drawing(event, context):
 
     s3.put_object(Bucket="doodals-bucket-seng401", Key=filepath, Body=image_data)
 
-    table.put_item(Item={
+    item={
       "drawing_id": drawing_id,
       "competition_id": competition_id,
       "username": username,
       "likes": likes,
       "date_created": date_created,
-      "s3_url": f"https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/{competition_id}/{drawing_id}.jpg",
-      "username": username
-    })
+      "s3_url": f"https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/{competition_id}/{drawing_id}.jpg"
+    }
+
+    table.put_item(Item=item)
     return {
       "statusCode": 200,
       "headers": {"Content-Type": "application/json",
@@ -75,7 +77,7 @@ def upload_drawing(event, context):
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"
       },
-      "body": f"Image {drawing_id} uploaded to S3 bucket."
+      "body": json.dumps(item)
     }
   except Exception as e:
     return {
@@ -85,5 +87,5 @@ def upload_drawing(event, context):
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods" : "OPTIONS, POST, GET"
       },
-      "body": json.dumps({"error": str(e)})
+      "body": json.dumps(str(e))
     }

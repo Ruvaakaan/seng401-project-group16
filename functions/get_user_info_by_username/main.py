@@ -5,17 +5,15 @@ dynamodb = boto3.client("dynamodb")
 
 def get_user_info_by_username(event, context):
     try:
-        print("event:", event)
-        body = json.loads(event["body"])
-        
+        # print("event:", event)
         # Extract username from the event
-        username = body.get("username")
+        username = event.get("username")
         if not username:
             return {
                 "statusCode": 400,
                 "body": "Username is missing in the request"
             }
-        print("Username:", username)
+        # print("Username:", username)
         
         # Construct the PartiQL query statement
         statement = "SELECT * FROM \"doodal-users\" WHERE username = ?"
@@ -26,7 +24,7 @@ def get_user_info_by_username(event, context):
             Statement=statement,
             Parameters=params
         )
-        print("response:", response)
+        # print("response:", response)
         
         items = response.get("Items", [])
         if not items:

@@ -23,6 +23,7 @@ function ViewAccount() {
   const [selectedImageCreationDate, setSelectedImageCreationDate] = useState(null);
   const [selectedImageDrawingID, setSelectedImageDrawingID] = useState(null);
   const [selectedUserLiked, setSelectedUserLiked] = useState(null);
+  const [selectedPostLikes, setSelectedPostLikes] = useState(0);
   const [selectedCompetitionID, setSelectedCompetitionID] = useState(null);
   const [totalLikes, setTotalLikes] = useState(0);
 
@@ -32,7 +33,8 @@ function ViewAccount() {
     dateCreated,
     drawingID,
     userLiked,
-    compID
+    compID,
+    likes
   ) => {
     setSelectedImage(image);
     setSelectedImageUserName(username);
@@ -40,6 +42,8 @@ function ViewAccount() {
     setSelectedImageDrawingID(drawingID);
     setSelectedUserLiked(userLiked);
     setSelectedCompetitionID(compID);
+    setSelectedPostLikes(likes)
+
     setShowPopUp(true);
   };
 
@@ -65,7 +69,7 @@ function ViewAccount() {
       // console.log("response:", response);
       if (response) {
         const responseBody = JSON.parse(response.body);
-        console.log(responseBody)
+        // console.log(responseBody)
         setUser({
           // id: response.user_id.S,
           username: responseBody.username.S,
@@ -170,7 +174,8 @@ function ViewAccount() {
                       item.date_created,
                       item.drawing_id,
                       item.liked_by_user,
-                      item.competition_id
+                      item.competition_id,
+                      item.likes
                     )
                   }
                 />
@@ -202,6 +207,7 @@ function ViewAccount() {
           drawingID={selectedImageDrawingID}
           liked={selectedUserLiked}
           posterPfp={user.picture}
+          likes={selectedPostLikes}
         />
       )}
     </div>
