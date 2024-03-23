@@ -55,6 +55,9 @@ const CommentsSidebar = ({
       ];
       newCommentAdded["text"] = newComment;
       newCommentAdded["date"] = Math.floor(new Date().getTime() / 1000);
+      newCommentAdded["pfp"] = JSON.parse(Cookies.get("userInfo"))["profile_photo_url"][
+        "S"
+      ];
       setPostComments([newCommentAdded, ...postComments]);
       setNewComment("");
     }

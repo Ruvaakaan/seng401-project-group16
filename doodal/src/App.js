@@ -51,12 +51,12 @@ function App() {
           const { url, method, request } = JSON.parse(unfinishedApiCall);
           const match = url.match(/\/([^/]+)$/);
           if (match) {
-            if (match[1] === "upload_drawing"){
+            if (match[1] === "upload_drawing") {
               setText("Your drawing was posted!");
               handleShow();
             }
           }
-          makeApiCall(url, method, request);
+          await makeApiCall(url, method, request);
         }
         localStorage.removeItem("unfinishedapicall");
       } catch (error) {
@@ -82,15 +82,15 @@ function App() {
   const [text, setText] = useState("");
   return (
     <DarkModeProvider>
-    <ProfilePictureProvider>
-      <div className="App">
-        <NavBar loggedIn={loggedIn} />
-        <div>
-          <Outlet />
-          <Modal show={show} onHide={handleClose}>
-            <Modal.Body>{text}</Modal.Body>
-          </Modal>
-        </div>
+      <ProfilePictureProvider>
+        <div className="App">
+          <NavBar loggedIn={loggedIn} />
+          <div>
+            <Outlet />
+            <Modal show={show} onHide={handleClose}>
+              <Modal.Body>{text}</Modal.Body>
+            </Modal>
+          </div>
         </div>
       </ProfilePictureProvider>
     </DarkModeProvider>

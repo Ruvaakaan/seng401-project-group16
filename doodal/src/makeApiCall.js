@@ -59,11 +59,11 @@ async function makeApiCall(url, method, request) {
 
 function handleUnauthorizedError(unfinishedCall) {
   //checks if an unfinishedapicall exists already to prevent chaining of requests
+
   if (localStorage.getItem("unfinishedapicall") !== null) {
     localStorage.removeItem("unfinishedapicall");
     return;
   }
-  
   // Save the unfinished API call request to a cookie for later retrieval
   localStorage.setItem("unfinishedapicall", JSON.stringify(unfinishedCall));
 

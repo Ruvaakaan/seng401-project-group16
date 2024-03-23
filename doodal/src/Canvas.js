@@ -246,8 +246,11 @@ function Canvas({
 
       const jsonString = JSON.stringify(jsonData);
       const link = `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/upload_drawing`;
-      await makeApiCall(link, "POST", jsonString);
-      window.location.href = `/gallery/${comp_id}?prompt=${prompt}`
+      const res = await makeApiCall(link, "POST", jsonString);
+      console.log(res)
+      if(res){
+        window.location.href = `/gallery/${comp_id}?prompt=${prompt}`
+      }
     } catch (error) {
       console.error("Error uploading drawing:", error);
     }
