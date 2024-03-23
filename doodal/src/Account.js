@@ -165,7 +165,7 @@ function Account() {
       <div className="user-info">
         <div className="profile-picture-container">
           <img
-            src={user.picture}
+            src={user.picture || "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"} 
             alt="Profile Picture"
             className="profile-picture"
             onClick={handleEditProfile}
@@ -175,7 +175,7 @@ function Account() {
           </span>
         </div>
         <div className="account-info">
-        <h2 className="username">{user.username}</h2>
+        <h2 className="username-profile">{user.username}</h2>
         <div className="likes">
           <h2>@{user.username} ‧ Total Likes: {totalLikes} <i className="fa-solid fa-heart fa-2xs"></i></h2>
         </div>
