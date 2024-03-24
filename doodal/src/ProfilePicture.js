@@ -34,7 +34,7 @@ function ProfilePicture({ onClose, onProfilePictureChange }) {
     }
   };
 
-  async function handleSubmit(){
+  async function handleSubmit() {
     if (file) {
       try {
         const imageUrl = URL.createObjectURL(file);
@@ -57,7 +57,7 @@ function ProfilePicture({ onClose, onProfilePictureChange }) {
       setFileError("Please choose an image");
     }
   };
-
+  
   return (
     <div className="profile-overlay">
       <div className="profile-content">
@@ -81,13 +81,11 @@ function ProfilePicture({ onClose, onProfilePictureChange }) {
         {fileError && <label id="error">{fileError}</label>}
         <div className="buttons">
           {/* Buttons container */}
-          <button onClick={handleSubmit}>Submit</button>
+          <button onClick={handleSubmit} disabled={fileError}>Submit</button>
           <button onClick={onClose}>Cancel</button>
         </div>
       </div>
     </div>
-    
-
   );
 }
 
