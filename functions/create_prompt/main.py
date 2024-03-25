@@ -20,6 +20,59 @@ def get_openai_response():
 
   client = OpenAI(api_key=openai_api_key)
   
+  prompt_ideas = [
+    "Dragon",
+    "Castle",
+    "Robot",
+    "Unicorn",
+    "Rocket",
+    "Wizard",
+    "Mermaid",
+    "Guitar",
+    "Octopus",
+    "Tiger",
+    "Jungle",
+    "Spaceship",
+    "Volcano",
+    "Phoenix",
+    "Galaxy",
+    "Fairy",
+    "Pirate",
+    "Circus",
+    "Ballet",
+    "Dream",
+    "Adventure",
+    "Mystery",
+    "Wonderland",
+    "Lighthouse",
+    "Rainbow",
+    "Sphinx",
+    "Kraken",
+    "Ninja",
+    "Magician",
+    "Zombie",
+    "Alien",
+    "Sword",
+    "Atlantis",
+    "Eclipse",
+    "Moonlight",
+    "Fireworks",
+    "Eagle",
+    "Oasis",
+    "Witch",
+    "Yeti",
+    "Safari",
+    "Sorcerer",
+    "Time machine",
+    "Magic carpet",
+    "Enchanted forest",
+    "Atlantis",
+    "Carnival",
+    "One Piece Anime",
+  ]
+  
+  prompt_idea = random.choice(prompt_ideas)
+  
   difficulty_levels = ["easy", "medium", "hard"]
   difficulty = random.choice(difficulty_levels)
   
@@ -31,9 +84,9 @@ def get_openai_response():
     max_words = 3
   elif difficulty.lower() == "hard":
     max_tokens = 30
-    max_words = 7
+    max_words = 5
   
-  prompt = f"Describe something unique to draw. No more than {max_words} words."
+  prompt = f"Describe something unique to draw that is related to {prompt_idea}. No more than {max_words} words."
   
   completion = client.chat.completions.create(
     model="gpt-3.5-turbo",
