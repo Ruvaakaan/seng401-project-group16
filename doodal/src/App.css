@@ -449,7 +449,13 @@ body {
 .card-img-top:hover{
   cursor: pointer;
 }
+.purple-navbar{
+  height: 100px;
+}
 
+.doodal-logo-middle{
+  height: 100px;
+}
 
 @media (min-width: 1500px) and (max-width: 2000px){
   .memo-banner {
@@ -485,6 +491,12 @@ body {
   }
   .filter-list{
     font-size: 1em;
+  }
+  .purple-navbar{
+    height: 70px;
+  }
+  .doodal-logo-middle {
+    height: 60px;
   }
 }
 

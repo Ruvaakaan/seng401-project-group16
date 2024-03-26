@@ -35,7 +35,7 @@ function NavBar({ loggedIn }) {
   return (
     <>
 
-      <Navbar className="purple-navbar" style={{ height: "100px" }}>
+      <Navbar className="purple-navbar">
         <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
           <Navbar.Brand>
             <Nav.Link>
@@ -62,16 +62,15 @@ function NavBar({ loggedIn }) {
                 </Link>
               </Nav.Link>
             </Nav>
-            <div
+            <div 
               style={{
                 position: "absolute",
                 left: "50%",
                 transform: "translateX(-50%)",
               }}
             >
-              <Image
+              <Image className="doodal-logo-middle"
                 src="https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/doodalnew.png"
-                style={{ width: "150px" }}
               />
             </div>
             {loggedIn !== false ? (

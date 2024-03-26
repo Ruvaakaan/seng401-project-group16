@@ -265,14 +265,12 @@ function Canvas({
 
   const startDrawingTouch = (event) => {
     event.preventDefault();
-    event.stopPropagation();
     const touch = event.touches[0];
     startDrawing(touch);
   };
 
   const drawTouch = (event) => {
     event.preventDefault();
-    event.stopPropagation();
     const touch = event.touches[0];
     draw(touch);
   };
@@ -280,6 +278,20 @@ function Canvas({
   const stopDrawingTouch = () => {
     stopDrawing();
   };
+
+  const preventScroll = (event) => {
+    if (isDrawing) {
+      event.preventDefault();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("touchmove", preventScroll, { passive: false });
+
+    return () => {
+      document.removeEventListener("touchmove", preventScroll);
+    };
+  }, [isDrawing]);
 
   return (
     <>
