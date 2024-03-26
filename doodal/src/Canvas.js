@@ -105,13 +105,13 @@ function Canvas({
 
       context.lineTo(
         event.clientX - canvasRef.current.offsetLeft,
-        event.clientY - canvasRef.current.offsetTop
+        event.clientY - canvasRef.current.offsetTop + window.scrollY
       );
       context.stroke();
       context.beginPath();
       context.moveTo(
         event.clientX - canvasRef.current.offsetLeft,
-        event.clientY - canvasRef.current.offsetTop
+        event.clientY - canvasRef.current.offsetTop + window.scrollY
       );
     }
   };
