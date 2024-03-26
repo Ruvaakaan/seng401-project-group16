@@ -50,6 +50,7 @@ const CommentsSidebar = ({
     if (newComment.trim()) {
       await addComments(drawingID, newComment);
       await handleComments();
+      setNewComment("")
     }
   };
 

@@ -95,7 +95,7 @@ function Canvas({
     if (context) {
       context.beginPath();
     }
-  }
+  };
 
   const drawFreehand = (event) => {
     if (context) {
@@ -254,9 +254,9 @@ function Canvas({
       const jsonString = JSON.stringify(jsonData);
       const link = `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/upload_drawing`;
       const res = await makeApiCall(link, "POST", jsonString);
-      console.log(res)
-      if(res){
-        window.location.href = `/gallery/${comp_id}?prompt=${prompt}`
+      console.log(res);
+      if (res) {
+        window.location.href = `/gallery/${comp_id}?prompt=${prompt}`;
       }
     } catch (error) {
       console.error("Error uploading drawing:", error);
@@ -336,21 +336,32 @@ function Canvas({
           onMouseUp={() => stopDrawing()}
           onMouseMove={(event) => draw(event)}
           onMouseLeave={() => stopDrawingLeave()}
+          onTouchStart={() => startDrawing()}
+          onTouchEnd={() => stopDrawing()}
           width={742}
           height={659}
           style={{ border: "1px solid #000", borderRadius: "1px" }}
         ></canvas>
 
         <ButtonGroup vertical className="button-choice-group">
-          <Button className={`color-selector ${straightLineMode ? "selected" : ""}`} onClick={toggleStraightLineMode}>
+          <Button
+            className={`color-selector ${straightLineMode ? "selected" : ""}`}
+            onClick={toggleStraightLineMode}
+          >
             <i className="fa fa-slash"></i>
           </Button>
 
-          <Button className={`color-selector ${rectangleMode ? "selected" : ""}`} onClick={toggleRectangleMode}>
+          <Button
+            className={`color-selector ${rectangleMode ? "selected" : ""}`}
+            onClick={toggleRectangleMode}
+          >
             <i class="fa-solid fa-square-full"></i>
           </Button>
 
-          <Button className={`color-selector ${triangleMode ? "selected" : ""}`} onClick={toggleTriangleMode}>
+          <Button
+            className={`color-selector ${triangleMode ? "selected" : ""}`}
+            onClick={toggleTriangleMode}
+          >
             <i class="fa-solid fa-play"></i>
           </Button>
 
@@ -362,8 +373,11 @@ function Canvas({
             <i className="fa fa-undo"></i>
           </Button>
 
-          <Button className={`color-selector ${eraserMode ? "selected" : ""}`} onClick={toggleEraserMode}>
-            <i className="fa fa-eraser"></i> 
+          <Button
+            className={`color-selector ${eraserMode ? "selected" : ""}`}
+            onClick={toggleEraserMode}
+          >
+            <i className="fa fa-eraser"></i>
           </Button>
         </ButtonGroup>
       </div>
