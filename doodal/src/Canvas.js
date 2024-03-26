@@ -90,6 +90,13 @@ function Canvas({
     saveCanvasState();
   };
 
+  const stopDrawingLeave = () => {
+    setIsDrawing(false);
+    if (context) {
+      context.beginPath();
+    }
+  }
+
   const drawFreehand = (event) => {
     if (context) {
       context.lineWidth = brushSize;
@@ -328,7 +335,7 @@ function Canvas({
           onMouseDown={(event) => startDrawing(event)}
           onMouseUp={() => stopDrawing()}
           onMouseMove={(event) => draw(event)}
-          onMouseLeave={() => stopDrawing()}
+          onMouseLeave={() => stopDrawingLeave()}
           width={742}
           height={659}
           style={{ border: "1px solid #000", borderRadius: "1px" }}
