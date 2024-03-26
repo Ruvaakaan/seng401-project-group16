@@ -263,6 +263,22 @@ function Canvas({
     }
   };
 
+  const startDrawingTouch = (event) => {
+    event.preventDefault(); // Prevent default touch behavior
+    const touch = event.touches[0]; // Get the first touch
+    startDrawing(touch);
+  };
+
+  const drawTouch = (event) => {
+    event.preventDefault(); // Prevent default touch behavior
+    const touch = event.touches[0]; // Get the first touch
+    draw(touch);
+  };
+
+  const stopDrawingTouch = () => {
+    stopDrawing();
+  };
+
   return (
     <>
       <div className="canvas-container">
@@ -336,9 +352,9 @@ function Canvas({
           onMouseUp={() => stopDrawing()}
           onMouseMove={(event) => draw(event)}
           onMouseLeave={() => stopDrawingLeave()}
-          onTouchStart={(event) => startDrawing(event)}
-          onTouchMove={(event) => draw(event)}
-          onTouchEnd={() => stopDrawing()}
+          onTouchStart={(event) => startDrawingTouch(event)}
+          onTouchMove={(event) => drawTouch(event)}
+          onTouchEnd={() => stopDrawingTouch()}
           width={742}
           height={659}
           style={{ border: "1px solid #000", borderRadius: "1px" }}
