@@ -11,7 +11,6 @@ def create_user(event, context):
     uuid = event["request"]["userAttributes"]["sub"]
     username = event["userName"]
     email = event["request"]["userAttributes"]["email"]
-    xp = 0
     sentences = [
       "My soul yearns for the art of drawing!",
       "Drawing beckons to me, a thirst unquenchable!",
@@ -33,7 +32,6 @@ def create_user(event, context):
       "user_id": uuid,
       "username": username,
       "email": email,
-      "experience": xp,
       "bio": bio,
       "date_created": date_created,
       "profile_photo_url": "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"

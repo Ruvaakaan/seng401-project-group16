@@ -3,7 +3,6 @@ import unittest
 from moto import mock_aws
 import boto3
 import base64
-import os
 
 from add_comment.main import add_comment
 from create_user.main import create_user
@@ -13,20 +12,15 @@ from delete_drawing.main import delete_drawing
 from upload_drawing.main import upload_drawing
 from update_bio.main import update_bio
 from upload_profile_photo.main import upload_profile_photo
-from sort_drawings.main import sort_drawings_handler
-from like_unlike.main import like_unlike
 from get_user_info_by_username.main import get_user_info_by_username
 from get_user_info.main import get_user_info
-from get_users_drawings.main import get_users_drawings
 
 class lambda_mocking_tests(unittest.TestCase):
 
     @mock_aws
     def test_add_comment(self):
-        # Mocking DynamoDB resources
         dynamodb = boto3.client('dynamodb', region_name='us-west-2')
 
-        # Create mock doodal-comments table
         dynamodb.create_table(
             TableName='doodal-comments',
             KeySchema=[
@@ -55,7 +49,6 @@ class lambda_mocking_tests(unittest.TestCase):
             }
         )
 
-        # Prepare event data
         drawing_id = "test-drawing-id"
         comment_text = "test-comment"
         username = "test-username"
@@ -64,28 +57,23 @@ class lambda_mocking_tests(unittest.TestCase):
             "headers": {"username": username}
         }
 
-        # Execute lambda function
         response = add_comment(event, None)
-        # print(response)
 
-        # Assert response
         self.assertEqual(response['statusCode'], 200)
         self.assertIn('body', response)
         body = json.loads(response['body'])
         self.assertIn('ResponseMetadata', body)
         self.assertEqual(body['ResponseMetadata']['HTTPStatusCode'], 200)
 
-        # Check if item is added to the table
         response = dynamodb.scan(
             TableName='doodal-comments'
         )
-        # print(response)
+        
         self.assertEqual(response['Count'], 1)
         comment = response['Items'][0]
         self.assertEqual(comment['username']['S'], username)
         self.assertEqual(comment['comment_text']['S'], comment_text)
         self.assertEqual(comment['drawing_id']['S'], drawing_id)
-        # Ensure date_created is not empty
         self.assertIsNotNone(comment['date_created']['S'])
         
     @mock_aws
@@ -139,7 +127,6 @@ class lambda_mocking_tests(unittest.TestCase):
         
         
         # Ensure experience, bio, date_created, and profile_photo_url are set correctly
-        self.assertEqual(user['experience']['N'], '0')
         self.assertIsNotNone(user['date_created']['S'])
         self.assertEqual(user['profile_photo_url']['S'], "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG")
 
@@ -661,22 +648,7 @@ class lambda_mocking_tests(unittest.TestCase):
         )['Item']
  
         self.assertNotEqual("", updated_item["profile_photo_url"]["S"])
-        
-    # NEEDS TO BE COMPLETED
-    @mock_aws
-    def test_sort_drawings(self):
-        pass
-    
-    # NEEDS TO BE COMPLETED
-    @mock_aws
-    def test_like_unlike(self):
-        pass
-    
-    # NEEDS TO BE COMPLETED
-    @mock_aws
-    def test_get_users_drawings(self):
-        pass
-    
+
     @mock_aws
     def test_get_user_info_by_username(self):
         dynamodb = boto3.client('dynamodb', region_name='us-west-2')
@@ -715,7 +687,7 @@ class lambda_mocking_tests(unittest.TestCase):
         self.assertEqual(response["statusCode"], 200)
         
         # Check if the response body contains the correct user info
-        expected_body = {"user_id": {"S": "test-uuid1"}, "username": {"S": "test_username_1"}, "email": {"S": "test1@example.com"}, "experience": {"N": "0"}, "bio": {"S": str(bio)}, "date_created": {"S": str(date_created)}, "profile_photo_url": {"S": "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"}}
+        expected_body = {"user_id": {"S": "test-uuid1"}, "username": {"S": "test_username_1"}, "email": {"S": "test1@example.com"}, "bio": {"S": str(bio)}, "date_created": {"S": str(date_created)}, "profile_photo_url": {"S": "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"}}
         self.assertEqual(body, expected_body)
     
     @mock_aws
@@ -759,7 +731,7 @@ class lambda_mocking_tests(unittest.TestCase):
         body = json.loads(response["body"])
 
         # Check if the response body contains the correct user info
-        expected_body = {"user_id": {"S": "test-uuid1"}, "username": {"S": "ruvaakaan"}, "email": {"S": "test1@example.com"}, "experience": {"N": "0"}, "bio": {"S": str(bio)}, "date_created": {"S": str(date_created)}, "profile_photo_url": {"S": "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"}}
+        expected_body = {"user_id": {"S": "test-uuid1"}, "username": {"S": "ruvaakaan"}, "email": {"S": "test1@example.com"}, "bio": {"S": str(bio)}, "date_created": {"S": str(date_created)}, "profile_photo_url": {"S": "https://doodals-bucket-seng401.s3.us-west-2.amazonaws.com/website+photos/octopus.PNG"}}
         self.assertEqual(body, expected_body)
     
     

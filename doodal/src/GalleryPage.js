@@ -107,7 +107,7 @@ function GalleryPage() {
 
   const callSorter = async (s) => {
     setSortType(s);
-    var i = comp_id ? comp_id : ""; // if in a comp, pass in comp id, else it is empty for no compettion
+    var i = version ? version : ""; // if in a comp, pass in comp id, else it is empty for no compettion
     let body = await sortImages(s, i, -1); // s is sort type, i is competition id, -1 is for amount which returns all
     if (!body) {
       return;

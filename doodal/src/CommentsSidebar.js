@@ -49,17 +49,7 @@ const CommentsSidebar = ({
   const handlePostComment = async () => {
     if (newComment.trim()) {
       await addComments(drawingID, newComment);
-      var newCommentAdded = {};
-      newCommentAdded["user"] = JSON.parse(Cookies.get("userInfo"))["username"][
-        "S"
-      ];
-      newCommentAdded["text"] = newComment;
-      newCommentAdded["date"] = Math.floor(new Date().getTime() / 1000);
-      newCommentAdded["pfp"] = JSON.parse(Cookies.get("userInfo"))["profile_photo_url"][
-        "S"
-      ];
-      setPostComments([newCommentAdded, ...postComments]);
-      setNewComment("");
+      await handleComments();
     }
   };
 
