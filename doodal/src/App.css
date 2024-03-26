@@ -465,11 +465,26 @@ body {
 @media (min-width: 1000px) and (max-width: 1500px){
   .memo-banner {
     position: absolute; 
-    top: 16%;
+    top: 20%;
     left: 50%;
     transform: translate(-50%, -50%);  
     font-size: 1.9em;
     min-width: 750px;
+  }
+  .prompt-title{
+    font-size: 1.4em;
+  }
+  .canvas-container{
+    margin-right: 0;
+  }
+  .canvas-container canvas{
+    margin:4px;
+  }
+  .filter-item{
+    margin-left: 4%;
+  }
+  .filter-list{
+    font-size: 1em;
   }
 }
 
@@ -483,10 +498,13 @@ body {
     min-width: 500px;
   }
   .prompt-title{
-    font-size: 1.5em;
+    font-size: 1.35em;
   }
   body {
     overflow-x: auto;
     min-width: 1000px;
+  }
+  .canvas-container{
+    margin:4px;
   }
 }

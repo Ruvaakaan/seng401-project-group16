@@ -264,14 +264,16 @@ function Canvas({
   };
 
   const startDrawingTouch = (event) => {
-    event.preventDefault(); // Prevent default touch behavior
-    const touch = event.touches[0]; // Get the first touch
+    event.preventDefault();
+    event.stopPropagation();
+    const touch = event.touches[0];
     startDrawing(touch);
   };
 
   const drawTouch = (event) => {
-    event.preventDefault(); // Prevent default touch behavior
-    const touch = event.touches[0]; // Get the first touch
+    event.preventDefault();
+    event.stopPropagation();
+    const touch = event.touches[0];
     draw(touch);
   };
 
