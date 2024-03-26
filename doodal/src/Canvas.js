@@ -336,7 +336,8 @@ function Canvas({
           onMouseUp={() => stopDrawing()}
           onMouseMove={(event) => draw(event)}
           onMouseLeave={() => stopDrawingLeave()}
-          onTouchStart={() => startDrawing()}
+          onTouchStart={(event) => startDrawing(event)}
+          onTouchMove={(event) => draw(event)}
           onTouchEnd={() => stopDrawing()}
           width={742}
           height={659}
