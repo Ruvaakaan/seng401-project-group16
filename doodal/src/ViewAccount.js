@@ -62,7 +62,7 @@ function ViewAccount() {
   const fetchUserData = async () => {
     try {
       const response = await makeApiCall(
-        `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/get_user_info_by_username`,
+        `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/prod/get_user_info_by_username`,
         "POST",
         {username: username}
       );
@@ -92,7 +92,7 @@ function ViewAccount() {
   const fetchUserImages = async () => {
     try {
       const response = await makeApiCall(
-        `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/get_users_drawings`,
+        `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/prod/get_users_drawings`,
         "POST",
         {username: username}
       );

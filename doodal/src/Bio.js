@@ -11,7 +11,7 @@ function Bio({ isOpen, onClose, onUpdate }) {
         const request = JSON.stringify({
             bio: newBio,
           })
-        const response = await makeApiCall(`https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/update_bio`, "POST", request);
+        const response = await makeApiCall(`https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/prod/update_bio`, "POST", request);
         onUpdate(newBio); //Pass the new bio value to the onUpdate function
         onClose();
         }

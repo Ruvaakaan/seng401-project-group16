@@ -5,7 +5,7 @@ export const getUserImages = async (user) => {
     username: user
   });
 
-  let res = await makeApiCall(`https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/get_users_drawings`, "POST", request)
+  let res = await makeApiCall(`https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/prod/get_users_drawings`, "POST", request)
   
   let image_list = [];
 

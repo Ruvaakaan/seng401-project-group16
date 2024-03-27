@@ -8,7 +8,7 @@ export const sortImages = async (sort, id, amt) => {
   });
 
   let res = await makeApiCall(
-    `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/sort_drawings`,
+    `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/prod/sort_drawings`,
     "POST",
     request
   );
