@@ -29,7 +29,7 @@ function App() {
 
         try {
           const user = await makeApiCall(
-            "https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/getdata",
+            "https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/prod/getdata",
             "GET",
             ""
           );

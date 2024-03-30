@@ -252,7 +252,7 @@ function Canvas({
       jsonData.image_data = img_data;
 
       const jsonString = JSON.stringify(jsonData);
-      const link = `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/upload_drawing`;
+      const link = `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/prod/upload_drawing`;
       const res = await makeApiCall(link, "POST", jsonString);
       console.log(res);
       if (res) {

@@ -57,7 +57,7 @@ function Home() {
   const getPrompts = async () => {
     // fetches the prompts from the prompts table
     let res = await fetch(
-      `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/get_prompts`,
+      `https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/prod/get_prompts`,
       {
         method: "GET",
         headers: {

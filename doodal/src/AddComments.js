@@ -6,7 +6,7 @@ export const addComments = async (drawingID, comment) => {
     comment_text: comment
   });
 
-  let res = await makeApiCall(`https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/add_comment`, "POST", request)
+  let res = await makeApiCall(`https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/prod/add_comment`, "POST", request)
 
   console.log(res);
   

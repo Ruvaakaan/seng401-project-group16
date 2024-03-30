@@ -6,7 +6,7 @@ export const delPost = async (drawingID, compID) => {
     competition_id: compID,
   });
 
-  let res = await makeApiCall(`https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/delete_drawing`, "POST", request)
+  let res = await makeApiCall(`https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/prod/delete_drawing`, "POST", request)
   
   return res;
 };

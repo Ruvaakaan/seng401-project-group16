@@ -46,7 +46,7 @@ function ProfilePicture({ onClose, onProfilePictureChange }) {
             image_data: imgData
           };
           const jsonString = JSON.stringify(jsonData);
-          const response = await makeApiCall(`https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/test/upload_profile_photo`, "POST", jsonString);
+          const response = await makeApiCall(`https://p7kiqce3wh.execute-api.us-west-2.amazonaws.com/prod/upload_profile_photo`, "POST", jsonString);
           onClose();
         };
         reader.readAsDataURL(file);
