@@ -82,6 +82,7 @@ function Home() {
       newCompetitions.push(newPrompts); // add prompt to the prompts list
       await handleImages(new_prompts[i]["competition_id"]["S"], "new"); // call handle image to get the top image for that prompt
     }
+    setCurrentPrompts(newCompetitions);
 
     var oldCompetitions = [];
     for (let i = 0; i < old_prompts.length; i++) {
@@ -94,7 +95,7 @@ function Home() {
       await handleImages(old_prompts[i]["competition_id"]["S"], "old"); // call handle image to get the top image for that prompt
     }
 
-    setCurrentPrompts(newCompetitions);
+    
     setOldPrompts(oldCompetitions);
   };
 
